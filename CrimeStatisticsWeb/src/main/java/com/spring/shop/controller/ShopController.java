@@ -47,9 +47,9 @@ public class ShopController {
 		model.addAttribute("product", productVo);
 		
 		if (adminid != null) {
-			return "shop/view";
-		} else {
 			return "redirect:/admin/shop/view";
+		} else {
+			return "shop/view";
 		}
 		
 	}

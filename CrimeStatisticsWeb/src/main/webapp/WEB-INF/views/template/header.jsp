@@ -172,13 +172,13 @@
             <ul class="dropdown-menu dropdown-menu-dark">
               <li><a class="dropdown-item" href="/shop/list" style="text-align: center; font-size: 18px;">전체 호신용품</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#" style="text-align: center; font-size: 18px;">스프레이건</a></li>
+              <li><a class="dropdown-item" href="/shop/list/100" style="text-align: center; font-size: 18px;">스프레이건</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#" style="text-align: center; font-size: 18px;">스프레이</a></li>
+              <li><a class="dropdown-item" href="/shop/list/200" style="text-align: center; font-size: 18px;">스프레이</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#" style="text-align: center; font-size: 18px;">전기충격기</a></li>
+              <li><a class="dropdown-item" href="/shop/list/300" style="text-align: center; font-size: 18px;">전기충격기</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#" style="text-align: center; font-size: 18px;">삼단봉</a></li>
+              <li><a class="dropdown-item" href="/shop/list/400" style="text-align: center; font-size: 18px;">삼단봉</a></li>
             </ul>
           </li>
         </ul>

@@ -40,7 +40,14 @@ ul, lo, li {
 							<img src="${pd.pdThumbImg}">
 						</div>
 						<div class="productsName">
-							<a href="/shop/view?n=${pd.pdNum}">${pd.pdName}</a>
+							<c:choose>
+								<c:when test="${not empty sessionScope.adminid}">
+									<a href="/admin/products/view?n=${pd.pdNum}">${pd.pdName}</a>
+								</c:when>
+								<c:otherwise>
+									<a href="/shop/view?n=${pd.pdNum}">${pd.pdName}</a>
+								</c:otherwise>
+							</c:choose>
 						</div>
 					</li>
 				</c:forEach>
