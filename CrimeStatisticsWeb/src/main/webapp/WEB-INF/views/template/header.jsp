@@ -81,12 +81,8 @@
 
 <body>
 
-<nav class="navbar navbar-expand-sm navbar-dark custom-a" style="background-color: #0f5485;">
-  <div class="container-fluid">
-  </div>
-</nav>
 
-<nav class="navbar navbar-dark  fixed-top custom-c" style="background-color: #0f5485;">
+<nav class="navbar navbar-dark custom-c" style="background-color: #0f5485;">
 
   <div class="container-fluid">
     

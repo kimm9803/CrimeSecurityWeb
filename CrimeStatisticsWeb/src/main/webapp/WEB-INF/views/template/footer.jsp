@@ -20,7 +20,7 @@
   </style>
 </head>
 <body>
-<footer class="text-center text-white fixed-bottom footer-custom">
+<footer class="text-center text-white footer-custom">
     <div class="text-center mb-3 mt-3">
       © Crime Statistics Web. All rights reserved.
     </div>

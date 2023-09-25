@@ -52,4 +52,16 @@ public class ShopServiceImpl implements ShopService {
 		shopDao.deleteCart(memberid, cartNum);
 	}
 
+	// 장바구니 결제가격 계산
+	@Override
+	public int calcPayment(String memberid, int cartNum) {
+		return shopDao.calcPayment(memberid, cartNum);
+	}
+
+	// 장바구니 전체 결제가격 계산
+	@Override
+	public int calcTotalPayment(String memberid) {
+		return shopDao.calcTotalPayment(memberid);
+	}
+
 }

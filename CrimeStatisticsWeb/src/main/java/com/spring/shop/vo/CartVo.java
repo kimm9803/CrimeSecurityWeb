@@ -17,10 +17,16 @@ public class CartVo {
 	private Date pdDate;
 	private String pdThumbImg;
 	
-	// need field(제품가격 * 담은 수량)
-	private int totalPrice;
+	// need field
+	private int totalPrice;		// 제품가격 * 담은 수량
+	private int paymentPrice;	// 결제가격
 	
-	
+	public int getPaymentPrice() {
+		return paymentPrice;
+	}
+	public void setPaymentPrice(int paymentPrice) {
+		this.paymentPrice = paymentPrice;
+	}
 	public int getTotalPrice() {
 		return totalPrice;
 	}

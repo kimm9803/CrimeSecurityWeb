@@ -1,5 +1,8 @@
 package com.spring.shop.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +39,21 @@ public class ShopRestController {
 	public void deleteCart(@RequestParam("memberid") String memberid,
 							 @RequestParam("cartNum") int cartNum) {
 		shopService.deleteCart(memberid, cartNum);
+	}
+	
+	// 전체 결제 가격 계산
+	@PostMapping("/shop/calc/all")
+	public int calcTotalPayment(@RequestParam("memberid") String memberid) {
+		int totalPaymentPrice = shopService.calcTotalPayment(memberid);
+		return totalPaymentPrice;
+	}
+	
+	// 결제 가격 계산
+	@PostMapping("/shop/calc")
+	public int calcPayment(@RequestParam("memberid") String memberid,
+			 			   @RequestParam("cartNum") int cartNum) {
+		
+		int paymentPrice = shopService.calcPayment(memberid, cartNum);
+		return paymentPrice; 
 	}
 }

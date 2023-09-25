@@ -24,4 +24,10 @@ public interface ShopService {
 	
 	// 장바구니 삭제
 	void deleteCart(String memberid, int cartNum);
+
+	// 장바구니 결제가격 계산
+	int calcPayment(String memberid, int cartNum);
+
+	// 장바구니 전체 결제가격 계산
+	int calcTotalPayment(String memberid);
 }

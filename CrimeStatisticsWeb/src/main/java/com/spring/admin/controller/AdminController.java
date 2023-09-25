@@ -103,14 +103,6 @@ public class AdminController {
 		return "admin/products/view";
 	}
 	
-	// 상품 수정
-	@GetMapping("/products/update")
-	public String updateProduct(@RequestParam("n") int pdNum, Model model) {
-		ProductVo productVo = shopService.getView(pdNum);
-		model.addAttribute("product", productVo);
-		return "admin/products/update";
-	}
-	
 	// 상품 삭제
 	@GetMapping("/products/delete")
 	public String deleteProduct(@RequestParam("n") int pdNum) {

@@ -59,4 +59,19 @@ public class ShopDaoImpl implements ShopDao {
 		sqlSession.delete(namespace + ".deleteCart", map);
 	}
 
+	// 장바구니 결제가격 계산
+	@Override
+	public int calcPayment(String memberid, int cartNum) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberid", memberid);
+		map.put("cartNum", cartNum);
+		return sqlSession.selectOne(namespace + ".calcPayment", map);
+	}
+
+	// 장바구니 전체 결제가격 계산
+	@Override
+	public int calcTotalPayment(String memberid) {
+		return sqlSession.selectOne(namespace + ".calcTotalPayment", memberid);
+	}
+
 }
