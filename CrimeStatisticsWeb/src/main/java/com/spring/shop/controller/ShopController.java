@@ -62,4 +62,10 @@ public class ShopController {
 		model.addAttribute("cartList", cartList);
 		return "shop/cart_list";
 	}
+	
+	// 주문 페이지
+	@GetMapping("/order")
+	public String getOrderPage() {
+		return "shop/order";
+	}
 }

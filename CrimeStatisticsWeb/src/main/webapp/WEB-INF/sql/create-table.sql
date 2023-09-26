@@ -105,3 +105,64 @@ alter table cart
 alter table cart
     add constraint cart_pdNum foreign key(pdNum)
     references products(pdNum);
+    
+-- 시퀀스 생성
+CREATE SEQUENCE orderid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+-- 주문 정보 테이블
+CREATE TABLE orderInfo (
+    orderid             NUMBER DEFAULT orderid_seq.NEXTVAL PRIMARY KEY,
+    memberid            VARCHAR2(50)    NOT NULL,
+    name                VARCHAR2(50)    NOT NULL,
+    email               VARCHAR2(100)   NOT NULL,
+    address             VARCHAR2(300)   NOT NULL,
+    address_postcode    VARCHAR2(100),
+    address_primary     VARCHAR2(100),
+    address_detail      VARCHAR2(100),
+    order_status        VARCHAR2(50),
+    orderDate           DATE            DEFAULT SYSDATE,
+    totalPrice          NUMBER(10),
+    FOREIGN KEY (memberid) REFERENCES member(memberid)
+);
+
+-- 시퀀스 생성
+CREATE SEQUENCE detailid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+-- 주문 상세 테이블
+CREATE TABLE orderdetail (
+    detailid    NUMBER  DEFAULT detailid_seq.NEXTVAL PRIMARY KEY,
+    orderid     NUMBER  NOT NULL,
+    pdNum       NUMBER  NOT NULL,
+    quantity    NUMBER,
+    totalPrice  NUMBER,
+    FOREIGN KEY (orderid) REFERENCES orderinfo(orderid),
+    FOREIGN KEY (pdNum) REFERENCES products(pdNum)
+);
+
+-- 시퀀스 생성
+CREATE SEQUENCE reviewid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+    
+-- 후기 테이블
+CREATE TABLE Reviews (
+    reviewid    NUMBER DEFAULT reviewid_seq.NEXTVAL PRIMARY KEY,
+    memberid    VARCHAR2(50)    NOT NULL,
+    pdNum       NUMBER          NOT NULL,
+    reviewText  VARCHAR2(500)   NOT NULL,
+    reviewImg   VARCHAR2(200),
+    RATING NUMBER(2, 1),
+    reviewDate  DATE DEFAULT SYSDATE,
+    FOREIGN KEY (memberid) REFERENCES member(memberid),
+    FOREIGN KEY (pdNum)    REFERENCES products(pdNum)
+);

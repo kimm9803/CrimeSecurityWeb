@@ -10,7 +10,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-<title>Insert title here</title>
+<title>장바구니</title>
 <style>
 main {
     display: flex;
@@ -95,6 +95,7 @@ td {
 	margin-left: 10px;
 	padding: 10px 30px;
 }
+
 </style>
 </head>
 <body>
