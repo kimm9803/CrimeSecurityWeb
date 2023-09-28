@@ -11,6 +11,7 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 <title>주문서 작성</title>
 <style>
 main {
@@ -145,7 +146,7 @@ main {
 	background-color: #f0f0f0 !important;
 }
 
-#danger {
+#payment {
 	margin-left: 70px;
 	margin-top: 10px;
 	padding: 10px 134px;
@@ -339,7 +340,7 @@ main {
 					<button type="button" id="primary" class="btn btn-primary">이전</button>
 				</div>
 				<div>
-					<button type="button" id="danger" class="btn btn-danger">결제하기</button>
+					<button type="button" id="payment" class="btn btn-danger">결제하기</button>
 				</div>
 		    </div>
 		</div>
@@ -407,50 +408,44 @@ main {
 					$('#address_detail').val('');
 				}
 			});
-			// 신용카드 버튼 클릭 시 동작
-			$('#creditCard').click(function() {
-			    if ($(this).css('border') === '2px solid rgb(220, 53, 69)') {
-			        $(this).css('border', '1px solid lightgray');
-			    } else {
-			        $('.buttonArea').not(this).css('border', '1px solid lightgray');
-			        $(this).css('border', '2px solid #dc3545');
-			    }
-			});
 
-			// 삼성페이 버튼 클릭 시 동작
-			$('#samsungPay').click(function() {
-			    if ($(this).css('border') === '2px solid rgb(220, 53, 69)') {
-			        $(this).css('border', '1px solid lightgray');
-			    } else {
-			        $('.buttonArea').not(this).css('border', '1px solid lightgray');
-			        $(this).css('border', '2px solid #dc3545');
-			    }
-			});
+			// 버튼 클릭 시 동작
+			$('.buttonArea').click(function() {
+			    const isSelected = $(this).data('selected');
 
-			// 카카오페이 버튼 클릭 시 동작
-			$('#kakaoPay').click(function() {
-			    if ($(this).css('border') === '2px solid rgb(220, 53, 69)') {
+			    if (isSelected) {
 			        $(this).css('border', '1px solid lightgray');
 			    } else {
 			        $('.buttonArea').not(this).css('border', '1px solid lightgray');
 			        $(this).css('border', '2px solid #dc3545');
-			    }
-			});
-
-			// 토스페이 버튼 클릭 시 동작
-			$('#tossPay').click(function() {
-			    if ($(this).css('border') === '2px solid rgb(220, 53, 69)') {
-			        $(this).css('border', '1px solid lightgray');
-			    } else {
-			        $('.buttonArea').not(this).css('border', '1px solid lightgray');
-			        $(this).css('border', '2px solid #dc3545');
+			        $('.buttonArea').data('selected', false);
+			        $(this).data('selected', true);
 			    }
 			});
 			
 			$('#primary').click(function() {
 				history.back();
-			})
-		})
+			});
+			
+			$('#payment').click(function() {
+				var creditCardSelected = $('#creditCard').data('selected');
+				var kakaoPaySelected   = $('#kakaoPay').data('selected');
+				var tossPaySelected    = $('#tossPay').data('selected');
+				var samsungPaySelected = $('#samsungPay').data('selected');
+				
+				if (creditCardSelected) {
+					iamport_inicis();
+				} else if (kakaoPaySelected) {
+					iamport_kakaopay();
+				} else if (tossPaySelected) {
+					iamport_tossPay();
+				} else if (samsungPaySelected) {
+					iamport_samsungPay();
+				} else {
+					alert('결제 수단을 선택해주세요');
+				}
+			});
+		});
 		// 주소
 		function exePost() {
 			 new daum.Postcode({
@@ -493,6 +488,132 @@ main {
 		        }
 		     }).open();
 		}
+		
+		// kg이니시스
+		function iamport_inicis(){
+			//가맹점 식별코드
+			IMP.init('imp52104544');
+			IMP.request_pay({
+			    pg : 'html5_inicis',
+			    pay_method : 'card',
+			    merchant_uid : '${merchant_uid}_' + new Date().getTime(),
+			    name : '${cart.pdName}' , //결제창에서 보여질 이름
+			    amount : ${cart.totalPrice}, //실제 결제되는 가격
+			    buyer_email : '${member.email}',
+			    buyer_name : '${member.name}',
+			    buyer_tel : '${member.tel}',
+			    buyer_addr : '${member.address_primary}' + ' ' + '${member.address_detail}',
+			    buyer_postcode : '${member.address_postcode}'
+			}, function(rsp) {
+				console.log(rsp);
+			    if ( rsp.success ) {
+			    	var msg = '결제가 완료되었습니다.';
+			        msg += '고유ID : ' + rsp.imp_uid;
+			        msg += '상점 거래ID : ' + rsp.merchant_uid;
+			        msg += '결제 금액 : ' + rsp.paid_amount;
+			        msg += '카드 승인번호 : ' + rsp.apply_num;
+			    } else {
+			    	 var msg = '결제에 실패하였습니다.';
+			         msg += '에러내용 : ' + rsp.error_msg;
+			    }
+			    alert(msg);
+			});
+		};
+		
+		// 카카오페이
+		function iamport_kakaopay(){
+			//가맹점 식별코드
+			IMP.init('imp52104544');
+			IMP.request_pay({
+			    pg : 'kakaopay',
+			    pay_method : 'card',
+			    merchant_uid : '${merchant_uid}_' + new Date().getTime(),
+			    name : '${cart.pdName}' , //결제창에서 보여질 이름
+			    amount : ${cart.totalPrice}, //실제 결제되는 가격
+			    buyer_email : '${member.email}',
+			    buyer_name : '${member.name}',
+			    buyer_tel : '${member.tel}',
+			    buyer_addr : '${member.address_primary}' + ' ' + '${member.address_detail}',
+			    buyer_postcode : '${member.address_postcode}'
+			}, function(rsp) {
+				console.log(rsp);
+			    if ( rsp.success ) {
+			    	var msg = '결제가 완료되었습니다.';
+			        msg += '고유ID : ' + rsp.imp_uid;
+			        msg += '상점 거래ID : ' + rsp.merchant_uid;
+			        msg += '결제 금액 : ' + rsp.paid_amount;
+			        msg += '카드 승인번호 : ' + rsp.apply_num;
+			    } else {
+			    	 var msg = '결제에 실패하였습니다.';
+			         msg += '에러내용 : ' + rsp.error_msg;
+			    }
+			    alert(msg);
+			});
+		};
+		
+		// 토스페이
+		function iamport_tossPay(){
+			//가맹점 식별코드
+			IMP.init('imp52104544');
+			IMP.request_pay({
+			    pg : 'tosspay',
+			    pay_method : 'card',
+			    merchant_uid : '${merchant_uid}_' + new Date().getTime(),
+			    name : '${cart.pdName}' , //결제창에서 보여질 이름
+			    amount : ${cart.totalPrice}, //실제 결제되는 가격
+			    buyer_email : '${member.email}',
+			    buyer_name : '${member.name}',
+			    buyer_tel : '${member.tel}',
+			    buyer_addr : '${member.address_primary}' + ' ' + '${member.address_detail}',
+			    buyer_postcode : '${member.address_postcode}'
+			}, function(rsp) {
+				console.log(rsp);
+			    if ( rsp.success ) {
+			    	var msg = '결제가 완료되었습니다.';
+			        msg += '고유ID : ' + rsp.imp_uid;
+			        msg += '상점 거래ID : ' + rsp.merchant_uid;
+			        msg += '결제 금액 : ' + rsp.paid_amount;
+			        msg += '카드 승인번호 : ' + rsp.apply_num;
+			    } else {
+			    	 var msg = '결제에 실패하였습니다.';
+			         msg += '에러내용 : ' + rsp.error_msg;
+			    }
+			    alert(msg);
+			});
+		};
+		
+		// 삼성페이
+		function iamport_samsungPay(){
+			//가맹점 식별코드
+			IMP.init('imp52104544');
+			IMP.request_pay({
+				pg: 'kcp',
+			    pay_method : 'samsung',
+			    merchant_uid : '${merchant_uid}_' + new Date().getTime(),
+			    name : '${cart.pdName}' , //결제창에서 보여질 이름
+			    amount : ${cart.totalPrice}, //실제 결제되는 가격
+			    buyer_email : '${member.email}',
+			    buyer_name : '${member.name}',
+			    buyer_tel : '${member.tel}',
+			    buyer_addr : '${member.address_primary}' + ' ' + '${member.address_detail}',
+			    buyer_postcode : '${member.address_postcode}'
+			}, function(rsp) {
+				console.log(rsp);
+			    if ( rsp.success ) {
+			    	var msg = '결제가 완료되었습니다.';
+			        msg += '고유ID : ' + rsp.imp_uid;
+			        msg += '상점 거래ID : ' + rsp.merchant_uid;
+			        msg += '결제 금액 : ' + rsp.paid_amount;
+			        msg += '카드 승인번호 : ' + rsp.apply_num;
+			    } else {
+			    	 var msg = '결제에 실패하였습니다.';
+			         msg += '에러내용 : ' + rsp.error_msg;
+			    }
+			    alert(msg);
+			});
+		};
+		
+		
 	</script>
 </body>
 </html>

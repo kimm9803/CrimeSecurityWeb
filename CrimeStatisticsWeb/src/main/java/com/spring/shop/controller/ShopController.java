@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.spring.member.service.MemberService;
+import com.spring.member.vo.MemberVo;
 import com.spring.shop.service.ShopService;
 import com.spring.shop.vo.CartVo;
 import com.spring.shop.vo.ProductVo;
@@ -22,6 +24,9 @@ public class ShopController {
 
 	@Autowired
 	private ShopService shopService;
+	
+	@Autowired
+	private MemberService memberService;
 	
 	// 전체 호신용품 리스트
 	@GetMapping("/list")
@@ -66,12 +71,14 @@ public class ShopController {
 	// 주문 페이지
 	@GetMapping("/order")
 	public String getOrderPage(@RequestParam("memberid") String memberid,
-							   @RequestParam("cartNum") int cartNum, Model model) {
+							   @RequestParam("cartNum") int cartNum,
+							   Model model, HttpSession session) {
 		CartVo cartVo = shopService.getCartOne(memberid, cartNum);
 		String merchantUid = shopService.generateMerchantUid();
-		
+		MemberVo findMember = memberService.findById(memberid);
 		model.addAttribute("cart", cartVo);
 		model.addAttribute("merchant_uid", merchantUid);
+		model.addAttribute("member", findMember);
 		return "shop/order";
 	}
 }

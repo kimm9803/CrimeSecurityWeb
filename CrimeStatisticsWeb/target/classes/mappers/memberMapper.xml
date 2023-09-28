@@ -13,7 +13,7 @@
 	
 	<!-- 회원찾기 -->
 	<select id="findById" parameterType="String" resultType="com.spring.member.vo.MemberVo">
-		SELECT memberid, passwd, name, nickname, address, email, sex, address_postcode, address_primary, address_detail, email_id AS emailId, email_domain AS emailDomain, regdate
+		SELECT memberid, passwd, name, nickname, tel, address, email, sex, address_postcode, address_primary, address_detail, email_id AS emailId, email_domain AS emailDomain, regdate
 		FROM member
 		WHERE memberid = #{memberid}
 	</select>
