@@ -62,4 +62,10 @@ public class MemberServiceImpl implements MemberService {
 	public String findIdWithEmail(String email) {
 		return memberDao.findIdWithEmail(email);
 	}
+
+	// 주문자 정보
+	@Override
+	public MemberVo findByOrderInfo(String name, String tel, String email) {
+		return memberDao.findByOrderInfo(name, tel, email);
+	}
 }

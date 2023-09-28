@@ -30,4 +30,7 @@ public interface ShopService {
 
 	// 장바구니 전체 결제가격 계산
 	int calcTotalPayment(String memberid);
+
+	// (장바구니) 단일 상품 구매시 물품 및 가격 정보
+	CartVo getCartOne(String memberid, int cartNum);
 }

@@ -158,7 +158,7 @@ td {
 						<td>${cart.totalPrice}</td>
 						<td>
 							<div style="margin-left: 60px; margin-bottom: 5px;"><button type="button" class="close"></button></div>
-							<div style="margin-bottom: 45px;"><button type="button" class="btn btn-danger" style="padding: 5px 30px;">구매</button></div>
+							<div style="margin-bottom: 45px;"><button type="button" class="btn btn-danger purchaseOne" style="padding: 5px 30px;">구매</button></div>
 						</td>
 					</tr>
 				</c:forEach>
@@ -301,6 +301,18 @@ td {
 		    			alert("에러 발생")
 		    		}
 		    	});
+		    });
+		    
+		    $(".purchaseOne").on("click", function() {
+		        // 해당 카트의 정보 가져오기
+		        var cartNum = $(this).closest("tr").prev().find(".cartNum").val();
+		        var memberid = $(this).closest("tr").prev().find(".memberid").val();
+		        
+		        // 이동할 URL 생성
+		        var redirectURL = '/shop/order?memberid=' + memberid + '&cartNum=' + cartNum;
+		        
+		        // 페이지 이동
+		        window.location.href = redirectURL;
 		    });
 		});
 		

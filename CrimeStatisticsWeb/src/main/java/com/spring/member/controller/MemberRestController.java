@@ -1,12 +1,15 @@
 package com.spring.member.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.member.service.MemberService;
@@ -64,4 +67,23 @@ public class MemberRestController {
 		}
 	}
 	
+	// 주문자 정보
+	@PostMapping("find-by-orderinfo")
+	public Object findByOrderInfo(@RequestParam("name") String name,
+								  @RequestParam("tel") String tel,
+								  @RequestParam("email") String email, Model model) {
+		MemberVo findMember = memberService.findByOrderInfo(name, tel, email);
+		if (findMember != null) {
+			Map<String, String> map = new HashMap<>();
+			map.put("name", findMember.getName());
+			map.put("tel", findMember.getTel());
+			map.put("address_postcode", findMember.getAddress_postcode());
+			map.put("address_primary", findMember.getAddress_primary());
+			map.put("address_detail", findMember.getAddress_detail());
+			map.put("email", findMember.getEmail());
+			return map;
+		} else {
+			return "error";
+		}
+	}
 }

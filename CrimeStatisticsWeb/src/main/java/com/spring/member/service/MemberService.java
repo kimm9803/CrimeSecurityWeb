@@ -29,4 +29,7 @@ public interface MemberService {
 	
 	// 아이디 찾기(이메일 활용)
 	String findIdWithEmail(String email);
+
+	// 주문자 정보
+	MemberVo findByOrderInfo(String name, String tel, String email);
 }

@@ -74,4 +74,13 @@ public class ShopDaoImpl implements ShopDao {
 		return sqlSession.selectOne(namespace + ".calcTotalPayment", memberid);
 	}
 
+	// (장바구니) 단일 상품 구매시 물품 및 가격 정보
+	@Override
+	public CartVo getCartOne(String memberid, int cartNum) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberid", memberid);
+		map.put("cartNum", cartNum);
+		return sqlSession.selectOne(namespace + ".getCartOne", map);
+	}
+
 }

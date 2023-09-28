@@ -77,6 +77,9 @@
 			<input type="text" name="nickname" id="nickname" size="30" autocomplete="off" required />
 			<button type="button" id="nicknameCheckDuplicate">중복확인</button><br /><br />
 			
+			<div>전화번호</div>
+			<input type="text" name="tel" id="tel" size="30" autocomplete="off" required />
+			
 			<div>주소</div>
 			<input type="text" name="address_postcode" size="30" placeholder="우편번호" readonly />
 			<input type="button" value="주소검색" onclick="exePost()"><br />

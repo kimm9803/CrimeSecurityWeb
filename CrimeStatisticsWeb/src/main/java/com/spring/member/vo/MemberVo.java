@@ -8,6 +8,7 @@ public class MemberVo {
 	private String passwd;
 	private String name;
 	private String nickname;
+	private String tel;
 	private String address;
 	private String address_postcode; // 회원가입 시 받아올 우편 주소
 	private String address_primary;	 // 회원가입 시 받아올 기본 주소
@@ -16,7 +17,21 @@ public class MemberVo {
 	private String emailId;		 	 // 회원가입 시 받아올 이메일 아이디
 	private String emailDomain;		 // 회원가입 시 받아올 이메일 도메인
 	private String sex;
+	private int    point;
 	
+	
+	public int getPoint() {
+		return point;
+	}
+	public void setPoint(int point) {
+		this.point = point;
+	}
+	public String getTel() {
+		return tel;
+	}
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
 	public String getAddress_postcode() {
 		return address_postcode;
 	}

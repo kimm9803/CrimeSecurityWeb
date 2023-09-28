@@ -1,5 +1,8 @@
 package com.spring.member.daoimpl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -55,5 +58,15 @@ public class MemberDaoImpl implements MemberDao {
 	@Override
 	public String findIdWithEmail(String email) {
 		return sqlSession.selectOne(namespace + ".findIdWithEmail", email);
+	}
+
+	// 주문자 정보
+	@Override
+	public MemberVo findByOrderInfo(String name, String tel, String email) {
+		Map<String, String> map = new HashMap<>();
+		map.put("name", name);
+		map.put("tel", tel);
+		map.put("email", email);
+		return sqlSession.selectOne(namespace + ".findByOrderInfo", map);
 	}
 }

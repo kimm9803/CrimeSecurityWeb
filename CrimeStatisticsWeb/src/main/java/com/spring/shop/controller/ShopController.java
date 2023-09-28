@@ -65,7 +65,10 @@ public class ShopController {
 	
 	// 주문 페이지
 	@GetMapping("/order")
-	public String getOrderPage() {
+	public String getOrderPage(@RequestParam("memberid") String memberid,
+							   @RequestParam("cartNum") int cartNum, Model model) {
+		CartVo cartVo = shopService.getCartOne(memberid, cartNum);
+		model.addAttribute("cart", cartVo);
 		return "shop/order";
 	}
 }

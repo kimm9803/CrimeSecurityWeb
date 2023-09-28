@@ -65,4 +65,12 @@
 		INNER JOIN products p ON c.pdNum = p.pdNum
 		WHERE c.memberid = #{memberid}
 	</select>
+	
+	<!-- (장바구니) 단일 상품 구매시 물품 및 가격 정보 -->
+	<select id="getCartOne" parameterType="hashMap" resultType="com.spring.shop.vo.CartVo">
+		SELECT c.cartNum, c.memberid, c.pdNum, c.cartStock, p.pdName, p.pdPrice, p.pdThumbImg, p.pdPrice * c.cartStock AS totalPrice
+		FROM cart c
+		INNER JOIN products p ON c.pdNum = p.pdNum
+		WHERE c.memberid = #{memberid} AND c.cartNum = #{cartNum}
+	</select>
 </mapper>

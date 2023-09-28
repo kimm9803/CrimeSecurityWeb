@@ -64,4 +64,10 @@ public class ShopServiceImpl implements ShopService {
 		return shopDao.calcTotalPayment(memberid);
 	}
 
+	// (장바구니) 단일 상품 구매시 물품 및 가격 정보
+	@Override
+	public CartVo getCartOne(String memberid, int cartNum) {
+		return shopDao.getCartOne(memberid, cartNum);
+	}
+
 }
