@@ -68,7 +68,10 @@ public class ShopController {
 	public String getOrderPage(@RequestParam("memberid") String memberid,
 							   @RequestParam("cartNum") int cartNum, Model model) {
 		CartVo cartVo = shopService.getCartOne(memberid, cartNum);
+		String merchantUid = shopService.generateMerchantUid();
+		
 		model.addAttribute("cart", cartVo);
+		model.addAttribute("merchant_uid", merchantUid);
 		return "shop/order";
 	}
 }

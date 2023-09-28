@@ -1,6 +1,7 @@
 package com.spring.shop.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,6 +69,13 @@ public class ShopServiceImpl implements ShopService {
 	@Override
 	public CartVo getCartOne(String memberid, int cartNum) {
 		return shopDao.getCartOne(memberid, cartNum);
+	}
+
+	// UUID 생성
+	@Override
+	public String generateMerchantUid() {
+		UUID uuid = UUID.randomUUID();
+        return "order_no_" + uuid.toString();
 	}
 
 }
