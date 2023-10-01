@@ -123,7 +123,7 @@ CREATE TABLE orderInfo (
     address_postcode    VARCHAR2(100),
     address_primary     VARCHAR2(100),
     address_detail      VARCHAR2(100),
-    order_status        VARCHAR2(50),
+    order_status        VARCHAR2(50) 	DEFAULT 'COMPLETEPAYMENT',
     orderDate           DATE            DEFAULT SYSDATE,
     totalPrice          NUMBER(10),
     FOREIGN KEY (memberid) REFERENCES member(memberid)

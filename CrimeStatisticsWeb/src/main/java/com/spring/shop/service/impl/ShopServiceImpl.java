@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.spring.shop.dao.ShopDao;
 import com.spring.shop.service.ShopService;
 import com.spring.shop.vo.CartVo;
+import com.spring.shop.vo.OrderDetailVo;
+import com.spring.shop.vo.OrderInfoVo;
 import com.spring.shop.vo.ProductVo;
 
 @Service("shopService")
@@ -78,4 +80,15 @@ public class ShopServiceImpl implements ShopService {
         return "order_no_" + uuid.toString();
 	}
 
+	// 주문정보 저장
+	@Override
+	public void orderSave(OrderInfoVo orderInfoVo) {
+		shopDao.orderSave(orderInfoVo);
+	}
+
+	// 주문상세 저장
+	@Override
+	public void orderDetailSave(OrderDetailVo orderDetailVo) {
+		shopDao.orderDetailSave(orderDetailVo);
+	}
 }

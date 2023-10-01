@@ -268,10 +268,10 @@ main {
 				            <img src="${cart.pdThumbImg}" style="width: 150px; height: 150px;">
 				        </div>
 				        <div style="flex: 1.5; margin-top: 30px; margin-left: 20px;">
-				            <div style="font-size: 25px;">${cart.pdName}</div>
+				            <div id="pdName" style="font-size: 25px;">${cart.pdName}</div>
 				            <div style="margin-top: 5px;">
 				            	<span>수량</span>
-				            	<span style="margin-left: 20px;">${cart.cartStock}</span>개
+				            	<span id="pdCnt" style="margin-left: 20px;">${cart.cartStock}</span>개
 				            </div>
 				            <div id="orderPay" style="font-weight: bold; margin-top: 5px;">${cart.totalPrice}원</div>
 				        </div>
@@ -507,11 +507,45 @@ main {
 			}, function(rsp) {
 				console.log(rsp);
 			    if ( rsp.success ) {
+			    	var memberid = '${member.memberid}';
+			    	var name = $('#name').val();
+			    	var tel = $('#tel').val();
+			    	var address_postcode = $('#address_postcode').val();
+			    	var address_primary = $('#address_primary').val();
+			    	var address_detail = $('#address_detail').val();
+			    	var address = address_primary + ' ' + address_detail;
+			    	var email = $('#email').val();
+			    	var totalPrice = parseInt($('#totalPay').text().replace('원', ''));
+			    	var amount = $('#pdCnt').val();
+			    	
 			    	var msg = '결제가 완료되었습니다.';
 			        msg += '고유ID : ' + rsp.imp_uid;
 			        msg += '상점 거래ID : ' + rsp.merchant_uid;
 			        msg += '결제 금액 : ' + rsp.paid_amount;
 			        msg += '카드 승인번호 : ' + rsp.apply_num;
+			        
+			        $.ajax({
+			        	url : '/shop/pay',
+			        	type : 'POST',
+			        	data : {
+			        		memberid : memberid,
+			        		name : name,
+			        		tel : tel,
+			        		address : address,
+			        		address_postcode : address_postcode,
+			        		address_primary : address_primary,
+			        		address_detail : address_detail,
+			        		email : email,
+			        		totalPrice : totalPrice
+			        	},
+			        	success : function(response) {
+			        		location.href = '/shop/orderlist';
+			        	},
+			        	error : function() {
+			        		alert('에러발생');
+			        	}
+			        	
+			        })
 			    } else {
 			    	 var msg = '결제에 실패하였습니다.';
 			         msg += '에러내용 : ' + rsp.error_msg;
@@ -538,11 +572,44 @@ main {
 			}, function(rsp) {
 				console.log(rsp);
 			    if ( rsp.success ) {
+			    	var memberid = '${member.memberid}';
+			    	var name = $('#name').val();
+			    	var tel = $('#tel').val();
+			    	var address_postcode = $('#address_postcode').val();
+			    	var address_primary = $('#address_primary').val();
+			    	var address_detail = $('#address_detail').val();
+			    	var address = address_primary + ' ' + address_detail;
+			    	var email = $('#email').val();
+			    	var totalPrice = parseInt($('#totalPay').text().replace('원', ''));
+			    	
 			    	var msg = '결제가 완료되었습니다.';
 			        msg += '고유ID : ' + rsp.imp_uid;
 			        msg += '상점 거래ID : ' + rsp.merchant_uid;
 			        msg += '결제 금액 : ' + rsp.paid_amount;
 			        msg += '카드 승인번호 : ' + rsp.apply_num;
+			        
+			        $.ajax({
+			        	url : '/shop/pay',
+			        	type : 'POST',
+			        	data : {
+			        		memberid : memberid,
+			        		name : name,
+			        		tel : tel,
+			        		address : address,
+			        		address_postcode : address_postcode,
+			        		address_primary : address_primary,
+			        		address_detail : address_detail,
+			        		email : email,
+			        		totalPrice : totalPrice
+			        	},
+			        	success : function(response) {
+			        		location.href = '/shop/orderlist';
+			        	},
+			        	error : function() {
+			        		alert('에러발생');
+			        	}
+			        	
+			        })
 			    } else {
 			    	 var msg = '결제에 실패하였습니다.';
 			         msg += '에러내용 : ' + rsp.error_msg;

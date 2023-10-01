@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.shop.dao.ShopDao;
 import com.spring.shop.vo.CartVo;
+import com.spring.shop.vo.OrderDetailVo;
+import com.spring.shop.vo.OrderInfoVo;
 import com.spring.shop.vo.ProductVo;
 
 @Repository("shopDao")
@@ -83,4 +85,15 @@ public class ShopDaoImpl implements ShopDao {
 		return sqlSession.selectOne(namespace + ".getCartOne", map);
 	}
 
+	// 주문정보 저장
+	@Override
+	public void orderSave(OrderInfoVo orderInfoVo) {
+		sqlSession.insert(namespace + ".orderSave", orderInfoVo);
+	}
+
+	// 주문상세 저장
+	@Override
+	public void orderDetailSave(OrderDetailVo orderDetailVo) {
+	    sqlSession.insert(namespace + ".orderDetailSave", orderDetailVo);
+	}
 }

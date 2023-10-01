@@ -1,8 +1,5 @@
 package com.spring.shop.controller;
 
-import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.shop.service.ShopService;
 import com.spring.shop.vo.CartVo;
+import com.spring.shop.vo.OrderDetailVo;
+import com.spring.shop.vo.OrderInfoVo;
 
 @RestController //@ResponseBody + @Controller
 public class ShopRestController {
@@ -55,5 +54,15 @@ public class ShopRestController {
 		
 		int paymentPrice = shopService.calcPayment(memberid, cartNum);
 		return paymentPrice; 
+	}
+	
+	// 결제
+	@PostMapping("/shop/pay")
+	public String pay(OrderInfoVo orderInfoVo, OrderDetailVo orderDetailVo) {
+		
+		// 주문정보 저장
+		shopService.orderSave(orderInfoVo);
+		shopService.orderDetailSave(orderDetailVo);
+		return "response";
 	}
 }

@@ -3,6 +3,8 @@ package com.spring.shop.dao;
 import java.util.List;
 
 import com.spring.shop.vo.CartVo;
+import com.spring.shop.vo.OrderDetailVo;
+import com.spring.shop.vo.OrderInfoVo;
 import com.spring.shop.vo.ProductVo;
 
 public interface ShopDao {
@@ -33,4 +35,10 @@ public interface ShopDao {
 
 	// (장바구니) 단일 상품 구매시 물품 및 가격 정보
 	CartVo getCartOne(String memberid, int cartNum);
+
+	// 주문정보 저장
+	void orderSave(OrderInfoVo orderInfoVo);
+	
+	// 주문상세 저장
+	void orderDetailSave(OrderDetailVo orderDetailVo);
 }

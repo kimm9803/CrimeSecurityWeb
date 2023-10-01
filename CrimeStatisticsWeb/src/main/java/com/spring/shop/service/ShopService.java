@@ -3,6 +3,8 @@ package com.spring.shop.service;
 import java.util.List;
 
 import com.spring.shop.vo.CartVo;
+import com.spring.shop.vo.OrderDetailVo;
+import com.spring.shop.vo.OrderInfoVo;
 import com.spring.shop.vo.ProductVo;
 
 public interface ShopService {
@@ -36,4 +38,10 @@ public interface ShopService {
 	
 	// UUID 생성
 	String generateMerchantUid();
+
+	// 주문 정보 저장
+	void orderSave(OrderInfoVo orderInfoVo);
+	
+	// 주문상세 저장
+	void orderDetailSave(OrderDetailVo orderDetailVo);
 }
