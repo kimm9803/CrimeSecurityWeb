@@ -22,10 +22,6 @@ ul, lo, li {
 	list-style: none;
 }
 
-body {
-	background-color: #cccccc;
-}
-
 #container {
 	text-align: center;
 }
@@ -46,18 +42,42 @@ ul.category-list li {
 #container {
 	background-color: #fff; /* 흰색 배경색 */
 	padding: 20px; /* 내부 여백 추가 */
-	border: 5px solid black;
-	border-radius: 10px; /* 둥근 테두리 추가 */
-	max-width: 1200px; /* 최대 너비 설정 */
+	border-top: 2px solid black;
+	border-bottom: 2px solid black;
 	margin: 0 auto; /* 가운데 정렬을 위한 마진 설정 */
+}
+.categoryTabs {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 20px;
+}
+
+.categoryTabs li {
+	flex: 1;
+	text-align: center;
+}
+
+.categoryTabs a {
+	display: block;
+	padding: 10px;
+	background-color: #f8f9fa;
+	text-decoration: none;
+	color: #000;
+	border-radius: 5px;
+	transition: background-color 0.3s;
+}
+
+.categoryTabs a:hover {
+	background-color: #343a40;
+	color: #fff;
 }
 </style>
 </head>
-<body style="background-color: #cccccc;">
+<body>
 	<header><%@ include file="../template/header.jsp"%></header>
 
-	<main>
-		<ul class="category-list">
+	<main style="width: 65%; margin: 0 auto; margin-top: 50px;">
+		<ul class="categoryTabs">
 			<li><a href="/shop/list">전체 호신용품</a></li>
 			<li><a href="/shop/list/100">스프레이건</a></li>
 			<li><a href="/shop/list/200">스프레이</a></li>
@@ -65,17 +85,17 @@ ul.category-list li {
 			<li><a href="/shop/list/400">삼단봉</a></li>
 		</ul>
 		<div id="container"
-			style="display: flex; align-items: center; max-width: 1200px; margin: 0 auto;">
+			style="display: flex; align-items: center; width: 100%; margin: 0 auto;">
 			<div style="flex: 1; text-align: left;">
 				<img src="${product.pdThumbImg}"
-					style="width: 500px; height: auto;">
+					style="width: 500px; height: 500px;">
 			</div>
 			<div style="flex: 1; text-align: center; padding: 0 20px;">
 				<div style="font-size: 30px; font-weight: bold;">${product.pdName}</div>
 				<hr style="margin: 10px 0;"><br>
 				<div>
 					<span style="float: left; font-size: 20px; margin-left: 100px;">판매가</span>
-	                <span style="float: right; margin-right: 100px; font-size: 20px;">${product.pdPrice}</span>
+	                <span class="pdPrice" style="float: right; margin-right: 100px; font-size: 20px;">${product.pdPrice}</span>
 	                <div style="clear: both;"></div>
 				</div>
 				<br>
@@ -88,7 +108,7 @@ ul.category-list li {
 				<div>
 					<span style="float: left; font-size: 20px; margin-left: 100px;">수량</span>
 	                <span style="float: right; margin-right: 100px; font-size: 20px;">
-	                	<input type="number" id="num" name="num" value="0" min="0" max="${product.pdStock}" />
+	                	<input type="number" id="num" value="0" min="0" max="${product.pdStock}" />
 	                </span>
 	                <div style="clear: both;"></div>
 				</div>
@@ -99,32 +119,48 @@ ul.category-list li {
 	                <span style="float: right;  font-size: 24px; font-weight: bold; margin-right: 100px;"><span id="totalPrice" name="totalPrice"></span>원</span>
 	                <div style="clear: both;"></div>
 				</div>
+				<form action="/shop/view/order" method="post">
+					<input type="hidden" name="pdThumbImg" value="${product.pdThumbImg}" />
+					<input type="hidden" name="pdName" value="${product.pdName}" />
+					<input type="hidden" id="cartStock" name="cartStock" value="0" />
+					<input type="hidden" name="pdPrice" value="${product.pdPrice}" />
+					<input type="hidden" name="pdNum" value="${product.pdNum}" />
 				<div style="text-align: right; margin-top: 20px;">
-    <span style="float: left; margin-left: 100px;">
-        <button type="button" class="btn btn-primary" style="font-size: 24px; padding: 10px 30px;">구매하기</button>
-    </span>
-    <span style="float: right; margin-right: 100px;">
-        <button type="button" class="btn btn-secondary" id="addCart" style="font-size: 24px; padding: 10px 30px;">장바구니</button>
-    </span>
-    <div style="clear: both;"></div>
-</div>
+				    <span style="float: left; margin-left: 100px;">
+				        <button type="submit" id="purchaseBtn" class="btn btn-danger" style="font-size: 24px; padding: 10px 40px;">구매하기</button>
+				    </span>
+				    <span style="float: right; margin-right: 100px;">
+				        <button type="button" class="btn btn-secondary" id="addCart" style="font-size: 24px; padding: 10px 40px;">장바구니</button>
+				    </span>
+				    <div style="clear: both;"></div>
+				</div>
+				</form>
 			</div>
 		</div>
 
 	</main>
 
-	<footer><%@ include file="../template/footer.jsp"%></footer>
+	<footer style="margin-top: 100px;"><%@ include file="../template/footer.jsp"%></footer>
 
 	<script>
+		$(document).ready(function() {
+			var pdPriceText = $('.pdPrice').text();
+		    var formattedPrice = addCommasToNumber(pdPriceText);
+		    $('.pdPrice').text(formattedPrice);
+		});
+		// 쉼표 추가
+		function addCommasToNumber(number) {
+		    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		}
 		// 총 금액 바뀌는 로직
 		function updateTotalPrice() {
 			var pdPrice = ${product.pdPrice};
 			var num = document.getElementById("num").value;
 
 			var totalPrice = pdPrice * num;
-
+			var formattedTotalPrice = addCommasToNumber(totalPrice);
 			var totalElement = document.getElementById("totalPrice");
-			totalElement.textContent = totalPrice;
+			totalElement.textContent = formattedTotalPrice;
 		}
 
 		window.onload = updateTotalPrice;
@@ -162,6 +198,21 @@ ul.category-list li {
 				})
 			}
 		})
+		
+		// 구매하기 버튼
+		$('#purchaseBtn').click(function() {
+			var memberid = "${memberid}";
+			var cartStock = $("#num").val();
+			$('#cartStock').val(cartStock);
+			
+			if (memberid == null || memberid === '') {
+				alert('로그인을 먼저 해주세요!');
+				event.preventDefault();
+			} else if (cartStock == 0) {
+				alert('최소 수량은 한개입니다');
+				event.preventDefault();
+			}
+		});
 	</script>
 </body>
 </html>

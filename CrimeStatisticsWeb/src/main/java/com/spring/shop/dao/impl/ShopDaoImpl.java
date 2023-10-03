@@ -92,8 +92,8 @@ public class ShopDaoImpl implements ShopDao {
 	}
 
 	// 주문상세 저장
-	@Override
-	public void orderDetailSave(OrderDetailVo orderDetailVo) {
-	    sqlSession.insert(namespace + ".orderDetailSave", orderDetailVo);
-	}
+//	@Override
+//	public void orderDetailSave(OrderDetailVo orderDetailVo) {
+//	    sqlSession.insert(namespace + ".orderDetailSave", orderDetailVo);
+//	}
 }

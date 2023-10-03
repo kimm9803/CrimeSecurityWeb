@@ -21,6 +21,22 @@ public class CartVo {
 	private int totalPrice;		// 제품가격 * 담은 수량
 	private int paymentPrice;	// 결제가격
 	
+	public CartVo() {};
+	public CartVo(int cartNum, String memberid, int pdNum, int cartStock, Date addDate, String pdName, int pdPrice,
+			Date pdDate, String pdThumbImg, int totalPrice, int paymentPrice) {
+		super();
+		this.cartNum = cartNum;
+		this.memberid = memberid;
+		this.pdNum = pdNum;
+		this.cartStock = cartStock;
+		this.addDate = addDate;
+		this.pdName = pdName;
+		this.pdPrice = pdPrice;
+		this.pdDate = pdDate;
+		this.pdThumbImg = pdThumbImg;
+		this.totalPrice = totalPrice;
+		this.paymentPrice = paymentPrice;
+	}
 	public int getPaymentPrice() {
 		return paymentPrice;
 	}

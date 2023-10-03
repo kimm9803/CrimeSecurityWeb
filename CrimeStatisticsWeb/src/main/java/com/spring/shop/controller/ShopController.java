@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -49,7 +50,9 @@ public class ShopController {
 	public String getProductView(Model model, @RequestParam("n") int pdNum, HttpSession session) {
 		ProductVo productVo = shopService.getView(pdNum);
 		String adminid = (String)session.getAttribute("adminid");
+		String memberid = (String)session.getAttribute("memberid");
 		model.addAttribute("product", productVo);
+		model.addAttribute("memberid", memberid);
 		
 		if (adminid != null) {
 			return "redirect:/admin/shop/view";
@@ -81,4 +84,31 @@ public class ShopController {
 		model.addAttribute("member", findMember);
 		return "shop/order";
 	}
+	
+	// 바로 구매 페이지
+	@PostMapping("/view/order")
+	public String buyNowPage(@RequestParam("pdThumbImg") String pdThumbImg,
+							 @RequestParam("pdName") String pdName,
+							 @RequestParam("cartStock") int cartStock,
+							 @RequestParam("pdPrice") int pdPrice,
+							 @RequestParam("pdNum") int pdNum,
+							 Model model, HttpSession session) {
+		CartVo cartVo = new CartVo();
+		String memberid = (String)session.getAttribute("memberid");
+		String merchantUid = shopService.generateMerchantUid();
+		MemberVo findMember = memberService.findById(memberid);
+		cartVo.setPdThumbImg(pdThumbImg);
+		cartVo.setPdName(pdName);
+		cartVo.setCartStock(cartStock);
+		cartVo.setPdPrice(pdPrice);
+		cartVo.setPdNum(pdNum);
+		cartVo.setTotalPrice();
+		
+		model.addAttribute("cart", cartVo);
+		model.addAttribute("member", findMember);
+		model.addAttribute("merchant_uid", merchantUid);
+		
+		return "shop/order";
+	}
+	
 }

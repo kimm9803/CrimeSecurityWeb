@@ -10,6 +10,20 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 <title>관리자 상품 등록</title>
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  main {
+    margin-top: 120px;
+    flex-grow: 1;
+  }
+  footer {
+    margin-top: auto;
+  }
+</style>
 </head>
 <body style="background-color: #cccccc;">
 	<header><%@ include file="../../template/header.jsp"%></header>

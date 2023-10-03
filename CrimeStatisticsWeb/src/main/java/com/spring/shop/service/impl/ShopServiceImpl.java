@@ -86,9 +86,9 @@ public class ShopServiceImpl implements ShopService {
 		shopDao.orderSave(orderInfoVo);
 	}
 
-	// 주문상세 저장
-	@Override
-	public void orderDetailSave(OrderDetailVo orderDetailVo) {
-		shopDao.orderDetailSave(orderDetailVo);
-	}
+//	// 주문상세 저장
+//	@Override
+//	public void orderDetailSave(OrderDetailVo orderDetailVo) {
+//		shopDao.orderDetailSave(orderDetailVo);
+//	}
 }

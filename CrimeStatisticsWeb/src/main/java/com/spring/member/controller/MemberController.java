@@ -123,6 +123,7 @@ public class MemberController {
 		//String gender = (String) response_obj.get("gender");
 		
 		session.setAttribute("naverid", id);
+		session.setMaxInactiveInterval(3600);
 		
 	    /* 네이버 로그인 성공 페이지 View 호출 */
 		return "redirect:/";
@@ -169,7 +170,8 @@ public class MemberController {
 		    String googleid = node.get("id").asText();
 
 		    session.setAttribute("googleid", googleid);
-
+		    session.setMaxInactiveInterval(3600);
+		    
 		return "redirect:/";
 	}
 	
@@ -188,6 +190,7 @@ public class MemberController {
 		MemberVo loginMember = memberService.login(memberVo);
 		session.setAttribute("memberid", loginMember.getMemberid());
 		session.setAttribute("nickname", loginMember.getNickname());
+		session.setMaxInactiveInterval(3600);
 		return "redirect:/";
 	}
 	

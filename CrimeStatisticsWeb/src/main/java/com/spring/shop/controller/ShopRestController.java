@@ -62,7 +62,7 @@ public class ShopRestController {
 		
 		// 주문정보 저장
 		shopService.orderSave(orderInfoVo);
-		shopService.orderDetailSave(orderDetailVo);
+//		shopService.orderDetailSave(orderDetailVo);
 		return "response";
 	}
 }
