@@ -101,7 +101,7 @@ td {
 <body>
 	<header><%@ include file="../template/header.jsp"%></header>
 
-	<main style="margin-top: 40px; margin-bottom: 100px;">
+	<main style="margin-top: 40px; margin-bottom: 155px;">
 		<div style="width: 60%; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center;">
 		    <h1>장바구니</h1>
 		    <div style="display: flex; justify-content: flex-end; align-items: center;">
@@ -145,15 +145,16 @@ td {
 					<tr>
 					<td><input type="hidden" class="cartNum" value="${cart.cartNum}"/></td>
 					<td><input type="hidden" class="memberid" value="${cart.memberid}"/></td>
+					<td><input type="hidden" class="pdNum" value="${cart.pdNum}"/></td>
 					</tr>
 					<tr style="border-bottom: 1px solid #ccc;">
 						<td style="position: relative;">
 							<input type="checkbox" class="itemCheckbox" style="position: absolute; transform: translateX(-50%) translateY(-300%); width: 20px; height: 20px;">
 						</td>
-						<td><img src="${cart.pdThumbImg}" width="100" height="100" style="margin-bottom: 10px;"></td>
-						<td>${cart.pdName}</td>
-						<td>${cart.cartStock}</td>
-						<td>${cart.pdPrice}</td>
+						<td class="pdThumbImg"><img src="${cart.pdThumbImg}" width="100" height="100" style="margin-bottom: 10px;"></td>
+						<td class="pdName">${cart.pdName}</td>
+						<td class="cartStock">${cart.cartStock}</td>
+						<td class="pdPrice">${cart.pdPrice}</td>
 						<td>무료</td>
 						<td>${cart.totalPrice}</td>
 						<td>
@@ -187,8 +188,8 @@ td {
 		</div>
 		<hr style="width: 60%; height: 2px; color: gray; background-color: black; border: none; margin-top: 50px; margin-bottom: 25px;">
 		<div>
-			<button type="button" id="primary" class="btn btn-primary">선택 제품 주문</button>
-			<button type="button" id="danger" class="btn btn-danger">전체 제품 주문</button>
+			<button type="button" id="primary" class="btn btn-primary selctPurchase">선택 제품 주문</button>
+			<button type="button" id="danger" class="btn btn-danger allPurchase">전체 제품 주문</button>
 		</div>
 	</main>
 	
@@ -303,6 +304,32 @@ td {
 		    	});
 		    });
 		    
+		 // 장바구니 선택삭제
+		    $("#select_delete").click(function() {
+		    	
+		    	// 선택된 체크박스 순회
+		    	$("tbody input.itemCheckbox:checked").each(function() {
+		    		var cartNum = $(this).closest("tr").prev().find('.cartNum').val();
+		    		var memberid = $(this).closest("tr").prev().find('.memberid').val();
+		    		
+		    		$.ajax({
+		    			url: "/shop/cart-list/select-delete",
+		    			type: "POST",
+		    			data: {
+		    				memberid: memberid,
+		    				cartNum: cartNum
+		    			},
+		    			success: function() {
+		    				location.href = "/shop/cart-list";
+		    			},
+		    			error: function() {
+		    				alert("에러 발생");
+		    			}
+		    		});
+		    	})
+		    });
+		 
+		    // 단일 구매버튼
 		    $(".purchaseOne").on("click", function() {
 		        // 해당 카트의 정보 가져오기
 		        var cartNum = $(this).closest("tr").prev().find(".cartNum").val();
@@ -312,6 +339,29 @@ td {
 		        var redirectURL = '/shop/order?memberid=' + memberid + '&cartNum=' + cartNum;
 		        
 		        // 페이지 이동
+		        window.location.href = redirectURL;
+		    });
+		    
+		    $(".selctPurchase").on("click", function() {
+		        var selectedItems = $("tbody input.itemCheckbox:checked");
+
+		        if (selectedItems.length === 0) {
+		            alert("선택된 제품이 없습니다.");
+		            return;
+		        }
+
+		        var cartNums = [];
+		        var memberids = [];
+
+		        selectedItems.each(function() {
+		            var cartNum = $(this).closest("tr").prev().find(".cartNum").val();
+		            var memberid = $(this).closest("tr").prev().find(".memberid").val();
+
+		            cartNums.push(cartNum);
+		            memberids.push(memberid);
+		        });
+
+		        var redirectURL = '/shop/select-order?cartNum=' + cartNums.join('&cartNum=') + '&memberid=' + memberids.join('&memberid=');
 		        window.location.href = redirectURL;
 		    });
 		});

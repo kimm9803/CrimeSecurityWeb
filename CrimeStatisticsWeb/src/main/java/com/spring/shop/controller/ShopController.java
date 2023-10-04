@@ -85,6 +85,29 @@ public class ShopController {
 		return "shop/order";
 	}
 	
+	// 장바구니 선택 제품 주문 페이지
+	@GetMapping("/select-order")
+	public String getSelectOrderPage(@RequestParam List<Integer> cartNum, @RequestParam List<String> memberid, Model model) {
+		
+		int finalPaymentPrice = 0; 	// 최종 결제금액
+		int totalCountStock = 0;	// 전체 제품 구매수량
+		for (int i = 0; i < cartNum.size(); i++) {
+			CartVo findCart = shopService.getCartOne(memberid.get(i), cartNum.get(i));
+			finalPaymentPrice += findCart.getTotalPrice();
+			totalCountStock   += findCart.getCartStock();
+		}
+		
+		CartVo cartVo = shopService.getCartOne(memberid.get(0), cartNum.get(0));
+		totalCountStock -= cartVo.getCartStock();
+		model.addAttribute("pdThumbImg", cartVo.getPdThumbImg());
+		model.addAttribute("pdName", cartVo.getPdName());
+		model.addAttribute("pdPrice", cartVo.getPdPrice());
+		model.addAttribute("cartStock", cartVo.getCartStock());
+		model.addAttribute("finalPaymentPrice", finalPaymentPrice);
+		model.addAttribute("totalCountStock", totalCountStock);
+		return "shop/select_order";
+	}
+	
 	// 바로 구매 페이지
 	@PostMapping("/view/order")
 	public String buyNowPage(@RequestParam("pdThumbImg") String pdThumbImg,

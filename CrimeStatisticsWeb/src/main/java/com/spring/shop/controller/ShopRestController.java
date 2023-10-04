@@ -4,6 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,14 +13,15 @@ import com.spring.shop.vo.CartVo;
 import com.spring.shop.vo.OrderDetailVo;
 import com.spring.shop.vo.OrderInfoVo;
 
-@RestController //@ResponseBody + @Controller
+@RestController
+@RequestMapping("/shop")
 public class ShopRestController {
 
 	@Autowired
 	private ShopService shopService;
 	
 	// 장바구니 담기
-	@PostMapping("/shop/view/add-cart")
+	@PostMapping("/view/add-cart")
 	public String addCart(CartVo cartVo, HttpSession session) {
 		String memberid = (String)session.getAttribute("memberid");
 		String result = "";
@@ -34,21 +36,28 @@ public class ShopRestController {
 	}
 	
 	// 장바구니 삭제
-	@PostMapping("/shop/cart-list/delete")
+	@PostMapping("/cart-list/delete")
 	public void deleteCart(@RequestParam("memberid") String memberid,
 							 @RequestParam("cartNum") int cartNum) {
 		shopService.deleteCart(memberid, cartNum);
 	}
 	
+	// 장바구니 선택 삭제
+	@PostMapping("/cart-list/select-delete")
+	public void deleteSelectCart(@RequestParam("memberid") String memberid,
+								 @RequestParam("cartNum") int cartNum) {
+		shopService.deleteCart(memberid, cartNum);
+	}
+	
 	// 전체 결제 가격 계산
-	@PostMapping("/shop/calc/all")
+	@PostMapping("/calc/all")
 	public int calcTotalPayment(@RequestParam("memberid") String memberid) {
 		int totalPaymentPrice = shopService.calcTotalPayment(memberid);
 		return totalPaymentPrice;
 	}
 	
 	// 결제 가격 계산
-	@PostMapping("/shop/calc")
+	@PostMapping("/calc")
 	public int calcPayment(@RequestParam("memberid") String memberid,
 			 			   @RequestParam("cartNum") int cartNum) {
 		
@@ -57,7 +66,7 @@ public class ShopRestController {
 	}
 	
 	// 결제
-	@PostMapping("/shop/pay")
+	@PostMapping("/pay")
 	public String pay(OrderInfoVo orderInfoVo, OrderDetailVo orderDetailVo) {
 		
 		// 주문정보 저장
