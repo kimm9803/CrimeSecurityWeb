@@ -124,6 +124,8 @@ CREATE TABLE ORDERINFO (
     PRIMARY KEY(orderid)
 );
 
+-- order_status default값으로 'COMPLETEPAYMENT' 추가 
+
 -- 주문 정보(외래키 추가)
 ALTER TABLE ORDERINFO
 ADD CONSTRAINT FK_ORDERINFO_MEMBER
