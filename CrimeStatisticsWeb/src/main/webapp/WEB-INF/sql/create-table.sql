@@ -106,12 +106,6 @@ alter table cart
     add constraint cart_pdNum foreign key(pdNum)
     references products(pdNum);
     
--- 시퀀스 생성
-CREATE SEQUENCE orderid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NOCACHE
-    NOCYCLE;
 
 -- 주문 정보 테이블
 CREATE TABLE ORDERINFO (
@@ -126,7 +120,8 @@ CREATE TABLE ORDERINFO (
     address_detail      VARCHAR2(100),
     order_status        VARCHAR2(100)   NOT NULL,
     orderDate           DATE    DEFAULT SYSDATE,
-    totalPrice          NUMBER(10)      NOT NULL
+    totalPrice          NUMBER(10)      NOT NULL,
+    PRIMARY KEY(orderid)
 );
 
 -- 주문 정보(외래키 추가)
