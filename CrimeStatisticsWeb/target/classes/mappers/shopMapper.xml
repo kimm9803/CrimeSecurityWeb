@@ -92,5 +92,13 @@
 		        #{cartNum}
 		    </foreach>
 	</insert>
-	<!-- VALUES (#{orderid}, #{pdNum}, #{quantity}, #{totalPrice}) -->
+	
+	<!-- 주문완료된 장바구니 삭제 -->
+	<delete id="deleteOrderedCart">
+		DELETE FROM cart
+		WHERE cartNum IN
+		<foreach collection="array" item="cartNum" open="(" separator="," close=")">
+			#{cartNum}
+		</foreach>
+	</delete>
 </mapper>

@@ -101,4 +101,10 @@ public class ShopDaoImpl implements ShopDao {
 		
 	    sqlSession.insert(namespace + ".orderDetailSave", map);
 	}
+
+	// 주문완료된 장바구니 삭제
+	@Override
+	public void deleteOrderedCart(String[] cartNums) {
+		sqlSession.delete(namespace + ".deleteOrderedCart", cartNums);
+	}
 }

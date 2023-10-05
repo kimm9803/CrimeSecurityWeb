@@ -1,5 +1,7 @@
 package com.spring.shop.service.impl;
 
+import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -90,5 +92,28 @@ public class ShopServiceImpl implements ShopService {
 	@Override
 	public void orderDetailSave(OrderDetailVo orderDetailVo, String memberid, String[] cartNums) {
 		shopDao.orderDetailSave(orderDetailVo, memberid, cartNums);
+	}
+
+	// 주문번호 생성
+	@Override
+	public String getUUID() {
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(Calendar.YEAR);
+		String ym = year + new DecimalFormat("00").format(cal.get(Calendar.MONTH) + 1);
+		String ymd = ym + new DecimalFormat("00").format(cal.get(Calendar.DATE));
+		String subNum = "";
+
+		for (int i = 1; i <= 6; i++) {
+			subNum += (int) (Math.random() * 10);
+		}
+
+		String orderid = ymd + "_" + subNum;
+		return orderid;
+	}
+
+	// 주문완료된 장바구니 삭제
+	@Override
+	public void deleteOrderedCart(String[] cartNums) {
+		shopDao.deleteOrderedCart(cartNums);
 	}
 }

@@ -69,27 +69,20 @@ public class ShopRestController {
 	@PostMapping("/pay")
 	public String pay(OrderInfoVo orderInfoVo, OrderDetailVo orderDetailVo, @RequestParam(value = "cartNums") String[] cartNums, HttpSession session) {
 		
-		Calendar cal = Calendar.getInstance();
-		int year = cal.get(Calendar.YEAR);
-		String ym = year + new DecimalFormat("00").format(cal.get(Calendar.MONTH) + 1);
-		String ymd = ym + new DecimalFormat("00").format(cal.get(Calendar.DATE));
-		String subNum = "";
-
-		for (int i = 1; i <= 6; i++) {
-			subNum += (int) (Math.random() * 10);
-		}
-
-		String orderid = ymd + "_" + subNum;
 		String memberid = (String)session.getAttribute("memberid");
+		String orderid = shopService.getUUID();
 		
 		// UUID 저장
 		orderInfoVo.setOrderid(orderid);
 		// 주문정보 저장
 		shopService.orderSave(orderInfoVo);
 
-		orderDetailVo.setOrderid(orderid);
 		// 주문상세 저장
+		orderDetailVo.setOrderid(orderid);
 		shopService.orderDetailSave(orderDetailVo, memberid, cartNums);
+		
+		// 주문완료된 장바구니 삭제
+		shopService.deleteOrderedCart(cartNums);
 		
 		return "response";
 	}
