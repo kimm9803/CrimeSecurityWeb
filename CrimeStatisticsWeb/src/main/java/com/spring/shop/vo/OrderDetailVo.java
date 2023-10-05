@@ -3,9 +3,9 @@ package com.spring.shop.vo;
 public class OrderDetailVo {
 
 	private int detailid;
-	private int orderid;
+	private String orderid;
 	private int pdNum;
-	private int quantity;
+	private int cartStock;
 	private int totalPrice;
 	
 	public int getDetailid() {
@@ -14,23 +14,24 @@ public class OrderDetailVo {
 	public void setDetailid(int detailid) {
 		this.detailid = detailid;
 	}
-	public int getOrderid() {
-		return orderid;
-	}
-	public void setOrderid(int orderid) {
-		this.orderid = orderid;
-	}
+	
 	public int getPdNum() {
 		return pdNum;
 	}
 	public void setPdNum(int pdNum) {
 		this.pdNum = pdNum;
 	}
-	public int getQuantity() {
-		return quantity;
+	public String getOrderid() {
+		return orderid;
 	}
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
+	public void setOrderid(String orderid) {
+		this.orderid = orderid;
+	}
+	public int getCartStock() {
+		return cartStock;
+	}
+	public void setCartStock(int cartStock) {
+		this.cartStock = cartStock;
 	}
 	public int getTotalPrice() {
 		return totalPrice;

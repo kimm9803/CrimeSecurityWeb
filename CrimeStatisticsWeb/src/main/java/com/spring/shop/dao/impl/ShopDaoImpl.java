@@ -92,8 +92,13 @@ public class ShopDaoImpl implements ShopDao {
 	}
 
 	// 주문상세 저장
-//	@Override
-//	public void orderDetailSave(OrderDetailVo orderDetailVo) {
-//	    sqlSession.insert(namespace + ".orderDetailSave", orderDetailVo);
-//	}
+	@Override
+	public void orderDetailSave(OrderDetailVo orderDetailVo, String memberid, String[] cartNums) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("orderDetailVo", orderDetailVo);
+		map.put("memberid", memberid);
+		map.put("cartNums", cartNums);
+		
+	    sqlSession.insert(namespace + ".orderDetailSave", map);
+	}
 }

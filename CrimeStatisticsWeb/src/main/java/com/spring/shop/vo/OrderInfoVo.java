@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class OrderInfoVo {
 
-	private int orderid;
+	private String orderid;
 	private String memberid;
 	private String name;
 	private String email;
@@ -23,10 +23,10 @@ public class OrderInfoVo {
 	public void setTel(String tel) {
 		this.tel = tel;
 	}
-	public int getOrderid() {
+	public String getOrderid() {
 		return orderid;
 	}
-	public void setOrderid(int orderid) {
+	public void setOrderid(String orderid) {
 		this.orderid = orderid;
 	}
 	public String getMemberid() {

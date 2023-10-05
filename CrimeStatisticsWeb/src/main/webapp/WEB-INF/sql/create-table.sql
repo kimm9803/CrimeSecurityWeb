@@ -114,45 +114,41 @@ CREATE SEQUENCE orderid_seq
     NOCYCLE;
 
 -- 주문 정보 테이블
-CREATE TABLE orderInfo (
-    orderid             NUMBER DEFAULT orderid_seq.NEXTVAL PRIMARY KEY,
+CREATE TABLE ORDERINFO (
+    orderid             VARCHAR2(100)   NOT NULL,
     memberid            VARCHAR2(50)    NOT NULL,
     name                VARCHAR2(50)    NOT NULL,
     email               VARCHAR2(100)   NOT NULL,
+    tel                 VARCHAR2(20)    NOT NULL,
     address             VARCHAR2(300)   NOT NULL,
-    address_postcode    VARCHAR2(100),
-    address_primary     VARCHAR2(100),
+    address_postcode    VARCHAR2(100)   NOT NULL,
+    address_primary     VARCHAR2(100)   NOT NULL,
     address_detail      VARCHAR2(100),
-    order_status        VARCHAR2(50) 	DEFAULT 'COMPLETEPAYMENT',
-    orderDate           DATE            DEFAULT SYSDATE,
-    totalPrice          NUMBER(10),
-    FOREIGN KEY (memberid) REFERENCES member(memberid)
+    order_status        VARCHAR2(100)   NOT NULL,
+    orderDate           DATE    DEFAULT SYSDATE,
+    totalPrice          NUMBER(10)      NOT NULL
 );
 
--- 시퀀스 생성
-CREATE SEQUENCE detailid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NOCACHE
-    NOCYCLE;
+-- 주문 정보(외래키 추가)
+ALTER TABLE ORDERINFO
+ADD CONSTRAINT FK_ORDERINFO_MEMBER
+FOREIGN KEY (memberid)
+REFERENCES member(memberid);
 
--- 주문 상세 테이블
-CREATE TABLE orderdetail (
-    detailid    NUMBER  DEFAULT detailid_seq.NEXTVAL PRIMARY KEY,
-    orderid     NUMBER  NOT NULL,
-    pdNum       NUMBER  NOT NULL,
-    quantity    NUMBER,
-    totalPrice  NUMBER,
-    FOREIGN KEY (orderid) REFERENCES orderinfo(orderid),
-    FOREIGN KEY (pdNum) REFERENCES products(pdNum)
+-- 주문상세 테이블
+CREATE TABLE ORDERDETAIL (
+    detailid    NUMBER          NOT NULL,
+    orderid     VARCHAR2(100)   NOT NULL,
+    pdNum       NUMBER          NOT NULL,
+    cartStock   NUMBER          NOT NULL,
+    totalPrice  NUMBER          NOT NULL,
+    PRIMARY KEY(detailid),
+    FOREIGN KEY(orderid) REFERENCES ORDERINFO(orderid),
+    FOREIGN KEY(pdNum)   REFERENCES PRODUCTS(pdNum)
 );
 
--- 시퀀스 생성
-CREATE SEQUENCE reviewid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NOCACHE
-    NOCYCLE;
+-- 주문상세 시퀀스 생성
+CREATE SEQUENCE ORDERDETAIL_SEQ;
     
 -- 후기 테이블
 CREATE TABLE Reviews (

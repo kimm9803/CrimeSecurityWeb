@@ -96,7 +96,9 @@ public class ShopController {
 			finalPaymentPrice += findCart.getTotalPrice();
 			totalCountStock   += findCart.getCartStock();
 		}
-		
+		String findMemberid = memberid.get(0); 
+		String merchantUid = shopService.generateMerchantUid();
+		MemberVo findMember = memberService.findById(findMemberid);
 		CartVo cartVo = shopService.getCartOne(memberid.get(0), cartNum.get(0));
 		totalCountStock -= cartVo.getCartStock();
 		model.addAttribute("pdThumbImg", cartVo.getPdThumbImg());
@@ -105,6 +107,8 @@ public class ShopController {
 		model.addAttribute("cartStock", cartVo.getCartStock());
 		model.addAttribute("finalPaymentPrice", finalPaymentPrice);
 		model.addAttribute("totalCountStock", totalCountStock);
+		model.addAttribute("merchant_uid", merchantUid);
+		model.addAttribute("member", findMember);
 		return "shop/select_order";
 	}
 	

@@ -342,6 +342,7 @@ td {
 		        window.location.href = redirectURL;
 		    });
 		    
+		    // 선택 제품 주문 버튼
 		    $(".selctPurchase").on("click", function() {
 		        var selectedItems = $("tbody input.itemCheckbox:checked");
 
@@ -364,6 +365,25 @@ td {
 		        var redirectURL = '/shop/select-order?cartNum=' + cartNums.join('&cartNum=') + '&memberid=' + memberids.join('&memberid=');
 		        window.location.href = redirectURL;
 		    });
+		    
+		    // 전체 제품 주문 버튼
+		    $(".allPurchase").on("click", function() {
+		    	var cartNums = [];
+		    	var memberids = [];
+		    	
+		    	$("tbody .memberid").each(function() {
+		    		var memberid = $(this).val();
+		    		memberids.push(memberid);
+		    	});
+		    	
+		    	$("tbody .cartNum").each(function() {
+		    		var cartNum = $(this).val();
+		    		cartNums.push(cartNum);
+		    	});
+		    	
+		    	var redirectURL = '/shop/select-order?cartNum=' + cartNums.join('&cartNum=') + '&memberid=' + memberids.join('&memberid=');
+		        window.location.href = redirectURL;
+		    })
 		});
 		
 	</script>

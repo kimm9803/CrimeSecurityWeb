@@ -346,5 +346,410 @@ main {
 		    </div>
 		</div>
 	</main>
+	
+	<footer><%@ include file="../template/footer.jsp"%></footer>
+	
+	<script>
+		$(document).ready(function() {
+			// 쉼표 추가
+			function addCommasToNumber(number) {
+			    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			}
+			
+			$('#finalPaymentPrice').text(addCommasToNumber($('#finalPaymentPrice').text()));
+		    $('#totalPrice').text(addCommasToNumber($('#totalPrice').text()));
+		    $('#orderPay').text(addCommasToNumber($('#orderPay').text()));
+		    $('#totalPay').text(addCommasToNumber($('#totalPay').text()));
+		    
+			$('#sameAsBilling').change(function() {
+				if (this.checked) {
+					var name  = $('#order_name').val();
+					var tel   = $('#order_tel').val();
+					var email = $('#order_email').val();
+					
+					$.ajax({
+						url: '/member/find-by-orderinfo',
+						type: 'POST',
+						data: {
+							name: name,
+							tel: tel,
+							email: email
+						},
+						success: function(data) {
+							if (data !== 'error') {
+								$('#name').val(data.name);
+								$('#tel').val(data.tel);
+								$('#email').val(data.email);
+								$('#address_postcode').val(data.address_postcode);
+								$('#address_primary').val(data.address_primary);
+								$('#address_detail').val(data.address_detail);
+							} else {
+								alert('기입하신 주문자 정보가 일치하지 않습니다');
+							}
+						},
+						error: function() {
+							alert('에러 발생');
+						}
+					});
+				} else {
+					$('#name').val('');
+					$('#tel').val('');
+					$('#email').val('');
+					$('#address_postcode').val('');
+					$('#address_primary').val('');
+					$('#address_detail').val('');
+				}
+			});
+			
+			// 버튼 클릭 시 동작
+			$('.buttonArea').click(function() {
+			    const isSelected = $(this).data('selected');
+
+			    if (isSelected) {
+			        $(this).css('border', '1px solid lightgray');
+			    } else {
+			        $('.buttonArea').not(this).css('border', '1px solid lightgray');
+			        $(this).css('border', '2px solid #dc3545');
+			        $('.buttonArea').data('selected', false);
+			        $(this).data('selected', true);
+			    }
+			});
+			
+			$('#primary').click(function() {
+				history.back();
+			});
+			
+			$('#payment').click(function() {
+				var creditCardSelected = $('#creditCard').data('selected');
+				var kakaoPaySelected   = $('#kakaoPay').data('selected');
+				var tossPaySelected    = $('#tossPay').data('selected');
+				var samsungPaySelected = $('#samsungPay').data('selected');
+				
+				if (creditCardSelected) {
+					iamport_inicis();
+				} else if (kakaoPaySelected) {
+					iamport_kakaopay();
+				} else if (tossPaySelected) {
+					iamport_tossPay();
+				} else if (samsungPaySelected) {
+					iamport_samsungPay();
+				} else {
+					alert('결제 수단을 선택해주세요');
+				}
+			});
+		});
+		// 주소
+		function exePost() {
+			 new daum.Postcode({
+		         oncomplete: function(data) {
+		            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+	
+		            // 도로명 주소의 노출 규칙에 따라 주소를 조합한다.
+		            // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+		            var fullRoadAddr = data.roadAddress; // 도로명 주소 변수
+		            var extraRoadAddr = ''; // 도로명 조합형 주소 변수
+	
+		            // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+		            // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+		            if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+		                extraRoadAddr += data.bname;
+		            }
+		            // 건물명이 있고, 공동주택일 경우 추가한다.
+		            if(data.buildingName !== '' && data.apartment === 'Y'){
+		               extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+		            }
+		            // 도로명, 지번 조합형 주소가 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+		            if(extraRoadAddr !== ''){
+		                extraRoadAddr = ' (' + extraRoadAddr + ')';
+		            }
+		            // 도로명, 지번 주소의 유무에 따라 해당 조합형 주소를 추가한다.
+		            if(fullRoadAddr !== ''){
+		                fullRoadAddr += extraRoadAddr;
+		            }
+	
+		            // 우편번호와 주소 정보를 해당 필드에 넣는다.
+		            console.log(data.zonecode);
+		            console.log(fullRoadAddr);
+		            
+		            $("[name=address_postcode]").val(data.zonecode);
+		            $("[name=address_primary]").val(fullRoadAddr);
+		            
+		            /* document.getElementById('signUpUserPostNo').value = data.zonecode; //5자리 새우편번호 사용
+		            document.getElementById('signUpUserCompanyAddress').value = fullRoadAddr;
+		            document.getElementById('signUpUserCompanyAddressDetail').value = data.jibunAddress; */
+		        }
+		     }).open();
+		}
+		
+		// kg이니시스
+		function iamport_inicis(){
+			//가맹점 식별코드
+			IMP.init('imp52104544');
+			IMP.request_pay({
+			    pg : 'html5_inicis',
+			    pay_method : 'card',
+			    merchant_uid : '${merchant_uid}_' + new Date().getTime(),
+			    name : '${pdName}' , //결제창에서 보여질 이름
+			    amount : ${finalPaymentPrice}, //실제 결제되는 가격
+			    buyer_email : '${member.email}',
+			    buyer_name : '${member.name}',
+			    buyer_tel : '${member.tel}',
+			    buyer_addr : '${member.address_primary}' + ' ' + '${member.address_detail}',
+			    buyer_postcode : '${member.address_postcode}'
+			}, function(rsp) {
+				console.log(rsp);
+			    if ( rsp.success ) {
+			    	var memberid = '${member.memberid}';
+			    	var name = $('#name').val();
+			    	var tel = $('#tel').val();
+			    	var address_postcode = $('#address_postcode').val();
+			    	var address_primary = $('#address_primary').val();
+			    	var address_detail = $('#address_detail').val();
+			    	var address = address_primary + ' ' + address_detail;
+			    	var email = $('#email').val();
+			    	var totalPrice = parseInt($('#totalPay').text().replace('원', ''));
+			    	var urlParams = new URLSearchParams(window.location.search);
+			    	var cartNums = urlParams.getAll('cartNum'); // cartNums는 배열로 가져옵니다.
+			    	
+			    	var msg = '결제가 완료되었습니다.';
+			        msg += '고유ID : ' + rsp.imp_uid;
+			        msg += '상점 거래ID : ' + rsp.merchant_uid;
+			        msg += '결제 금액 : ' + rsp.paid_amount;
+			        msg += '카드 승인번호 : ' + rsp.apply_num;
+			        
+			        $.ajax({
+			        	url : '/shop/pay',
+			        	type : 'POST',
+			        	data : {
+			        		memberid : memberid,
+			        		name : name,
+			        		tel : tel,
+			        		address : address,
+			        		address_postcode : address_postcode,
+			        		address_primary : address_primary,
+			        		address_detail : address_detail,
+			        		email : email,
+			        		totalPrice : totalPrice,
+			        		cartNums : cartNums
+			        	},
+			        	traditional: true,
+			        	success : function(response) {
+			        		location.href = '/shop/orderlist';
+			        	},
+			        	error : function() {
+			        		alert('에러발생');
+			        	}
+			        	
+			        })
+			    } else {
+			    	 var msg = '결제에 실패하였습니다.';
+			         msg += '에러내용 : ' + rsp.error_msg;
+			    }
+			    alert(msg);
+			});
+		};
+		
+		// 카카오페이
+		function iamport_kakaopay(){
+			//가맹점 식별코드
+			IMP.init('imp52104544');
+			IMP.request_pay({
+			    pg : 'kakaopay',
+			    pay_method : 'card',
+			    merchant_uid : '${merchant_uid}_' + new Date().getTime(),
+			    name : '${pdName}' , //결제창에서 보여질 이름
+			    amount : ${finalPaymentPrice}, //실제 결제되는 가격
+			    buyer_email : '${member.email}',
+			    buyer_name : '${member.name}',
+			    buyer_tel : '${member.tel}',
+			    buyer_addr : '${member.address_primary}' + ' ' + '${member.address_detail}',
+			    buyer_postcode : '${member.address_postcode}'
+			}, function(rsp) {
+				console.log(rsp);
+			    if ( rsp.success ) {
+			    	var memberid = '${member.memberid}';
+			    	var name = $('#name').val();
+			    	var tel = $('#tel').val();
+			    	var address_postcode = $('#address_postcode').val();
+			    	var address_primary = $('#address_primary').val();
+			    	var address_detail = $('#address_detail').val();
+			    	var address = address_primary + ' ' + address_detail;
+			    	var email = $('#email').val();
+			    	var totalPrice = parseInt($('#totalPay').text().replace('원', ''));
+			    	var urlParams = new URLSearchParams(window.location.search);
+			    	var cartNums = urlParams.getAll('cartNum');
+			    	
+			    	var msg = '결제가 완료되었습니다.';
+			        msg += '고유ID : ' + rsp.imp_uid;
+			        msg += '상점 거래ID : ' + rsp.merchant_uid;
+			        msg += '결제 금액 : ' + rsp.paid_amount;
+			        msg += '카드 승인번호 : ' + rsp.apply_num;
+			        
+			        $.ajax({
+			        	url : '/shop/pay',
+			        	type : 'POST',
+			        	data : {
+			        		memberid : memberid,
+			        		name : name,
+			        		tel : tel,
+			        		address : address,
+			        		address_postcode : address_postcode,
+			        		address_primary : address_primary,
+			        		address_detail : address_detail,
+			        		email : email,
+			        		totalPrice : totalPrice,
+			        		cartNums : cartNums
+			        	},
+			        	traditional: true,
+			        	success : function(response) {
+			        		location.href = '/shop/orderlist';
+			        	},
+			        	error : function() {
+			        		alert('에러발생');
+			        	}
+			        	
+			        })
+			    } else {
+			    	 var msg = '결제에 실패하였습니다.';
+			         msg += '에러내용 : ' + rsp.error_msg;
+			    }
+			    alert(msg);
+			});
+		};
+		
+		// 토스페이
+		function iamport_tossPay(){
+			//가맹점 식별코드
+			IMP.init('imp52104544');
+			IMP.request_pay({
+			    pg : 'tosspay',
+			    pay_method : 'card',
+			    merchant_uid : '${merchant_uid}_' + new Date().getTime(),
+			    name : '${pdName}' , //결제창에서 보여질 이름
+			    amount : ${finalPaymentPrice}, //실제 결제되는 가격
+			    buyer_email : '${member.email}',
+			    buyer_name : '${member.name}',
+			    buyer_tel : '${member.tel}',
+			    buyer_addr : '${member.address_primary}' + ' ' + '${member.address_detail}',
+			    buyer_postcode : '${member.address_postcode}'
+			}, function(rsp) {
+				console.log(rsp);
+			    if ( rsp.success ) {
+			    	var memberid = '${member.memberid}';
+			    	var name = $('#name').val();
+			    	var tel = $('#tel').val();
+			    	var address_postcode = $('#address_postcode').val();
+			    	var address_primary = $('#address_primary').val();
+			    	var address_detail = $('#address_detail').val();
+			    	var address = address_primary + ' ' + address_detail;
+			    	var email = $('#email').val();
+			    	var totalPrice = parseInt($('#totalPay').text().replace('원', ''));
+			    	var urlParams = new URLSearchParams(window.location.search);
+			    	var cartNums = urlParams.getAll('cartNum'); // cartNums는 배열로 가져옵니다.
+			    	
+			    	var msg = '결제가 완료되었습니다.';
+			        msg += '고유ID : ' + rsp.imp_uid;
+			        msg += '상점 거래ID : ' + rsp.merchant_uid;
+			        msg += '결제 금액 : ' + rsp.paid_amount;
+			        msg += '카드 승인번호 : ' + rsp.apply_num;
+			        
+			        $.ajax({
+			        	url : '/shop/pay',
+			        	type : 'POST',
+			        	data : {
+			        		memberid : memberid,
+			        		name : name,
+			        		tel : tel,
+			        		address : address,
+			        		address_postcode : address_postcode,
+			        		address_primary : address_primary,
+			        		address_detail : address_detail,
+			        		email : email,
+			        		totalPrice : totalPrice,
+			        		cartNums : cartNums
+			        	},
+			        	traditional: true,
+			        	success : function(response) {
+			        		location.href = '/shop/orderlist';
+			        	},
+			        	error : function() {
+			        		alert('에러발생');
+			        	}
+			        })
+			    } else {
+			    	 var msg = '결제에 실패하였습니다.';
+			         msg += '에러내용 : ' + rsp.error_msg;
+			    }
+			    alert(msg);
+			});
+		};
+		
+		// 삼성페이
+		function iamport_samsungPay(){
+			//가맹점 식별코드
+			IMP.init('imp52104544');
+			IMP.request_pay({
+				pg: 'kcp',
+			    pay_method : 'samsung',
+			    merchant_uid : '${merchant_uid}_' + new Date().getTime(),
+			    name : '${pdName}' , //결제창에서 보여질 이름
+			    amount : ${finalPaymentPrice}, //실제 결제되는 가격
+			    buyer_email : '${member.email}',
+			    buyer_name : '${member.name}',
+			    buyer_tel : '${member.tel}',
+			    buyer_addr : '${member.address_primary}' + ' ' + '${member.address_detail}',
+			    buyer_postcode : '${member.address_postcode}'
+			}, function(rsp) {
+				console.log(rsp);
+			    if ( rsp.success ) {
+			    	var memberid = '${member.memberid}';
+			    	var name = $('#name').val();
+			    	var tel = $('#tel').val();
+			    	var address_postcode = $('#address_postcode').val();
+			    	var address_primary = $('#address_primary').val();
+			    	var address_detail = $('#address_detail').val();
+			    	var address = address_primary + ' ' + address_detail;
+			    	var email = $('#email').val();
+			    	var totalPrice = parseInt($('#totalPay').text().replace('원', ''));
+			    	var urlParams = new URLSearchParams(window.location.search);
+			    	var cartNums = urlParams.getAll('cartNum'); // cartNums는 배열로 가져옵니다.
+			    	
+			    	var msg = '결제가 완료되었습니다.';
+			        msg += '고유ID : ' + rsp.imp_uid;
+			        msg += '상점 거래ID : ' + rsp.merchant_uid;
+			        msg += '결제 금액 : ' + rsp.paid_amount;
+			        msg += '카드 승인번호 : ' + rsp.apply_num;
+			        
+			        $.ajax({
+			        	url : '/shop/pay',
+			        	type : 'POST',
+			        	data : {
+			        		memberid : memberid,
+			        		name : name,
+			        		tel : tel,
+			        		address : address,
+			        		address_postcode : address_postcode,
+			        		address_primary : address_primary,
+			        		address_detail : address_detail,
+			        		email : email,
+			        		totalPrice : totalPrice,
+			        		cartNums : cartNums
+			        	},
+			        	traditional: true,
+			        	success : function(response) {
+			        		location.href = '/shop/orderlist';
+			        	},
+			        	error : function() {
+			        		alert('에러발생');
+			        	}
+			        });
+			    } else {
+			    	 var msg = '결제에 실패하였습니다.';
+			         msg += '에러내용 : ' + rsp.error_msg;
+			    }
+			    alert(msg);
+			});
+		};
+	</script>
 </body>
 </html>

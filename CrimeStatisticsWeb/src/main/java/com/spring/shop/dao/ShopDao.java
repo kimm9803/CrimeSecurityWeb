@@ -40,5 +40,5 @@ public interface ShopDao {
 	void orderSave(OrderInfoVo orderInfoVo);
 	
 	// 주문상세 저장
-//	void orderDetailSave(OrderDetailVo orderDetailVo);
+	void orderDetailSave(OrderDetailVo orderDetailVo, String memberid, String[] cartNums);
 }
