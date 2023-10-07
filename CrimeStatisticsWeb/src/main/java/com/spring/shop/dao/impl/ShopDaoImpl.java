@@ -101,10 +101,22 @@ public class ShopDaoImpl implements ShopDao {
 		
 	    sqlSession.insert(namespace + ".orderDetailSave", map);
 	}
-
+	
 	// 주문완료된 장바구니 삭제
 	@Override
 	public void deleteOrderedCart(String[] cartNums) {
 		sqlSession.delete(namespace + ".deleteOrderedCart", cartNums);
+	}
+
+	// 장바구니 번호
+	@Override
+	public int getCartNum(CartVo cartVo) {
+		return sqlSession.selectOne(namespace + ".getCartNum", cartVo);
+	}
+
+	// 주문상세 가져오기
+	@Override
+	public List<OrderDetailVo> getOrderDetail(String orderid) {
+		return sqlSession.selectList(namespace + ".getOrderDetail", orderid);
 	}
 }

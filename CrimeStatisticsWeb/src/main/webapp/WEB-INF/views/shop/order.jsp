@@ -25,7 +25,6 @@ main {
 
 #content {
 	border-top: 3px solid black;
-	
 }
 
 .deliveryInfo {
@@ -254,7 +253,7 @@ main {
 				        <button class="customBtn" style="width: 100px; height: 40px; margin-left: 10px;">전액사용</button>
 				    </div>
 				    <div style="margin-top: 20px;">
-				        보유 포인트 : 0원
+				        보유 포인트 : <span id="point">${member.point}</span> 점
 				    </div>
 				</div>
 		    </div>
@@ -302,7 +301,7 @@ main {
 				    	<span id="totalPay" style="color: #dc3545; font-size: 20px; font-weight: bold;">${cart.totalPrice}원</span>
 				    </div>
 				    <div style="margin-right: 250px; margin-top: 10px;">
-				    	<span style="color: #dc3545; font-size: 20px;">2500 </span>포인트 적립예정
+				    	<span id="accumulatePoint" style="color: #dc3545; font-size: 20px;"></span> 포인트 적립예정
 				    </div>
 				</div>
 				<div class="paymentMethod">
@@ -316,7 +315,7 @@ main {
 						</div>
 						<div class="buttonArea" id="kakaoPay">
 						    <img src="/img/kakao_pay.png" style="height: 30px; display: inline-block; margin-bottom: 5px;">
-						    <span style="display: inline-block; margin-left: 10px; margin-bottom: 5px;">카카오페이</span>
+						    <span style="display: inline-block; margin-left: 20px; margin-bottom: 5px;">카카오페이</span>
 						</div>
 				    </div>
 				    <div class="buttonContainer">
@@ -354,7 +353,6 @@ main {
 			function addCommasToNumber(number) {
 			    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 			}
-			// cart.totalPrice 값을 가져와서 쉼표를 추가합니다.
 			var orderPayElement = document.getElementById('orderPay');
 			var totalPriceElement = document.getElementById('totalPrice');
 			var totalPayElement = document.getElementById('totalPay');
@@ -369,6 +367,13 @@ main {
 			orderPayElement.textContent = formattedOrderPay + '원';
 			totalPriceElement.textContent = formattedTotalPrice + '원';
 			totalPayElement.textContent = formattedTotalPay + '원';
+			
+			
+			// 적립예정 포인트
+			var totalPay = parseInt($('#totalPay').text().replace(/[^0-9]/g, ''));
+		    var accumulatePoint = Math.floor(totalPay * 0.05);
+		    $('#accumulatePoint').text(addCommasToNumber(accumulatePoint));
+		    
 			$('#sameAsBilling').change(function() {
 				if (this.checked) {
 					var name  = $('#order_name').val();
@@ -516,7 +521,9 @@ main {
 			    	var address = address_primary + ' ' + address_detail;
 			    	var email = $('#email').val();
 			    	var totalPrice = parseInt($('#totalPay').text().replace('원', ''));
-			    	var amount = $('#pdCnt').val();
+			    	var cartNum = ${cart.cartNum};
+			    	// 포인트
+			    	var accumulatePoint = parseInt($('#accumulatePoint').text().replace(/[^0-9]/g, ''));
 			    	
 			    	var msg = '결제가 완료되었습니다.';
 			        msg += '고유ID : ' + rsp.imp_uid;
@@ -536,10 +543,12 @@ main {
 			        		address_primary : address_primary,
 			        		address_detail : address_detail,
 			        		email : email,
-			        		totalPrice : totalPrice
+			        		totalPrice : totalPrice,
+			        		cartNum : cartNum,
+			        		accumulatePoint : accumulatePoint
 			        	},
-			        	success : function(response) {
-			        		location.href = '/shop/orderlist';
+			        	success : function(orderid) {
+			        		location.href = '/shop/order/success?orderid=' + orderid;
 			        	},
 			        	error : function() {
 			        		alert('에러발생');
@@ -581,6 +590,9 @@ main {
 			    	var address = address_primary + ' ' + address_detail;
 			    	var email = $('#email').val();
 			    	var totalPrice = parseInt($('#totalPay').text().replace('원', ''));
+			    	var cartNum = ${cart.cartNum};
+			    	// 포인트
+			    	var accumulatePoint = parseInt($('#accumulatePoint').text().replace(/[^0-9]/g, ''));
 			    	
 			    	var msg = '결제가 완료되었습니다.';
 			        msg += '고유ID : ' + rsp.imp_uid;
@@ -600,10 +612,12 @@ main {
 			        		address_primary : address_primary,
 			        		address_detail : address_detail,
 			        		email : email,
-			        		totalPrice : totalPrice
+			        		totalPrice : totalPrice,
+			        		cartNum : cartNum,
+			        		accumulatePoint : accumulatePoint
 			        	},
-			        	success : function(response) {
-			        		location.href = '/shop/orderlist';
+			        	success : function(orderid) {
+			        		location.href = '/shop/order/success?orderid=' + orderid;
 			        	},
 			        	error : function() {
 			        		alert('에러발생');
@@ -645,6 +659,9 @@ main {
 			    	var address = address_primary + ' ' + address_detail;
 			    	var email = $('#email').val();
 			    	var totalPrice = parseInt($('#totalPay').text().replace('원', ''));
+			    	var cartNum = ${cart.cartNum};
+			    	// 포인트
+			    	var accumulatePoint = parseInt($('#accumulatePoint').text().replace(/[^0-9]/g, ''));
 			    	
 			    	var msg = '결제가 완료되었습니다.';
 			        msg += '고유ID : ' + rsp.imp_uid;
@@ -664,10 +681,12 @@ main {
 			        		address_primary : address_primary,
 			        		address_detail : address_detail,
 			        		email : email,
-			        		totalPrice : totalPrice
+			        		totalPrice : totalPrice,
+			        		cartNum : cartNum,
+			        		accumulatePoint : accumulatePoint
 			        	},
-			        	success : function(response) {
-			        		location.href = '/shop/orderlist';
+			        	success : function(orderid) {
+			        		location.href = '/shop/order/success?orderid=' + orderid;
 			        	},
 			        	error : function() {
 			        		alert('에러발생');
@@ -708,6 +727,9 @@ main {
 			    	var address = address_primary + ' ' + address_detail;
 			    	var email = $('#email').val();
 			    	var totalPrice = parseInt($('#totalPay').text().replace('원', ''));
+			    	var cartNum = ${cart.cartNum};
+			    	// 포인트
+			    	var accumulatePoint = parseInt($('#accumulatePoint').text().replace(/[^0-9]/g, ''));
 			    	
 			    	var msg = '결제가 완료되었습니다.';
 			        msg += '고유ID : ' + rsp.imp_uid;
@@ -727,10 +749,12 @@ main {
 			        		address_primary : address_primary,
 			        		address_detail : address_detail,
 			        		email : email,
-			        		totalPrice : totalPrice
+			        		totalPrice : totalPrice,
+			        		cartNum : cartNum,
+			        		accumulatePoint : accumulatePoint
 			        	},
-			        	success : function(response) {
-			        		location.href = '/shop/orderlist';
+			        	success : function(orderid) {
+			        		location.href = '/shop/order/success?orderid=' + orderid;
 			        	},
 			        	error : function() {
 			        		alert('에러발생');

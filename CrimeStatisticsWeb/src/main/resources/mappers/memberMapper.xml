@@ -13,7 +13,7 @@
 	
 	<!-- 회원찾기 -->
 	<select id="findById" parameterType="String" resultType="com.spring.member.vo.MemberVo">
-		SELECT memberid, passwd, name, nickname, tel, address, email, sex, address_postcode, address_primary, address_detail, email_id AS emailId, email_domain AS emailDomain, regdate
+		SELECT memberid, passwd, name, nickname, tel, address, email, sex, address_postcode, address_primary, address_detail, email_id AS emailId, email_domain AS emailDomain, regdate, point
 		FROM member
 		WHERE memberid = #{memberid}
 	</select>
@@ -56,8 +56,15 @@
 	
 	<!-- 주문자 정보 -->
 	<select id="findByOrderInfo" parameterType="hashMap" resultType="com.spring.member.vo.MemberVo">
-		SELECT memberid, passwd, name, nickname, tel, address, email, sex, address_postcode, address_primary, address_detail, regdate
+		SELECT memberid, passwd, name, nickname, tel, address, email, sex, address_postcode, address_primary, address_detail, regdate, point
 		FROM member
 		WHERE name = #{name} AND tel = #{tel} AND email = #{email}
 	</select>
+	
+	<!-- 적립예정 포인트 -->
+	<update id="updatePoint" parameterType="hashMap">
+		UPDATE member 
+		SET point = point + #{accumulatePoint}
+		WHERE memberid = #{memberid}
+	</update>
 </mapper>

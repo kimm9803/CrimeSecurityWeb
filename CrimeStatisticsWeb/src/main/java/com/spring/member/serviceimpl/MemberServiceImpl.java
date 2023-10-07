@@ -68,4 +68,10 @@ public class MemberServiceImpl implements MemberService {
 	public MemberVo findByOrderInfo(String name, String tel, String email) {
 		return memberDao.findByOrderInfo(name, tel, email);
 	}
+
+	// 적립예정 포인트
+	@Override
+	public void updatePoint(int accumulatePoint, String memberid) {
+		memberDao.updatePoint(accumulatePoint, memberid);
+	}
 }

@@ -8,13 +8,28 @@ public class OrderDetailVo {
 	private int cartStock;
 	private int totalPrice;
 	
+	// join column
+	private String pdThumbImg;
+	private String pdName;
+	
+	public String getPdName() {
+		return pdName;
+	}
+	public void setPdName(String pdName) {
+		this.pdName = pdName;
+	}
+	public String getPdThumbImg() {
+		return pdThumbImg;
+	}
+	public void setPdThumbImg(String pdThumbImg) {
+		this.pdThumbImg = pdThumbImg;
+	}
 	public int getDetailid() {
 		return detailid;
 	}
 	public void setDetailid(int detailid) {
 		this.detailid = detailid;
 	}
-	
 	public int getPdNum() {
 		return pdNum;
 	}

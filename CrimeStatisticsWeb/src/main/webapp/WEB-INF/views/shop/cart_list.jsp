@@ -101,7 +101,7 @@ td {
 <body>
 	<header><%@ include file="../template/header.jsp"%></header>
 
-	<main style="margin-top: 40px; margin-bottom: 155px;">
+	<main style="margin-top: 40px; margin-bottom: 153px;">
 		<div style="width: 60%; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center;">
 		    <h1>장바구니</h1>
 		    <div style="display: flex; justify-content: flex-end; align-items: center;">

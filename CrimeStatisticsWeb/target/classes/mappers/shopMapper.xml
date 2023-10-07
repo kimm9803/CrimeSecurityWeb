@@ -101,4 +101,19 @@
 			#{cartNum}
 		</foreach>
 	</delete>
+	
+	<!-- 장바구니 번호 -->
+	<select id="getCartNum" resultType="int">
+		SELECT cartNum
+		FROM cart
+		WHERE memberid = #{memberid} AND pdNum = #{pdNum} AND cartStock = #{cartStock}
+	</select>
+	
+	<!-- 주문상세 가져오기 -->
+	<select id="getOrderDetail" resultType="com.spring.shop.vo.OrderDetailVo">
+		SELECT o.detailid, o.orderid, o.pdNum, o.cartStock, o.totalPrice, p.pdThumbImg, p.pdName
+		FROM orderdetail o
+		INNER JOIN products p ON o.pdNum = p.pdNum
+		WHERE o.orderid = #{orderid}
+	</select>
 </mapper>

@@ -93,7 +93,7 @@ public class ShopServiceImpl implements ShopService {
 	public void orderDetailSave(OrderDetailVo orderDetailVo, String memberid, String[] cartNums) {
 		shopDao.orderDetailSave(orderDetailVo, memberid, cartNums);
 	}
-
+	
 	// 주문번호 생성
 	@Override
 	public String getUUID() {
@@ -108,6 +108,7 @@ public class ShopServiceImpl implements ShopService {
 		}
 
 		String orderid = ymd + "_" + subNum;
+		
 		return orderid;
 	}
 
@@ -115,5 +116,17 @@ public class ShopServiceImpl implements ShopService {
 	@Override
 	public void deleteOrderedCart(String[] cartNums) {
 		shopDao.deleteOrderedCart(cartNums);
+	}
+
+	// 장바구니 번호
+	@Override
+	public int getCartNum(CartVo cartVo) {
+		return shopDao.getCartNum(cartVo);
+	}
+
+	// 주문상세 가져오기
+	@Override
+	public List<OrderDetailVo> getOrderDetail(String orderid) {
+		return shopDao.getOrderDetail(orderid);
 	}
 }

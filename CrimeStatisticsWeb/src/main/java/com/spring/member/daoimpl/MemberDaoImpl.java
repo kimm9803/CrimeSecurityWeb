@@ -69,4 +69,13 @@ public class MemberDaoImpl implements MemberDao {
 		map.put("email", email);
 		return sqlSession.selectOne(namespace + ".findByOrderInfo", map);
 	}
+
+	// 적립예정 포인트
+	@Override
+	public void updatePoint(int accumulatePoint, String memberid) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("accumulatePoint", accumulatePoint);
+		map.put("memberid", memberid);
+		sqlSession.update(namespace + ".updatePoint", map);
+	}
 }

@@ -41,7 +41,13 @@ public interface ShopDao {
 	
 	// 주문상세 저장
 	void orderDetailSave(OrderDetailVo orderDetailVo, String memberid, String[] cartNums);
-
+	
 	// 주문완료된 장바구니 삭제
 	void deleteOrderedCart(String[] cartNums);
+
+	// 장바구니 번호
+	int getCartNum(CartVo cartVo);
+
+	// 주문상세 가져오기
+	List<OrderDetailVo> getOrderDetail(String orderid);
 }

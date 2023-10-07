@@ -106,7 +106,6 @@ alter table cart
     add constraint cart_pdNum foreign key(pdNum)
     references products(pdNum);
     
-
 -- 주문 정보 테이블
 CREATE TABLE ORDERINFO (
     orderid             VARCHAR2(100)   NOT NULL,

@@ -17,6 +17,7 @@ import com.spring.member.service.MemberService;
 import com.spring.member.vo.MemberVo;
 import com.spring.shop.service.ShopService;
 import com.spring.shop.vo.CartVo;
+import com.spring.shop.vo.OrderDetailVo;
 import com.spring.shop.vo.ProductVo;
 
 @Controller
@@ -130,6 +131,10 @@ public class ShopController {
 		cartVo.setPdPrice(pdPrice);
 		cartVo.setPdNum(pdNum);
 		cartVo.setTotalPrice();
+		cartVo.setMemberid(memberid);
+		shopService.addCart(cartVo);
+		int cartNum = shopService.getCartNum(cartVo);
+		cartVo.setCartNum(cartNum);
 		
 		model.addAttribute("cart", cartVo);
 		model.addAttribute("member", findMember);
@@ -138,4 +143,14 @@ public class ShopController {
 		return "shop/order";
 	}
 	
+	// 결제 완료 페이지
+	@GetMapping("/order/success")
+	public String orderSuccess(@RequestParam("orderid") String orderid, Model model) {
+		
+		List<OrderDetailVo> orderDetailVo = shopService.getOrderDetail(orderid);
+		
+		model.addAttribute("orderDetail", orderDetailVo);
+		
+		return "shop/order_success";
+	}
 }

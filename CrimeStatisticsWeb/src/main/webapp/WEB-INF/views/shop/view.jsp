@@ -49,7 +49,7 @@ ul.category-list li {
 .categoryTabs {
 	display: flex;
 	justify-content: space-between;
-	margin-bottom: 20px;
+	margin-bottom: 21px;
 }
 
 .categoryTabs li {

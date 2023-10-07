@@ -32,4 +32,7 @@ public interface MemberService {
 
 	// 주문자 정보
 	MemberVo findByOrderInfo(String name, String tel, String email);
+
+	// 적립예정 포인트
+	void updatePoint(int accumulatePoint, String memberid);
 }

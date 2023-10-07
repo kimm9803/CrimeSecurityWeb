@@ -221,7 +221,7 @@ public class MemberController {
 	}
 	
 	// 회원 탈퇴
-	@PostMapping("/delete")
+	@GetMapping("/delete")
 	public String memberDelete(HttpSession session) {
 		String memberid = (String)session.getAttribute("memberid");
 		memberService.memberDelete(memberid);

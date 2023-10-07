@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.member.service.MemberService;
 import com.spring.shop.service.ShopService;
 import com.spring.shop.vo.CartVo;
 import com.spring.shop.vo.OrderDetailVo;
@@ -20,6 +21,9 @@ public class ShopRestController {
 	@Autowired
 	private ShopService shopService;
 
+	@Autowired
+	private MemberService memberService;
+	
 	// 장바구니 담기
 	@PostMapping("/view/add-cart")
 	public String addCart(CartVo cartVo, HttpSession session) {
@@ -62,15 +66,18 @@ public class ShopRestController {
 		return paymentPrice;
 	}
 
-	// 결제
-	@PostMapping("/pay")
-	public String pay(OrderInfoVo orderInfoVo, OrderDetailVo orderDetailVo, @RequestParam(value = "cartNums") String[] cartNums, HttpSession session) {
+	// 장바구니 선택 결제
+	@PostMapping("/select-pay")
+	public String pay(OrderInfoVo orderInfoVo, OrderDetailVo orderDetailVo, 
+			@RequestParam(value = "cartNums") String[] cartNums, 
+			@RequestParam("accumulatePoint") int accumulatePoint,
+			HttpSession session) {
 		
 		String memberid = (String)session.getAttribute("memberid");
 		String orderid = shopService.getUUID();
 		
 		// UUID 저장
-		orderInfoVo.setOrderid(orderid);
+		orderInfoVo.setOrderid(orderid);	
 		// 주문정보 저장
 		shopService.orderSave(orderInfoVo);
 
@@ -81,6 +88,38 @@ public class ShopRestController {
 		// 주문완료된 장바구니 삭제
 		shopService.deleteOrderedCart(cartNums);
 		
-		return "response";
+		// 적립예정 포인트
+		memberService.updatePoint(accumulatePoint, memberid);
+		
+		return orderid;
+	}
+	
+	// 바로 결제
+	@PostMapping("/pay")
+	public String nowPay(OrderInfoVo orderInfoVo, OrderDetailVo orderDetailVo, 
+			@RequestParam("cartNum") String cartNum, 
+			@RequestParam("accumulatePoint") int accumulatePoint, 
+			HttpSession session) {
+		
+		String memberid = (String)session.getAttribute("memberid");
+		String orderid = shopService.getUUID();
+		String[] cartNums = { cartNum };
+		
+		// UUID 저장
+		orderInfoVo.setOrderid(orderid);
+		// 주문정보 저장
+		shopService.orderSave(orderInfoVo);
+		
+		// 주문상세 저장
+		orderDetailVo.setOrderid(orderid);
+		shopService.orderDetailSave(orderDetailVo, memberid, cartNums);
+		
+		// 주문완료된 장바구니 삭제
+		shopService.deleteOrderedCart(cartNums);
+		
+		// 적립예정 포인트
+		memberService.updatePoint(accumulatePoint, memberid);
+		
+		return orderid;
 	}
 }
