@@ -62,9 +62,16 @@
 	</select>
 	
 	<!-- 적립예정 포인트 -->
-	<update id="updatePoint" parameterType="hashMap">
+	<update id="accumulatePoint" parameterType="hashMap">
 		UPDATE member 
 		SET point = point + #{accumulatePoint}
+		WHERE memberid = #{memberid}
+	</update>
+	
+	<!-- 사용 포인트 -->
+	<update id="pointUsage" parameterType="hashMap">
+		UPDATE member
+		SET point = point - #{usedPoint}
 		WHERE memberid = #{memberid}
 	</update>
 </mapper>

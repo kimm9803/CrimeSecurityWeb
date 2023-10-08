@@ -72,10 +72,19 @@ public class MemberDaoImpl implements MemberDao {
 
 	// 적립예정 포인트
 	@Override
-	public void updatePoint(int accumulatePoint, String memberid) {
+	public void accumulatePoint(int accumulatePoint, String memberid) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("accumulatePoint", accumulatePoint);
 		map.put("memberid", memberid);
-		sqlSession.update(namespace + ".updatePoint", map);
+		sqlSession.update(namespace + ".accumulatePoint", map);
+	}
+
+	// 사용 포인트
+	@Override
+	public void pointUsage(int usedPoint, String memberid) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("usedPoint", usedPoint);
+		map.put("memberid", memberid);
+		sqlSession.update(namespace + ".pointUsage", map);
 	}
 }

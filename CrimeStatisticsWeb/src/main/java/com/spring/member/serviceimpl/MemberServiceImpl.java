@@ -71,7 +71,13 @@ public class MemberServiceImpl implements MemberService {
 
 	// 적립예정 포인트
 	@Override
-	public void updatePoint(int accumulatePoint, String memberid) {
-		memberDao.updatePoint(accumulatePoint, memberid);
+	public void accumulatePoint(int accumulatePoint, String memberid) {
+		memberDao.accumulatePoint(accumulatePoint, memberid);
+	}
+
+	// 포인트 사용
+	@Override
+	public void pointUsage(int usedPoint, String memberid) {
+		memberDao.pointUsage(usedPoint, memberid);
 	}
 }

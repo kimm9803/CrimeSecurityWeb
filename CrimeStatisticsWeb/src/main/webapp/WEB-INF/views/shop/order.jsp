@@ -249,8 +249,8 @@ main {
 				        포인트
 				    </div>
 				    <div>
-				        <input type="text" name="pointUsage" value="0" style="width:430px; height: 40px; padding-left: 15px;" />
-				        <button class="customBtn" style="width: 100px; height: 40px; margin-left: 10px;">전액사용</button>
+				        <input type="text" id="pointUsage" value="0" style="width:430px; height: 40px; padding-left: 15px;" />
+				        <button id="allPointUsage" class="customBtn" style="width: 100px; height: 40px; margin-left: 10px;">전액사용</button>
 				    </div>
 				    <div style="margin-top: 20px;">
 				        보유 포인트 : <span id="point">${member.point}</span> 점
@@ -290,7 +290,7 @@ main {
 				    </div>
 				    <div style="display: flex; justify-content: space-between; margin-top: 5px; margin-right: 250px;">
 				    	<span style="color: gray;">포인트 사용</span>
-				    	<span>0원</span>
+				    	<span id="payPoint">0원</span>
 				    </div>
 				    <div style="display: flex; justify-content: space-between; margin-top: 5px; margin-right: 250px; border-bottom: 1px solid lightgray; padding-bottom: 20px;">
 				    	<span style="color: gray;">배송비</span>
@@ -353,6 +353,7 @@ main {
 			function addCommasToNumber(number) {
 			    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 			}
+			
 			var orderPayElement = document.getElementById('orderPay');
 			var totalPriceElement = document.getElementById('totalPrice');
 			var totalPayElement = document.getElementById('totalPay');
@@ -362,18 +363,57 @@ main {
 			var formattedOrderPay = addCommasToNumber(orderPayValue);
 			var formattedTotalPrice = addCommasToNumber(totalPriceValue);
 			var formattedTotalPay = addCommasToNumber(totalPayValue);
-
+			$('#point').text(addCommasToNumber($('#point').text()));
+			
+			
 			// 포맷된 값을 id="totalPrice"의 텍스트로 설정합니다.
 			orderPayElement.textContent = formattedOrderPay + '원';
 			totalPriceElement.textContent = formattedTotalPrice + '원';
 			totalPayElement.textContent = formattedTotalPay + '원';
 			
-			
 			// 적립예정 포인트
-			var totalPay = parseInt($('#totalPay').text().replace(/[^0-9]/g, ''));
-		    var accumulatePoint = Math.floor(totalPay * 0.05);
-		    $('#accumulatePoint').text(addCommasToNumber(accumulatePoint));
-		    
+		    function accumlatePoint() {
+		    	var totalPay = parseInt($('#totalPay').text().replace(/[^0-9]/g, ''));
+			    var accumulatePoint = Math.floor(totalPay * 0.05);
+			    $('#accumulatePoint').text(addCommasToNumber(accumulatePoint));
+		    }
+			
+		 	// 초기 적립예정 포인트
+		    accumlatePoint();
+		 	
+		 	// 사용 포인트 값
+		    $('#pointUsage').on('keyup', function() {
+			    var inputVal = parseInt($(this).val());
+			    var memberPoint = parseInt('${member.point}');
+			    
+			    if (inputVal > memberPoint) {
+			        alert('보유 포인트를 초과하였습니다');
+			        $(this).val(0);
+			        $('#payPoint').text(0 + '원'); // 보유 포인트 초과 시 0원으로 표시
+			        $('#totalPay').text(addCommasToNumber(${cart.totalPrice}) + '원');
+			        accumlatePoint();
+			    } else if (inputVal <= memberPoint && inputVal > 0) {
+			    	$('#payPoint').text('-' + addCommasToNumber(inputVal) + '원');
+			    	$('#totalPay').text(addCommasToNumber(${cart.totalPrice} - inputVal) + '원');
+			    	accumlatePoint();
+			    } else {
+			    	$('#payPoint').text(0 + '원');
+			    	$('#totalPay').text(addCommasToNumber(${cart.totalPrice}) + '원');
+			    	accumlatePoint();
+			    }
+			});
+		 	
+		 	// 전액사용 버튼 클릭
+		    $('#allPointUsage').on('click', function() {
+		    	var allPoint = ${member.point};
+		    	$('#pointUsage').val(allPoint);
+		    	$('#payPoint').text('-' + addCommasToNumber(allPoint) + '원');
+		    	$('#totalPay').text(addCommasToNumber(${cart.totalPrice} - allPoint) + '원');
+		    	
+		    	accumlatePoint();
+		    });
+		 
+		 	// 주문자 정보와 일치
 			$('#sameAsBilling').change(function() {
 				if (this.checked) {
 					var name  = $('#order_name').val();
@@ -428,10 +468,12 @@ main {
 			    }
 			});
 			
+			// 이전
 			$('#primary').click(function() {
 				history.back();
 			});
 			
+			// 결제하기
 			$('#payment').click(function() {
 				var creditCardSelected = $('#creditCard').data('selected');
 				var kakaoPaySelected   = $('#kakaoPay').data('selected');
@@ -496,6 +538,7 @@ main {
 		
 		// kg이니시스
 		function iamport_inicis(){
+			var totalPay = parseInt($('#totalPay').text().replace(/[^0-9]/g, ''));
 			//가맹점 식별코드
 			IMP.init('imp52104544');
 			IMP.request_pay({
@@ -503,7 +546,7 @@ main {
 			    pay_method : 'card',
 			    merchant_uid : '${merchant_uid}_' + new Date().getTime(),
 			    name : '${cart.pdName}' , //결제창에서 보여질 이름
-			    amount : ${cart.totalPrice}, //실제 결제되는 가격
+			    amount : totalPay, //실제 결제되는 가격
 			    buyer_email : '${member.email}',
 			    buyer_name : '${member.name}',
 			    buyer_tel : '${member.tel}',
@@ -520,17 +563,19 @@ main {
 			    	var address_detail = $('#address_detail').val();
 			    	var address = address_primary + ' ' + address_detail;
 			    	var email = $('#email').val();
-			    	var totalPrice = parseInt($('#totalPay').text().replace('원', ''));
+			    	var totalPrice = parseInt($('#totalPay').text().replace(/[^0-9]/g, ''));
 			    	var cartNum = ${cart.cartNum};
 			    	// 포인트
 			    	var accumulatePoint = parseInt($('#accumulatePoint').text().replace(/[^0-9]/g, ''));
+			    	var pointUsage = $('#pointUsage').val();
 			    	
+			    	/*
 			    	var msg = '결제가 완료되었습니다.';
 			        msg += '고유ID : ' + rsp.imp_uid;
 			        msg += '상점 거래ID : ' + rsp.merchant_uid;
 			        msg += '결제 금액 : ' + rsp.paid_amount;
 			        msg += '카드 승인번호 : ' + rsp.apply_num;
-			        
+			        */
 			        $.ajax({
 			        	url : '/shop/pay',
 			        	type : 'POST',
@@ -545,7 +590,8 @@ main {
 			        		email : email,
 			        		totalPrice : totalPrice,
 			        		cartNum : cartNum,
-			        		accumulatePoint : accumulatePoint
+			        		accumulatePoint : accumulatePoint,
+			        		pointUsage : pointUsage
 			        	},
 			        	success : function(orderid) {
 			        		location.href = '/shop/order/success?orderid=' + orderid;
@@ -565,6 +611,7 @@ main {
 		
 		// 카카오페이
 		function iamport_kakaopay(){
+			var totalPay = parseInt($('#totalPay').text().replace(/[^0-9]/g, ''));
 			//가맹점 식별코드
 			IMP.init('imp52104544');
 			IMP.request_pay({
@@ -572,7 +619,7 @@ main {
 			    pay_method : 'card',
 			    merchant_uid : '${merchant_uid}_' + new Date().getTime(),
 			    name : '${cart.pdName}' , //결제창에서 보여질 이름
-			    amount : ${cart.totalPrice}, //실제 결제되는 가격
+			    amount : totalPay, //실제 결제되는 가격
 			    buyer_email : '${member.email}',
 			    buyer_name : '${member.name}',
 			    buyer_tel : '${member.tel}',
@@ -593,13 +640,15 @@ main {
 			    	var cartNum = ${cart.cartNum};
 			    	// 포인트
 			    	var accumulatePoint = parseInt($('#accumulatePoint').text().replace(/[^0-9]/g, ''));
+			    	var pointUsage = $('#pointUsage').val();
 			    	
+			    	/*
 			    	var msg = '결제가 완료되었습니다.';
 			        msg += '고유ID : ' + rsp.imp_uid;
 			        msg += '상점 거래ID : ' + rsp.merchant_uid;
 			        msg += '결제 금액 : ' + rsp.paid_amount;
 			        msg += '카드 승인번호 : ' + rsp.apply_num;
-			        
+			        */
 			        $.ajax({
 			        	url : '/shop/pay',
 			        	type : 'POST',
@@ -614,7 +663,8 @@ main {
 			        		email : email,
 			        		totalPrice : totalPrice,
 			        		cartNum : cartNum,
-			        		accumulatePoint : accumulatePoint
+			        		accumulatePoint : accumulatePoint,
+			        		pointUsage : pointUsage
 			        	},
 			        	success : function(orderid) {
 			        		location.href = '/shop/order/success?orderid=' + orderid;
@@ -634,6 +684,7 @@ main {
 		
 		// 토스페이
 		function iamport_tossPay(){
+			var totalPay = parseInt($('#totalPay').text().replace(/[^0-9]/g, ''));
 			//가맹점 식별코드
 			IMP.init('imp52104544');
 			IMP.request_pay({
@@ -641,7 +692,7 @@ main {
 			    pay_method : 'card',
 			    merchant_uid : '${merchant_uid}_' + new Date().getTime(),
 			    name : '${cart.pdName}' , //결제창에서 보여질 이름
-			    amount : ${cart.totalPrice}, //실제 결제되는 가격
+			    amount : totalPay, //실제 결제되는 가격
 			    buyer_email : '${member.email}',
 			    buyer_name : '${member.name}',
 			    buyer_tel : '${member.tel}',
@@ -662,13 +713,15 @@ main {
 			    	var cartNum = ${cart.cartNum};
 			    	// 포인트
 			    	var accumulatePoint = parseInt($('#accumulatePoint').text().replace(/[^0-9]/g, ''));
+			    	var pointUsage = $('#pointUsage').val();
 			    	
+			    	/*
 			    	var msg = '결제가 완료되었습니다.';
 			        msg += '고유ID : ' + rsp.imp_uid;
 			        msg += '상점 거래ID : ' + rsp.merchant_uid;
 			        msg += '결제 금액 : ' + rsp.paid_amount;
 			        msg += '카드 승인번호 : ' + rsp.apply_num;
-			        
+			        */
 			        $.ajax({
 			        	url : '/shop/pay',
 			        	type : 'POST',
@@ -683,7 +736,8 @@ main {
 			        		email : email,
 			        		totalPrice : totalPrice,
 			        		cartNum : cartNum,
-			        		accumulatePoint : accumulatePoint
+			        		accumulatePoint : accumulatePoint,
+			        		pointUsage : pointUsage
 			        	},
 			        	success : function(orderid) {
 			        		location.href = '/shop/order/success?orderid=' + orderid;
@@ -702,6 +756,7 @@ main {
 		
 		// 삼성페이
 		function iamport_samsungPay(){
+			var totalPay = parseInt($('#totalPay').text().replace(/[^0-9]/g, ''));
 			//가맹점 식별코드
 			IMP.init('imp52104544');
 			IMP.request_pay({
@@ -709,7 +764,7 @@ main {
 			    pay_method : 'samsung',
 			    merchant_uid : '${merchant_uid}_' + new Date().getTime(),
 			    name : '${cart.pdName}' , //결제창에서 보여질 이름
-			    amount : ${cart.totalPrice}, //실제 결제되는 가격
+			    amount : totalPay, //실제 결제되는 가격
 			    buyer_email : '${member.email}',
 			    buyer_name : '${member.name}',
 			    buyer_tel : '${member.tel}',
@@ -730,13 +785,15 @@ main {
 			    	var cartNum = ${cart.cartNum};
 			    	// 포인트
 			    	var accumulatePoint = parseInt($('#accumulatePoint').text().replace(/[^0-9]/g, ''));
+			    	var pointUsage = $('#pointUsage').val();
 			    	
+			    	/*
 			    	var msg = '결제가 완료되었습니다.';
 			        msg += '고유ID : ' + rsp.imp_uid;
 			        msg += '상점 거래ID : ' + rsp.merchant_uid;
 			        msg += '결제 금액 : ' + rsp.paid_amount;
 			        msg += '카드 승인번호 : ' + rsp.apply_num;
-			        
+			        */
 			        $.ajax({
 			        	url : '/shop/pay',
 			        	type : 'POST',
@@ -751,7 +808,8 @@ main {
 			        		email : email,
 			        		totalPrice : totalPrice,
 			        		cartNum : cartNum,
-			        		accumulatePoint : accumulatePoint
+			        		accumulatePoint : accumulatePoint,
+			        		pointUsage : pointUsage
 			        	},
 			        	success : function(orderid) {
 			        		location.href = '/shop/order/success?orderid=' + orderid;

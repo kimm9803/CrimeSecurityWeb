@@ -71,6 +71,7 @@ public class ShopRestController {
 	public String pay(OrderInfoVo orderInfoVo, OrderDetailVo orderDetailVo, 
 			@RequestParam(value = "cartNums") String[] cartNums, 
 			@RequestParam("accumulatePoint") int accumulatePoint,
+			@RequestParam("pointUsage") int usedPoint,
 			HttpSession session) {
 		
 		String memberid = (String)session.getAttribute("memberid");
@@ -88,8 +89,11 @@ public class ShopRestController {
 		// 주문완료된 장바구니 삭제
 		shopService.deleteOrderedCart(cartNums);
 		
+		// 포인트 사용
+		memberService.pointUsage(usedPoint, memberid);
+		
 		// 적립예정 포인트
-		memberService.updatePoint(accumulatePoint, memberid);
+		memberService.accumulatePoint(accumulatePoint, memberid);
 		
 		return orderid;
 	}
@@ -98,7 +102,8 @@ public class ShopRestController {
 	@PostMapping("/pay")
 	public String nowPay(OrderInfoVo orderInfoVo, OrderDetailVo orderDetailVo, 
 			@RequestParam("cartNum") String cartNum, 
-			@RequestParam("accumulatePoint") int accumulatePoint, 
+			@RequestParam("accumulatePoint") int accumulatePoint,
+			@RequestParam("pointUsage") int usedPoint,
 			HttpSession session) {
 		
 		String memberid = (String)session.getAttribute("memberid");
@@ -117,8 +122,11 @@ public class ShopRestController {
 		// 주문완료된 장바구니 삭제
 		shopService.deleteOrderedCart(cartNums);
 		
+		// 포인트 사용
+		memberService.pointUsage(usedPoint, memberid);
+				
 		// 적립예정 포인트
-		memberService.updatePoint(accumulatePoint, memberid);
+		memberService.accumulatePoint(accumulatePoint, memberid);
 		
 		return orderid;
 	}

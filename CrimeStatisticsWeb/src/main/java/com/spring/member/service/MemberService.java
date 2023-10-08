@@ -34,5 +34,8 @@ public interface MemberService {
 	MemberVo findByOrderInfo(String name, String tel, String email);
 
 	// 적립예정 포인트
-	void updatePoint(int accumulatePoint, String memberid);
+	void accumulatePoint(int accumulatePoint, String memberid);
+
+	// 포인트 사용
+	void pointUsage(int usedPoint, String memberid);
 }
