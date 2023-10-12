@@ -13,7 +13,9 @@ import com.spring.shop.service.ShopService;
 import com.spring.shop.vo.CartVo;
 import com.spring.shop.vo.OrderDetailVo;
 import com.spring.shop.vo.OrderInfoVo;
+import com.spring.shop.vo.PointVo;
 import com.spring.shop.vo.ProductVo;
+import com.spring.shop.vo.ReviewVo;
 
 @Service("shopService")
 public class ShopServiceImpl implements ShopService {
@@ -128,5 +130,53 @@ public class ShopServiceImpl implements ShopService {
 	@Override
 	public List<OrderDetailVo> getOrderDetail(String orderid) {
 		return shopDao.getOrderDetail(orderid);
+	}
+
+	// 주문정보 가져오기
+	@Override
+	public List<OrderInfoVo> getOrderInfoList(String memberid) {
+		return shopDao.getOrderInfoList(memberid);
+	}
+
+	// 리뷰 작성
+	@Override
+	public void writeReview(ReviewVo reviewVo) {
+		shopDao.writeReview(reviewVo);
+	}
+
+	// 리뷰 리스트
+	@Override
+	public List<ReviewVo> getReviewList(String memberid) {
+		return shopDao.getReviewList(memberid);
+	}
+
+	// 리뷰 삭제
+	@Override
+	public void deleteReview(int reviewid, String memberid) {
+		shopDao.deleteReview(reviewid, memberid);
+	}
+
+	// 전체 리뷰 가져오기
+	@Override
+	public List<ReviewVo> getAllReviewList() {
+		return shopDao.getAllReviewList();
+	}
+
+	// 포인트 사용(포인트 테이블)
+	@Override
+	public void insertPointUsage(int usedPoint, String memberid, int afterUsagePoint) {
+		shopDao.insertPointUsage(usedPoint, memberid, afterUsagePoint);
+	}
+
+	// 포인트 적립(포인트 테이블)
+	@Override
+	public void insertAccumulatePoint(int accumulatePoint, String memberid, int afterAccumulatePoint) {
+		shopDao.insertAccumulatePoint(accumulatePoint, memberid, afterAccumulatePoint);
+	}
+
+	// 포인트 내역
+	@Override
+	public List<PointVo> getPointList(String memberid) {
+		return shopDao.getPointList(memberid);
 	}
 }

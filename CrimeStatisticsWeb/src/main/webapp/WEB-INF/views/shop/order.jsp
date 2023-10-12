@@ -386,6 +386,15 @@ main {
 			    var inputVal = parseInt($(this).val());
 			    var memberPoint = parseInt('${member.point}');
 			    
+			    if (inputVal > ${cart.totalPrice}) {
+			    	alert('상품 가격까지만 포인트 사용이 가능합니다');
+			    	$(this).val(0);
+			    	$('#payPoint').text(0 + '원');
+			    	$('#totalPay').text(addCommasToNumber(${cart.totalPrice}) + '원');
+			    	accumlatePoint();
+			    	return;
+			    }
+			    
 			    if (inputVal > memberPoint) {
 			        alert('보유 포인트를 초과하였습니다');
 			        $(this).val(0);
@@ -400,12 +409,16 @@ main {
 			    	$('#payPoint').text(0 + '원');
 			    	$('#totalPay').text(addCommasToNumber(${cart.totalPrice}) + '원');
 			    	accumlatePoint();
-			    }
+			    } 
 			});
 		 	
 		 	// 전액사용 버튼 클릭
 		    $('#allPointUsage').on('click', function() {
 		    	var allPoint = ${member.point};
+		    	if (allPoint > ${cart.totalPrice}) {
+		    		alert('상품 가격까지만 포인트 사용이 가능합니다');
+		    		return;
+		    	}
 		    	$('#pointUsage').val(allPoint);
 		    	$('#payPoint').text('-' + addCommasToNumber(allPoint) + '원');
 		    	$('#totalPay').text(addCommasToNumber(${cart.totalPrice} - allPoint) + '원');
@@ -563,7 +576,7 @@ main {
 			    	var address_detail = $('#address_detail').val();
 			    	var address = address_primary + ' ' + address_detail;
 			    	var email = $('#email').val();
-			    	var totalPrice = parseInt($('#totalPay').text().replace(/[^0-9]/g, ''));
+			    	var totalPrice = totalPay;
 			    	var cartNum = ${cart.cartNum};
 			    	// 포인트
 			    	var accumulatePoint = parseInt($('#accumulatePoint').text().replace(/[^0-9]/g, ''));
@@ -604,8 +617,8 @@ main {
 			    } else {
 			    	 var msg = '결제에 실패하였습니다.';
 			         msg += '에러내용 : ' + rsp.error_msg;
+			         alert(msg);
 			    }
-			    alert(msg);
 			});
 		};
 		
@@ -636,7 +649,7 @@ main {
 			    	var address_detail = $('#address_detail').val();
 			    	var address = address_primary + ' ' + address_detail;
 			    	var email = $('#email').val();
-			    	var totalPrice = parseInt($('#totalPay').text().replace('원', ''));
+			    	var totalPrice = totalPay;
 			    	var cartNum = ${cart.cartNum};
 			    	// 포인트
 			    	var accumulatePoint = parseInt($('#accumulatePoint').text().replace(/[^0-9]/g, ''));
@@ -677,8 +690,8 @@ main {
 			    } else {
 			    	 var msg = '결제에 실패하였습니다.';
 			         msg += '에러내용 : ' + rsp.error_msg;
+			         alert(msg);
 			    }
-			    alert(msg);
 			});
 		};
 		
@@ -709,7 +722,7 @@ main {
 			    	var address_detail = $('#address_detail').val();
 			    	var address = address_primary + ' ' + address_detail;
 			    	var email = $('#email').val();
-			    	var totalPrice = parseInt($('#totalPay').text().replace('원', ''));
+			    	var totalPrice = totalPay;
 			    	var cartNum = ${cart.cartNum};
 			    	// 포인트
 			    	var accumulatePoint = parseInt($('#accumulatePoint').text().replace(/[^0-9]/g, ''));
@@ -749,8 +762,8 @@ main {
 			    } else {
 			    	 var msg = '결제에 실패하였습니다.';
 			         msg += '에러내용 : ' + rsp.error_msg;
+			         alert(msg);
 			    }
-			    alert(msg);
 			});
 		};
 		
@@ -781,7 +794,7 @@ main {
 			    	var address_detail = $('#address_detail').val();
 			    	var address = address_primary + ' ' + address_detail;
 			    	var email = $('#email').val();
-			    	var totalPrice = parseInt($('#totalPay').text().replace('원', ''));
+			    	var totalPrice = totalPay;
 			    	var cartNum = ${cart.cartNum};
 			    	// 포인트
 			    	var accumulatePoint = parseInt($('#accumulatePoint').text().replace(/[^0-9]/g, ''));
@@ -821,8 +834,8 @@ main {
 			    } else {
 			    	 var msg = '결제에 실패하였습니다.';
 			         msg += '에러내용 : ' + rsp.error_msg;
+			         alert(msg);
 			    }
-			    alert(msg);
 			});
 		};
 	</script>

@@ -12,7 +12,9 @@ import com.spring.shop.dao.ShopDao;
 import com.spring.shop.vo.CartVo;
 import com.spring.shop.vo.OrderDetailVo;
 import com.spring.shop.vo.OrderInfoVo;
+import com.spring.shop.vo.PointVo;
 import com.spring.shop.vo.ProductVo;
+import com.spring.shop.vo.ReviewVo;
 
 @Repository("shopDao")
 public class ShopDaoImpl implements ShopDao {
@@ -118,5 +120,64 @@ public class ShopDaoImpl implements ShopDao {
 	@Override
 	public List<OrderDetailVo> getOrderDetail(String orderid) {
 		return sqlSession.selectList(namespace + ".getOrderDetail", orderid);
+	}
+
+	// 주문정보 가져오기
+	@Override
+	public List<OrderInfoVo> getOrderInfoList(String memberid) {
+		return sqlSession.selectList(namespace + ".getOrderInfoList", memberid);
+	}
+
+	// 리뷰 작성
+	@Override
+	public void writeReview(ReviewVo reviewVo) {
+		sqlSession.insert(namespace + ".writeReview", reviewVo);
+	}
+
+	// 리뷰 리스트
+	@Override
+	public List<ReviewVo> getReviewList(String memberid) {
+		return sqlSession.selectList(namespace + ".getReviewList", memberid);
+	}
+
+	// 리뷰 삭제
+	@Override
+	public void deleteReview(int reviewid, String memberid) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("reviewid", reviewid);
+		map.put("memberid", memberid);
+		sqlSession.delete(namespace + ".deleteReview", map);
+	}
+
+	// 전체 리뷰 가져오기
+	@Override
+	public List<ReviewVo> getAllReviewList() {
+		return sqlSession.selectList(namespace + ".getAllReviewList");
+	}
+
+	// 포인트 사용(포인트 테이블)
+	@Override
+	public void insertPointUsage(int usedPoint, String memberid, int afterUsagePoint) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("usedPoint", usedPoint);
+		map.put("memberid", memberid);
+		map.put("afterUsagePoint", afterUsagePoint);
+		sqlSession.insert(namespace + ".insertPointUsage", map);
+	}
+
+	// 포인트 적립(포인트 테이블)
+	@Override
+	public void insertAccumulatePoint(int accumulatePoint, String memberid, int afterAccumulatePoint) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("accumulatePoint", accumulatePoint);
+		map.put("memberid", memberid);
+		map.put("afterAccumulatePoint", afterAccumulatePoint);
+		sqlSession.insert(namespace + ".insertAccumulatePoint", map);
+	}
+
+	// 포인트 내역
+	@Override
+	public List<PointVo> getPointList(String memberid) {
+		return sqlSession.selectList(namespace + ".getPointList", memberid);
 	}
 }

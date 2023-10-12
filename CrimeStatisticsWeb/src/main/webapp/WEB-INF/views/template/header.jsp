@@ -148,17 +148,46 @@
       </div>
       <div class="offcanvas-body" style= "background-color: rgba(8, 35, 56, 0.4)">
         <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#" style="text-align: center; font-size: 25px;">자유게시판</a>
+         <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/board/listsearch?menu_id=1">자유게시판</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link dropdown-toggle" href="#"  role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: center; font-size: 25px;">
+            <a class="nav-link dropdown-toggle" href="#"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 지역 별 게시판
             </a>
-            <ul class="dropdown-menu dropdown-menu-dark" >
-                <li><a  class="dropdown-item" href="#">서울</a></li>
+            <ul class="dropdown-menu dropdown-menu-dark">
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=2">서울</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a  class="dropdown-item" href="#">경기도</a></li>
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=3">부산</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=4">대구</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=5">인천</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=6">광주</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=7">대전</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=8">울산</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=9">경기</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=10">강원</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=11">충북</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=12">충남</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=13">전북</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=14">전남</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=15">경북</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=16">경남</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a  class="dropdown-item" href="/board/listsearch?menu_id=17">제주</a></li>
+                <li><hr class="dropdown-divider"></li> 
             </ul>
           </li>
           <li class="nav-item dropdown">

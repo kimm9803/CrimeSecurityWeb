@@ -1,7 +1,9 @@
 package com.spring.shop.controller;
 
+import java.io.File;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.member.service.MemberService;
 import com.spring.member.vo.MemberVo;
@@ -19,6 +22,8 @@ import com.spring.shop.service.ShopService;
 import com.spring.shop.vo.CartVo;
 import com.spring.shop.vo.OrderDetailVo;
 import com.spring.shop.vo.ProductVo;
+import com.spring.shop.vo.ReviewVo;
+import com.spring.utils.UploadFileUtils;
 
 @Controller
 @RequestMapping("/shop")
@@ -29,6 +34,9 @@ public class ShopController {
 	
 	@Autowired
 	private MemberService memberService;
+	
+	@Resource(name="uploadPath")
+	private String uploadPath;
 	
 	// 전체 호신용품 리스트
 	@GetMapping("/list")
@@ -54,6 +62,7 @@ public class ShopController {
 		String memberid = (String)session.getAttribute("memberid");
 		model.addAttribute("product", productVo);
 		model.addAttribute("memberid", memberid);
+		model.addAttribute("reviewList", shopService.getAllReviewList());
 		
 		if (adminid != null) {
 			return "redirect:/admin/shop/view";
@@ -152,5 +161,31 @@ public class ShopController {
 		model.addAttribute("orderDetail", orderDetailVo);
 		
 		return "shop/order_success";
+	}
+	
+	// 리뷰 작성 페이지
+	@GetMapping("/review")
+	public String writeReviewPage(@RequestParam("pdNum") int pdNum, @RequestParam("memberid") String memberid, Model model) {
+		ProductVo productVo = shopService.getView(pdNum);
+		model.addAttribute("product", productVo);
+		model.addAttribute("memberid", memberid);
+		return "shop/review";
+	}
+	
+	@PostMapping("/review/write")
+	public String writeReview(ReviewVo reviewVo, MultipartFile file) throws Exception {
+		String imgUploadPath = uploadPath;
+		String ymdPath = UploadFileUtils.calcPath(imgUploadPath);
+		String fileName = null;
+		if(file != null && file.getOriginalFilename() != null && !file.getOriginalFilename().isEmpty()) {
+		    fileName =  UploadFileUtils.fileUpload(imgUploadPath, file.getOriginalFilename(), file.getBytes(), ymdPath);
+		    reviewVo.setReviewImg(File.separator + "imgUpload" + ymdPath + File.separator + fileName);
+		    shopService.writeReview(reviewVo);
+		} else {
+		    // 파일이 업로드되지 않은 경우의 처리 (예: 기본 이미지 경로 설정 등)
+			reviewVo.setReviewImg("");
+			shopService.writeReview(reviewVo);
+		}
+		return "redirect:/";
 	}
 }

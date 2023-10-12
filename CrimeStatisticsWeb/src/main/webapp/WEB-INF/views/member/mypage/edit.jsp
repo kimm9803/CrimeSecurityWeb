@@ -10,12 +10,12 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-<title>My Page</title>
+<title>회원정보수정</title>
 </head>
 <body style="background-color: #cccccc;">
-	<header><%@ include file="../template/header.jsp"%></header>
+	<header><%@ include file="../../template/header.jsp"%></header>
 	<main style="margin-left: 700px; margin-bottom: 150px;">
-	<h2>My Page</h2>
+	<h2>회원정보수정</h2>
 		<form action="/member/modify" method="post">
 			<div>이름</div>
 			<input type="text" name="name" size="30" value="${member.name}" readonly disabled /><br /><br />
@@ -65,7 +65,7 @@
 		</form>
 	</main>
 	
-	<footer><%@ include file="../template/footer.jsp"%></footer>
+	<footer><%@ include file="../../template/footer.jsp"%></footer>
 	
 	<script>
 		let code = "";	// 이메일 인증코드

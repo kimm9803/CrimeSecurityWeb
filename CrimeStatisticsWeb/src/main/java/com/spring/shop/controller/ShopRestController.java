@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.member.service.MemberService;
+import com.spring.member.vo.MemberVo;
 import com.spring.shop.service.ShopService;
 import com.spring.shop.vo.CartVo;
 import com.spring.shop.vo.OrderDetailVo;
@@ -91,9 +92,23 @@ public class ShopRestController {
 		
 		// 포인트 사용
 		memberService.pointUsage(usedPoint, memberid);
-		
+				
+		// 포인트 사용된 후의 회원 포인트
+		MemberVo useMember = memberService.findById(memberid);
+		int afterUsagePoint = useMember.getPoint();
+				
+		// 포인트 테이블에 삽입
+		shopService.insertPointUsage(usedPoint, memberid, afterUsagePoint);
+						
 		// 적립예정 포인트
 		memberService.accumulatePoint(accumulatePoint, memberid);
+				
+		// 포인트 적립된 후의 회원 포인트
+		MemberVo accMember = memberService.findById(memberid);
+		int afterAccumulatePoint = accMember.getPoint();
+				
+		// 포인트 테이블에 삽입
+		shopService.insertAccumulatePoint(accumulatePoint, memberid, afterAccumulatePoint);
 		
 		return orderid;
 	}
@@ -124,10 +139,33 @@ public class ShopRestController {
 		
 		// 포인트 사용
 		memberService.pointUsage(usedPoint, memberid);
+		
+		// 포인트 사용된 후의 회원 포인트
+		MemberVo useMember = memberService.findById(memberid);
+		int afterUsagePoint = useMember.getPoint();
+		
+		// 포인트 테이블에 삽입
+		shopService.insertPointUsage(usedPoint, memberid, afterUsagePoint);
 				
 		// 적립예정 포인트
 		memberService.accumulatePoint(accumulatePoint, memberid);
 		
+		// 포인트 적립된 후의 회원 포인트
+		MemberVo accMember = memberService.findById(memberid);
+		int afterAccumulatePoint = accMember.getPoint();
+		
+		// 포인트 테이블에 삽입
+		shopService.insertAccumulatePoint(accumulatePoint, memberid, afterAccumulatePoint);
+		
 		return orderid;
+	}
+	
+	// 리뷰 삭제
+	@PostMapping("/review/delete")
+	public String deleteReview(@RequestParam("reviewid") int reviewid, @RequestParam("memberid") String memberid) {
+		
+		shopService.deleteReview(reviewid, memberid);
+		
+		return "complete";
 	}
 }

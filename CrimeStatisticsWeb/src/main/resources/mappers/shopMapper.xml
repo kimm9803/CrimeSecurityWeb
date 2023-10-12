@@ -116,4 +116,58 @@
 		INNER JOIN products p ON o.pdNum = p.pdNum
 		WHERE o.orderid = #{orderid}
 	</select>
+	
+	<!-- 주문정보 가져오기 -->
+	<select id="getOrderInfoList" resultType="com.spring.shop.vo.OrderInfoVo">
+		SELECT orderid, memberid, name, email, tel, address, address_postcode, address_primary, address_detail, order_status, orderDate, totalPrice 
+		FROM orderinfo
+		WHERE memberid = #{memberid}
+	</select>
+	
+	<!-- 리뷰 작성 -->
+	<insert id="writeReview">
+		INSERT INTO reviews (memberid, pdNum, reviewText, reviewImg, rating)
+		VALUES (#{memberid}, #{pdNum}, #{reviewText}, #{reviewImg}, #{rating})
+	</insert>
+	
+	<!-- 리뷰 가져오기 -->
+	<select id="getReviewList" resultType="com.spring.shop.vo.ReviewVo">
+		SELECT r.reviewid, r.memberid, r.pdNum, r.reviewText, r.reviewImg, r.rating, TO_CHAR(r.reviewDate, 'YYYY/MM/DD') AS reviewDate, p.pdName
+		FROM reviews r
+		INNER JOIN products p ON p.pdNum = r.pdNum
+		WHERE memberid = #{memberid}
+	</select>
+	
+	<!-- 리뷰 삭제 -->
+	<delete id="deleteReview" parameterType="hashMap">
+		DELETE FROM reviews
+		WHERE reviewid = #{reviewid} AND memberid = #{memberid}
+	</delete>
+	
+	<!-- 전체 리뷰 가져오기 -->
+	<select id="getAllReviewList" resultType="com.spring.shop.vo.ReviewVo">
+		SELECT reviewid, memberid, pdNum, reviewText, reviewImg, rating, TO_CHAR(reviewDate, 'YYYY/MM/DD') AS reviewDATE
+		FROM reviews
+	</select>
+	
+	<!-- 포인트 사용(포인트 테이블) -->
+	<insert id="insertPointUsage" parameterType="hashMap">
+		INSERT INTO point (memberid, usagePoint, point)
+		VALUES (#{memberid}, #{usedPoint}, #{afterUsagePoint})
+	</insert>
+	
+	<!-- 포인트 적립(포인트 테이블) -->
+	<insert id="insertAccumulatePoint" parameterType="hashMap">
+		INSERT INTO point (memberid, accumulatePoint, point)
+		VALUES (#{memberid}, #{accumulatePoint}, #{afterAccumulatePoint})
+	</insert>
+	
+	<!-- 포인트 내역 -->
+	<select id="getPointList" resultType="com.spring.shop.vo.PointVo">
+		SELECT p.pointid, p.memberid, p.accumulatePoint, p.usagePoint, p.point, TO_CHAR(p.pointDate,'YYYY/MM/DD PM HH:MI:SS') AS pointDate, m.name
+		FROM point p
+		INNER JOIN member m ON m.memberid = p.memberid
+		WHERE p.memberid = #{memberid}
+		ORDER BY p.pointid DESC
+	</select>
 </mapper>

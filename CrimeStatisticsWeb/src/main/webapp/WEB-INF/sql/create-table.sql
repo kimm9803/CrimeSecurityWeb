@@ -131,6 +131,10 @@ ADD CONSTRAINT FK_ORDERINFO_MEMBER
 FOREIGN KEY (memberid)
 REFERENCES member(memberid);
 
+
+-- 주문상세 시퀀스 생성
+CREATE SEQUENCE ORDERDETAIL_SEQ;
+
 -- 주문상세 테이블
 CREATE TABLE ORDERDETAIL (
     detailid    NUMBER          NOT NULL,
@@ -143,8 +147,9 @@ CREATE TABLE ORDERDETAIL (
     FOREIGN KEY(pdNum)   REFERENCES PRODUCTS(pdNum)
 );
 
--- 주문상세 시퀀스 생성
-CREATE SEQUENCE ORDERDETAIL_SEQ;
+
+-- 후기 시퀀스 생성
+CREATE SEQUENCE reviewid_seq;
     
 -- 후기 테이블
 CREATE TABLE Reviews (
@@ -157,4 +162,19 @@ CREATE TABLE Reviews (
     reviewDate  DATE DEFAULT SYSDATE,
     FOREIGN KEY (memberid) REFERENCES member(memberid),
     FOREIGN KEY (pdNum)    REFERENCES products(pdNum)
+);
+
+
+-- 포인트 시퀀스 생성
+CREATE SEQUENCE pointid_seq;
+
+// 포인트
+CREATE TABLE POINT (
+    pointid         NUMBER  DEFAULT pointid_seq.NEXTVAL PRIMARY KEY,
+    memberid        VARCHAR2(50)    NOT NULL,
+    accumulatePoint NUMBER(10),
+    usagePoint      NUMBER(10),
+    point           NUMBER(10),
+    pointDate       DATE    DEFAULT SYSDATE,
+    FOREIGN KEY (memberid) REFERENCES member(memberid)
 );

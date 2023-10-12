@@ -5,7 +5,9 @@ import java.util.List;
 import com.spring.shop.vo.CartVo;
 import com.spring.shop.vo.OrderDetailVo;
 import com.spring.shop.vo.OrderInfoVo;
+import com.spring.shop.vo.PointVo;
 import com.spring.shop.vo.ProductVo;
+import com.spring.shop.vo.ReviewVo;
 
 public interface ShopDao {
 
@@ -50,4 +52,28 @@ public interface ShopDao {
 
 	// 주문상세 가져오기
 	List<OrderDetailVo> getOrderDetail(String orderid);
+
+	// 주문정보 가져오기
+	List<OrderInfoVo> getOrderInfoList(String memberid);
+
+	// 리뷰 작성
+	void writeReview(ReviewVo reviewVo);
+
+	// 리뷰 리스트
+	List<ReviewVo> getReviewList(String memberid);
+
+	// 리뷰 삭제
+	void deleteReview(int reviewid, String memberid);
+
+	// 전체 리뷰 가져오기
+	List<ReviewVo> getAllReviewList();
+
+	// 포인트 사용(포인트 테이블)
+	void insertPointUsage(int usedPoint, String memberid, int afterUsagePoint);
+
+	// 포인트 적립(포인트 테이블)
+	void insertAccumulatePoint(int accumulatePoint, String memberid, int afterAccumulatePoint);
+
+	// 포인트 내역
+	List<PointVo> getPointList(String memberid);
 }
