@@ -410,7 +410,7 @@ h3 {
 				                <div>포인트</div>
 				                <div style="margin-right: 20px;">
 				                	<a href="/member/mypage/point" class="splita">
-				                		<span style="color: red; font-weight: bold;">${member.point } </span>포인트
+				                		<span class="benefitPoint" style="color: red; font-weight: bold;">${member.point } </span>포인트
 				                	</a>
 				                </div>
 				            </div>
@@ -477,10 +477,19 @@ h3 {
 		    $('.btn').on('click', function() {
 		    	location.href = '/member/mypage/modify';
 		    });
+		    
+		    // BENEFIT 포인트 쉼표 추가
+		    $('.benefitPoint').text(addCommasToNumber($('.benefitPoint').text()));
 		});
 		
+		// 휴대폰번호 '-' 추가
 		function formatPhoneNumber(phoneNumber) {
 		    return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+		}
+		
+		// 쉼표 추가
+		function addCommasToNumber(number) {
+		    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		}
 	</script>
 </body>

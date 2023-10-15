@@ -16,7 +16,7 @@ public interface BoardDao {
 
 	void updateBoard(BoardVo vo);
 
-	void deleteBoard(BoardVo vo);
+	void deleteBoard(int bnum);
 
 	void readCount(BoardVo vo);
 

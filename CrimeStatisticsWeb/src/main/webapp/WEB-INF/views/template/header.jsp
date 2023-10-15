@@ -206,6 +206,14 @@
               <li><a class="dropdown-item" href="/shop/list/400" style="text-align: center; font-size: 18px;">삼단봉</a></li>
             </ul>
           </li>
+          <li class="nav-item">
+          <a class="nav-link dropdown-toggle" href="#"  role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: center; font-size: 25px;">Q&A 게시판</a>
+              <ul class="dropdown-menu dropdown-menu-dark" >
+                <li><a  class="dropdown-item" href="/question/listPageSearch?num=1">Q&A</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a  class="dropdown-item" href="/question/writeform">질문 작성</a></li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>

@@ -1,5 +1,6 @@
 package com.spring.shop.dao.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -151,10 +152,16 @@ public class ShopDaoImpl implements ShopDao {
 
 	// 전체 리뷰 가져오기
 	@Override
-	public List<ReviewVo> getAllReviewList() {
-		return sqlSession.selectList(namespace + ".getAllReviewList");
+	public List<ReviewVo> getAllReviewList(int pdNum) {
+		return sqlSession.selectList(namespace + ".getAllReviewList", pdNum);
 	}
 
+	// 하나의 상품 리뷰 평균
+	@Override
+	public double getReviewAvg(int pdNum) {
+		return sqlSession.selectOne(namespace + ".getReviewAvg", pdNum);
+	}
+	
 	// 포인트 사용(포인트 테이블)
 	@Override
 	public void insertPointUsage(int usedPoint, String memberid, int afterUsagePoint) {
@@ -180,4 +187,15 @@ public class ShopDaoImpl implements ShopDao {
 	public List<PointVo> getPointList(String memberid) {
 		return sqlSession.selectList(namespace + ".getPointList", memberid);
 	}
+
+	// 포인트 내역 기간 조회
+	@Override
+	public List<PointVo> showPointDate(Date startDate, Date endDate, String memberid) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("memberid", memberid);
+		return sqlSession.selectList(namespace + ".showPointDate", map);
+	}
+
 }

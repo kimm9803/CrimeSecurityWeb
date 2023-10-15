@@ -1,80 +1,76 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>게시물 수정</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>게시물 등록</title>
 
-    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
-    
-    <!-- 부트스트랩 CSS 링크 추가 -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-    <style>
-/*         input { height: 32px; }
-        
-        /* 이하의 스타일은 부트스트랩 클래스와 함께 사용되도록 수정 */
-        #table th { width: 20%; }
-        #table td { width: 80%; }
-        input[type=text] { width: 100%; }
-        textarea { width: 100%; height: 300px; padding: 10px; } */
-    </style>
-    <!-- 부트스트랩 JavaScript 및 jQuery 추가 -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+<!-- 부트스트랩 5 CSS 링크 추가 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+  <!-- 부트스트랩 5 JavaScript 및 Popper.js 추가 -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
 </head>
-<body>
-    <main class="container mt-5">
-        <form action="/board/update" method="POST" name="form">
-            <input type="hidden" name="menu_id" value="${ vo.menu_id }" />
-                <caption>
-                    <h2 style="text-align: center; padding:20px;">게시물 수정</h2>
-                </caption>
-            <table class="table">
-                <tr>
-                    <th>글번호</th>
-                    <td><input type="text" class="form-control" name="bnum" value="${ vo.bnum }" readonly /></td>
-                </tr>
-                <tr>
-                    <th>제목</th>
-                    <td><input type="text" class="form-control" name="title" value="${ vo.title }"/></td>
-                </tr>
-                <tr>
-                    <th>글쓴이</th>
-                    <td><input type="text" class="form-control" value="${ vo.writer }" readonly /></td>
-                </tr>
-                <tr>
-                    <th>날짜</th>
-                    <td><input type="text" class="form-control" value="${ vo.regdate }" readonly /></td>
-                </tr>
-                <tr>
-                    <th>조회수</th>
-                    <td><input type="text" class="form-control" value="${ vo.readcount }" readonly /></td>
-                </tr>
-                <tr>
-                    <th>내용</th>
-                    <td><textarea class="form-control" name="cont" rows="10">${ vo.cont }</textarea></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <input type="button" class="btn btn-primary" id="update" value="수정" />
-                        <a href="/board/listsearch?menu_id=${ vo.menu_id }" class="btn btn-secondary">목록</a>
-                        <button type="button" class="btn btn-light" onclick="history.back()">이전으로</button>
-                    </td>
-                </tr>
-            </table>
-        </form> 
-    </main>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-document.getElementById("update").onclick = function(){
-	  if(confirm("수정하시겠습니까?")){
-		  form.submit();
-	  }
+<style>
+/* CSS 스타일 */
+.speech-bubble {
+	display: none;
+	position: absolute;
+	background-color: #f9f9f9;
+	border: 1px solid #ccc;
+	padding: 10px;
+	max-width: 300px;
+	z-index: 1;
+	right:300px;
+		
 }
-</script>
+
+.speech-bubble:after {
+	content: "";
+	position: absolute;
+	bottom: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: #f9f9f9 transparent transparent transparent;
+}
+</style>
+<body>
+<header><%@ include file="../template/header.jsp"%></header>
+  <main class="container mt-5" style="margin:0 auto 50px;  width:900px;">    
+    <form action="/board/update" method="POST">        
+          <h2 style="text-align: center; padding:20px;">글 수정</h2>			
+			<input type="hidden" name="menu_id" value="${vo.menu_id}" />        
+			<input type="hidden" name="bnum" value="${vo.bnum}" />        
+			<input type="hidden" name="regdate" value="${vo.regdate}" />        
+			<input type="hidden" name="readcount" value="${vo.readcount}" />        
+      <table class="table">
+        <tr>
+          <th>제목</th>
+          <td><input type="text" class="form-control" name="title" required value="${vo.title}" /></td>
+        </tr>
+        <tr>
+          <th>글쓴이</th>
+          <td><input type="text" class="form-control" name="writer" value="${nickname}" readonly /></td>
+        </tr>
+        <tr>
+          <th>내용</th>
+          <td><textarea class="form-control" name="cont" rows="17" required >${vo.cont}</textarea></td>
+        </tr>  
+        <tr>
+          <td colspan="2">
+            <button type="submit" class="btn btn-danger">수정</button>
+            <button type="button" class="btn btn-danger" onclick="history.back()">취소</button>
+          </td>
+        </tr>
+      </table>
+    </form> 
+  </main>
+ <footer><%@ include file="../template/footer.jsp"%></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+	</script>
 </body>
 </html>

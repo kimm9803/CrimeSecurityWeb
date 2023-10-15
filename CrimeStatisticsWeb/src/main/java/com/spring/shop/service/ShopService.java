@@ -1,5 +1,6 @@
 package com.spring.shop.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.spring.shop.vo.CartVo;
@@ -72,7 +73,10 @@ public interface ShopService {
 	void deleteReview(int reviewid, String memberid);
 
 	// 전체 리뷰 가져오기
-	List<ReviewVo> getAllReviewList();
+	List<ReviewVo> getAllReviewList(int pdNum);
+	
+	// 하나의 상품 리뷰 평균
+	double getReviewAvg(int pdNum);
 
 	// 포인트 사용(포인트 테이블)
 	void insertPointUsage(int usedPoint, String memberid, int afterUsagePoint);
@@ -82,4 +86,7 @@ public interface ShopService {
 
 	// 포인트 내역
 	List<PointVo> getPointList(String memberid);
+
+	// 포인트 내역 기간 조회
+	List<PointVo> showPointDate(Date startDate, Date endDate, String memberid);
 }

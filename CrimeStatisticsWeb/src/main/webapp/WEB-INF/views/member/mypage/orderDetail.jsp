@@ -381,7 +381,7 @@ footer {
 				                <div>포인트</div>
 				                <div style="margin-right: 20px;">
 				                	<a href="/member/mypage/point" class="splita">
-				                		<span style="color: red; font-weight: bold;">${member.point } </span>포인트
+				                		<span class="benefitPoint" style="color: red; font-weight: bold;">${member.point } </span>포인트
 				                	</a>
 				                </div>
 				            </div>
@@ -485,6 +485,9 @@ footer {
 		    	var formattedPrice = addCommasToNumber(totalPrice);
 		        totalPriceElement.text(formattedPrice);
 		    });
+		    
+		 	// BENEFIT 포인트 쉼표 추가
+		    $('.benefitPoint').text(addCommasToNumber($('.benefitPoint').text()));
 		    
 		    $('.writeReview').on('click', function() {
 		    	var pdNum = $(this).closest('tr').prev().find('.pdNum').val();

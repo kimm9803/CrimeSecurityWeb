@@ -156,7 +156,7 @@ td {
 						<td class="cartStock">${cart.cartStock}</td>
 						<td class="pdPrice">${cart.pdPrice}</td>
 						<td>무료</td>
-						<td>${cart.totalPrice}</td>
+						<td class="totalPrice">${cart.totalPrice}</td>
 						<td>
 							<div style="margin-left: 60px; margin-bottom: 5px;"><button type="button" class="close"></button></div>
 							<div style="margin-bottom: 45px;"><button type="button" class="btn btn-danger purchaseOne" style="padding: 5px 30px;">구매</button></div>
@@ -204,6 +204,13 @@ td {
 			function addCommasToNumber(number) {
 			    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 			}
+			
+			// 쉼표 추가
+			$('tbody tr').each(function() {
+			    $(this).find('.pdPrice').text(addCommasToNumber($(this).find('.pdPrice').text()));
+			    $(this).find('.totalPrice').text(addCommasToNumber($(this).find('.totalPrice').text()));
+			});
+
 			
 			// 단일 체크박스가 클릭되었을 때
 		    $(".itemCheckbox").click(function() {

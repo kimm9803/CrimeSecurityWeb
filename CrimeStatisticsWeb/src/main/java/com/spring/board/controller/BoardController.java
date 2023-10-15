@@ -138,15 +138,7 @@ public class BoardController {
 		return mv;
 	}
 	
-	
-	//게시물 삭제
-	@GetMapping("/delete")
-	public ModelAndView delete(BoardVo vo) {
-		boardService.deleteBoard(vo);
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("redirect:/board/listsearch?menu_id=" +  vo.getMenu_id());
-		return mv;
-	}	
+
 
 	//게시물 목록 ( 검색 + 페이징 )
 	@GetMapping("/listsearch")

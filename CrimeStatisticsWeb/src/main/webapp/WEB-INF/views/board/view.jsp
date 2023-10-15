@@ -9,101 +9,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
     <!-- 부트스트랩 CSS 링크 추가 -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&family=Nanum+Gothic+Coding&family=Nanum+Pen+Script&family=Noto+Sans+KR&family=Orbit&display=swap" rel="stylesheet">
     <!-- 부트스트랩 JavaScript 및 jQuery 추가 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</head>
-<body>
 
+</head>
+<style>
+.post-container {
+   border-top: 5px solid #0F3A5F;
+   border-bottom: 2px solid #0F3A5F;
+   padding: 20px;
+   margin: 10px;
+   display: flex;
+   justify-content: space-between;
+   align-items: flex-start;
+}
+
+.post-title {
+   font-size: 24px;
+   font-weight: bold;
+   margin-bottom: 10px;
+}
+
+.post-info {
+   font-size: 14px;
+   color: #777;
+}
+
+.post-content {
+   margin-top: 10px;
+   margin-left: 10px;
+   font-size: 16px;
+}
+main{
+font-family: 'Nanum Gothic Coding', monospace;
+}
+</style>
+<body>
 <!---------------- 본문 --------------->
 <header><%@ include file="../template/header.jsp"%></header>
-    <main class="container mt-5">
-        <caption>
-            <h2 style="text-align: center; padding:20px;">게시물 내용보기</h2>
-        </caption>
-        <table class="table">
-            <tr>
-                <th>글번호</th>
-                <td>${ vo.bnum }</td>
-                <th>조회수</th>
-                <td>${ vo.readcount }</td>
-            </tr>
-            <tr>
-                <th>작성자</th>
-                <td>${ vo.writer }</td>
-                <th>날짜</th>
-                <td>${ vo.regdate }</td>
-            </tr>
-            <tr>
-                <th>제목</th>
-                <td colspan="3">${ vo.title }</td>
-            </tr>
-            <tr>
-                <th>내용</th>
-                <td colspan="3" id="td_ta" style="height:300px;">${ vo.cont }</td>
-            </tr>
-            <tr>            
-                <td colspan="4" style="text-align:left">
-                     <form method="GET" name="form" Style="display:inline-block;">    
-                     <input type="hidden" name="menu_id" value="${vo.menu_id}">
-                     <input type="button" id="write" class="btn btn-primary" value="새글쓰기">
-                     </form>
-                     <c:if test="${sessionScope.nickname == vo.writer}">
-                      <a href="/board/updateform?menu_id=${ vo.menu_id }&bnum=${ vo.bnum }" class="btn btn-secondary">수정</a>
-                      <a href="/board/delete?menu_id=${ vo.menu_id }&bnum=${ vo.bnum }" class="btn btn-danger" id="delete">삭제</a>
-                     </c:if>                     
-                    <a href="/board/listsearch?page=1&perPageNum=10&menu_id=${vo.menu_id}" class="btn btn-info">목록으로</a>
-                    <a href="javascript:history.back()" class="btn btn-light">이전으로</a>
-                </td>
-            </tr>
-        </table>
+    <main class="container mt-5" style="margin:0 auto 50px;  width:900px;">      
+      <h2 style="text-align: center; padding:20px;">게시물 내용보기</h2>        
+       <div class="post-container">
+       <input type="hidden" value="${vo.bnum}">
+       <input type="hidden" value="${vo.menu_id}">
+        <div>
+            <div class="post-title">
+                ${vo.title}
+            </div>
+            <div class="post-info">
+                작성자: ${vo.writer} | 등록일: ${vo.regdate}
+            </div>
+        </div>
+        <div class="post-info">
+            조회: ${vo.readcount} | 추천: ${vo.likehit}
+        </div>           
+    </div>
+    <div class="post-content" style="height: 300px;">
+        ${vo.cont}
+    </div>
         <c:if test="${sessionScope.memberid != null}">
-			<div class="d-flex justify-content-center align-items-center" style="padding: 50px;">
-			    <c:if test="${likecheck eq 1 }">
-			        <a href="#" onclick="updateLike(); return false;" class="text-decoration-none mr-2">
-			            <img id="loglike" src="/img/Like.png" alt="추천" class="mr-1">
-			        </a>
-			    </c:if>			
-			    <c:if test="${likecheck eq 0 }">
-			        <a href="#" onclick="updateLike(); return false;" class="text-decoration-none mr-2">
-			            <img id="loglike" src="/img/Unlike.png" alt="추천" class="mr-1">
-			        </a>
-			    </c:if>
-			    <p class="mb-0" style="font-size:20px;">(${vo.likehit})</p>		
-			</div>
+         <div class="d-flex justify-content-center align-items-center" style="padding: 50px;">
+             <c:if test="${likecheck eq 1 }">
+                 <a href="#" onclick="updateLike(); return false;" class="text-decoration-none mr-2">
+                     <img id="loglike" src="/img/Like.png" alt="추천" class="mr-1">
+                 </a>
+             </c:if>         
+             <c:if test="${likecheck eq 0 }">
+                 <a href="#" onclick="updateLike(); return false;" class="text-decoration-none mr-2">
+                     <img id="loglike" src="/img/Unlike.png" alt="추천" class="mr-1">
+                 </a>
+             </c:if>
+             <p class="mb-0" style="font-size:20px;">(${vo.likehit})</p>      
+         </div>
         </c:if>
         <c:if test="${sessionScope.memberid == null}">
-		    <div class="d-flex justify-content-center align-items-center" style="padding: 50px;">
-		        <a>
-		        <img id="loglike" src="/img/Unlike.png" alt="추천" class="mr-1">
-		        </a>
-		        <p class="mb-0" style="font-size:20px;">(${vo.likehit})</p>
-		    </div>
-		</c:if>
+          <div class="d-flex justify-content-center align-items-center" style="padding: 50px;">
+              <a>
+              <img id="loglike" src="/img/Unlike.png" alt="추천" class="mr-1">
+              </a>
+              <p class="mb-0" style="font-size:20px;">(${vo.likehit})</p>
+          </div>
+      </c:if>
+       <div style="margin-bottom: 30px;">
+            <a href="/board/updateform?bnum=${vo.bnum}" id="update" class="btn btn-danger ml-2">수정</a>
+          <button id="delete" class="btn btn-danger">삭제</button>
+       </div>        
         <%@ include file="../board/include/reply.jsp"%>
      </main>   
-    <script>        
-        document.getElementById("write").onclick = function(){
-      	  var memberid = '<%= (String)session.getAttribute("memberid")%>';
-      	  if(memberid == "null"){
-      		  alert("로그인이 필요합니다");
-      		  return false;
-      	  }else{
-      		  form.action="/board/writeform";
-      		  form.submit();
-      	  }
-        }
-        
-        
+        <footer style="margin-top: 150px;"><%@ include file="../template/footer.jsp"%></footer>
+    <script>  
+               
         let bnum = ${vo.bnum};
         let memberid = '<%= (String)session.getAttribute("memberid")%>';
-        if (memberid != null) {
-            document.getElementById("delete").onclick = function () {
-                if (confirm("삭제하시겠습니까?")) {         
-                }
-            }
+        
+       
+            document.getElementById("delete").onclick = function () {               
+               $.ajax({
+                    url: '/board/delete',
+                    type: 'POST',
+               data:{
+                  "bnum" : bnum                                    
+               },                    
+                    success: function () {
+                        // 삭제 성공 시 실행할 동작 (예: 페이지 리로드)
+                        location.href="/board/listsearch?menu_id="+ ${vo.menu_id};
+                    },
+                    error: function () {
+                        // 삭제 실패 시 실행할 동작
+                        alert('게시물 삭제 실패');
+                    }
+                });
         }
 
             function updateLike() {

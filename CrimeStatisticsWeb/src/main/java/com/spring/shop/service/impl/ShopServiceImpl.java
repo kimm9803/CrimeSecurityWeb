@@ -2,6 +2,7 @@ package com.spring.shop.service.impl;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -158,8 +159,14 @@ public class ShopServiceImpl implements ShopService {
 
 	// 전체 리뷰 가져오기
 	@Override
-	public List<ReviewVo> getAllReviewList() {
-		return shopDao.getAllReviewList();
+	public List<ReviewVo> getAllReviewList(int pdNum) {
+		return shopDao.getAllReviewList(pdNum);
+	}
+	
+	// 하나의 상품 리뷰 평균
+	@Override
+	public double getReviewAvg(int pdNum) {
+		return shopDao.getReviewAvg(pdNum);
 	}
 
 	// 포인트 사용(포인트 테이블)
@@ -179,4 +186,11 @@ public class ShopServiceImpl implements ShopService {
 	public List<PointVo> getPointList(String memberid) {
 		return shopDao.getPointList(memberid);
 	}
+
+	// 포인트 내역 기간 조회
+	@Override
+	public List<PointVo> showPointDate(Date startDate, Date endDate, String memberid) {
+		return shopDao.showPointDate(startDate, endDate, memberid);
+	}
+
 }

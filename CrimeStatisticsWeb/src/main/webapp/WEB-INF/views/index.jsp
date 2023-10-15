@@ -15,59 +15,89 @@ String responseJSON = "{\"loggedIn\": " + (memberid != null) + "}";
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&family=Nanum+Gothic+Coding&family=Nanum+Pen+Script&family=Orbit&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 <title>home</title>
 <style>
-    .table-container {
-            margin-top: 20px;
-        }
-        table.table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table.table th, table.table td {
-            padding: 10px;
-            text-align: center;
-        }
-        table.table th {
-            background-color: #f2f2f2;
-        }
-        table.table tbody tr:nth-child(odd) {
-            background-color: #f9f9f9;
-        }
-        table.table tbody tr:nth-child(even) {
-            background-color: #ffffff;
-        }
+.table-container {
+	margin-top: 20px;
+}
 
+table.table {
+	width: 100%;
+	border-collapse: collapse;
+}
 
+table.table th, table.table td {
+	padding: 10px;
+	text-align: center;
+}
 
-   .chart-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch; /* stretch로 변경하여 수직으로 높이를 늘립니다. */
+table.table th {
+	background-color: #f2f2f2;
+}
+
+table.table tbody tr:nth-child(odd) {
+	background-color: #f9f9f9;
+}
+
+table.table tbody tr:nth-child(even) {
+	background-color: #ffffff;
+}
+
+.chart-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: stretch; /* stretch로 변경하여 수직으로 높이를 늘립니다. */
 }
 
 .chart {
-  flex: 1;
-  padding: 5px;
-  height:400px;
+	flex: 1;
+	padding: 5px;
+	height: 400px;
 }
 
-  .svg-container {
-    display: flex;
-    justify-content: flex-start; /* 왼쪽 정렬으로 변경 */
-    align-items: center;
-    height: 200vh; /* 원하는 높이로 조정하세요 */
-  }
-  #menu{font-size:30px; text-align: left;}
-  #board{font-size:30px; text-align: left;}
+.svg-container {
+	display: flex;
+	justify-content: flex-start; /* 왼쪽 정렬으로 변경 */
+	align-items: center;
+	height: 200vh; /* 원하는 높이로 조정하세요 */
+}
+
+#menu {
+	font-size: 30px;
+	text-align: left;
+}
+
+#board {
+	font-size: 30px;
+	text-align: left;
+}
+
+.table td, .table th {
+font-family: 'Orbit', sans-serif;
+}
+#chart{
+font-family: 'Orbit', sans-serif;
+font-size: 18px;
+font-weight:bold;
+text-align: center;
+color:#0F3A5F;
+}
+#title{
+font-family: 'Orbit', sans-serif;
+font-weight:bold;
+text-align: center;
+margin-bottom: 20px;
+color:#0F3A5F;
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body style="background-color: #cccccc; height: 150vh;">
+<body style="height: 100vh;">
    <header><%@ include file="template/header.jsp"%></header>
-
-
   <div class="row">
     <!-- 왼쪽 열: 지도 -->
     <div class="col-md-6"  style="width: 611px; height:900px; margin-left: 12%; margin-bottom: 0%; margin-top:0">
@@ -77,9 +107,9 @@ String responseJSON = "{\"loggedIn\": " + (memberid != null) + "}";
     </div>
     
     <!-- 오른쪽 열: 표 -->
-    <div class="col-md-6">
-   
+    <div class="col-md-6">   
        <div class = "table-container">
+       <h2 id="title">범죄 데이터</h2>
       <table class="table table-bordered">
     <thead>
       <tr>
@@ -91,44 +121,46 @@ String responseJSON = "{\"loggedIn\": " + (memberid != null) + "}";
     </thead>
     <tbody>
       <tr>
-        <td>강간</td>
-        <td><span id="gangOccurrence">100</span></td>
-        <td><span id="gangArrest"></span></td>
-        <td><span id="gangArrestRate">100</span></td>
+        <td>성범죄</td>
+        <td><span id="gangOccurrence">21331</span></td>
+        <td><span id="gangArrest">20104</span></td>
+        <td><span id="gangArrestRate">94.24%</span></td>
       </tr>
       <tr>
         <td>강도</td>
-        <td><span id="robberOccurrence">100</span></td>
-        <td><span id="robberArrest"></span></td>
-        <td><span id="robberArrestRate">100</span></td>
+        <td><span id="robberOccurrence">516</span></td>
+        <td><span id="robberArrest">507</span></td>
+        <td><span id="robberArrestRate">98.25%</span></td>
       </tr>
       <tr>
         <td>살인</td>
-        <td><span id="murderOccurrence">100</span></td>
-        <td><span id="murderArrest"></span></td>
-        <td><span id="murderArrestRate">100</span></td>
+        <td><span id="murderOccurrence">404</span></td>
+        <td><span id="murderArrest">394</span></td>
+        <td><span id="murderArrestRate">97.52%</span></td>
       </tr>
       <tr>
         <td>절도</td>
-        <td><span id="theftOccurrence">100</span></td>
-        <td><span id="theftArrest"></span></td>
-        <td><span id="theftArrestRate">100</span></td>
+        <td><span id="theftOccurrence">182270</span></td>
+        <td><span id="theftArrest">113705</span></td>
+        <td><span id="theftArrestRate">62.38%</span></td>
       </tr>
       <tr>
         <td>폭력</td>
-        <td><span id="violentOccurrence">100</span></td>
-        <td><span id="violentArrest"></span></td>
-        <td><span id="violentArrestRate">100</span></td>
+        <td><span id="violentOccurrence">245286</span></td>
+        <td><span id="violentArrest">209789</span></td>
+        <td><span id="violentArrestRate">85.53%</span></td>
       </tr>
        </tbody>
      </table>
   </div>
          <div class="chart-container">
   <div class="chart" id="data">
+    <p id="chart">검거건수</p>
     <canvas id="crimeDonutChart" ></canvas>
   </div>
   
   <div class="chart" id="data">
+    <p id="chart">검거율</p>
     <canvas id="arrChart" ></canvas>
   </div>
 </div>
@@ -158,7 +190,7 @@ function createChart() {
   // 발생 건수 데이터를 가지고 있는 JavaScript 객체를 생성합니다.
   var data = {
     labels: ['강간', '강도', '살인', '절도', '폭력'],
-    datasets: [{
+    datasets: [{      	
       data: [gangOccurrence, robberOccurrence, murderOccurrence, theftOccurrence, violentOccurrence],
       backgroundColor: [  
            'rgb(255, 99, 132)',   // Red (강간)
@@ -182,6 +214,11 @@ function createChart() {
     type: 'bar',
     data: data,
     options: {
+    	plugins:{
+            legend: {
+                display: false
+            },
+        },
        scales:{
           y:{
              type:'logarithmic',
@@ -213,7 +250,7 @@ function arrChart(){
     // 발생 건수 데이터를 가지고 있는 JavaScript 객체를 생성합니다.
      var data = {
        labels: ['강간', '강도', '살인', '절도', '폭력'],
-       datasets: [{
+       datasets: [{         
          data: [gangArrestRate, robberArrestRate, murderArrestRate, theftArrestRate, violentArrestRate],
          backgroundColor: [  
               'rgb(255, 99, 132)',   // Red (강간)
@@ -237,6 +274,11 @@ function arrChart(){
        type: 'line',
        data: data,
        options: {
+    	  plugins:{
+               legend: {
+                   display: false
+               },
+           },
           maintainAspectRatio: false,
           scales:{
              y:{      

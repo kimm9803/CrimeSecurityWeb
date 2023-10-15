@@ -22,7 +22,7 @@ public interface BoardService {
 	void updateBoard(BoardVo vo);
 	
     //게시물 삭제
-	void deleteBoard(BoardVo vo);
+	void deleteBoard(int bnum);
 
     //게시물 조회수	
 	void readCount(BoardVo vo);

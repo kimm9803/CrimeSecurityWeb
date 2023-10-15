@@ -62,7 +62,14 @@ public class ShopController {
 		String memberid = (String)session.getAttribute("memberid");
 		model.addAttribute("product", productVo);
 		model.addAttribute("memberid", memberid);
-		model.addAttribute("reviewList", shopService.getAllReviewList());
+		model.addAttribute("reviewList", shopService.getAllReviewList(pdNum));
+		model.addAttribute("reviewCnt", shopService.getAllReviewList(pdNum).size());
+		if (shopService.getAllReviewList(pdNum).size() > 0) {
+			model.addAttribute("reviewAvg", shopService.getReviewAvg(pdNum));
+		} else {
+			model.addAttribute("reviewAvg", 0.0);
+		}
+		
 		
 		if (adminid != null) {
 			return "redirect:/admin/shop/view";

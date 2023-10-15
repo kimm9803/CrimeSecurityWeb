@@ -148,8 +148,15 @@
 	<select id="getAllReviewList" resultType="com.spring.shop.vo.ReviewVo">
 		SELECT reviewid, memberid, pdNum, reviewText, reviewImg, rating, TO_CHAR(reviewDate, 'YYYY/MM/DD') AS reviewDATE
 		FROM reviews
+		WHERE pdNum = #{pdNum}
 	</select>
 	
+	<!-- 전체 리뷰 평균 -->
+	<select id="getReviewAvg" resultType="double">
+		SELECT ROUND(AVG(rating), 1) AS ratingAvg
+		FROM reviews
+		WHERE pdNum = #{pdNum}
+	</select>
 	<!-- 포인트 사용(포인트 테이블) -->
 	<insert id="insertPointUsage" parameterType="hashMap">
 		INSERT INTO point (memberid, usagePoint, point)
@@ -168,6 +175,15 @@
 		FROM point p
 		INNER JOIN member m ON m.memberid = p.memberid
 		WHERE p.memberid = #{memberid}
+		ORDER BY p.pointid DESC
+	</select>
+	
+	<!-- 포인트 내역 기간 조회 -->
+	<select id="showPointDate" parameterType="hashMap" resultType="com.spring.shop.vo.PointVo">
+		SELECT p.pointid, p.memberid, p.accumulatePoint, p.usagePoint, p.point, TO_CHAR(p.pointDate,'YYYY/MM/DD PM HH:MI:SS') AS pointDate, m.name
+		FROM point p
+		INNER JOIN member m ON m.memberid = p.memberid
+		WHERE p.pointDate BETWEEN #{startDate} AND #{endDate} AND p.memberid = #{memberid}
 		ORDER BY p.pointid DESC
 	</select>
 </mapper>

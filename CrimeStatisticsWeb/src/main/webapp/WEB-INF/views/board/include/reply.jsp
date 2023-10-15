@@ -15,9 +15,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
+<style>
+#replymain {
+ border-top: 2px solid #0F3A5F; 
+}
+
+#replywrite{
+ border-top: 2px solid #0F3A5F; 
+}
+</style>
 <body>
         <!------------------------- 댓글 ---------------------------->
-        <h3>댓글</h3>
+        <main id="replymain">
+        <h3 style="margin-top: 20px;">댓글</h3>
         <div id="reply">
             <ol class="replyList list-unstyled">
                 <c:forEach items="${replyList}" var="reply">
@@ -29,18 +39,20 @@
                                     <strong>작성 날짜:</strong> <fmt:formatDate value="${reply.regdate}" pattern="yyyy-MM-dd" />
                                 </p>
                                 <p class="card-text">${reply.cont}</p>
+                                <c:if test="${sessionScope.nickname == reply.writer}">
                                 <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#editModal"
                                     data-bnum="${reply.bnum}" data-rnum="${reply.rnum}" data-writer="${reply.writer}" data-cont="${reply.cont}">수정</a>
                                 <a href="/reply/delete?rnum=${reply.rnum}&bnum=${reply.bnum}" class="btn btn-light">삭제</a>
+                                </c:if>
                             </div>
                         </div>
                     </li>
                 </c:forEach>
             </ol>
         </div>
-        <div>
+        <div id="replywrite">
             <form method="post" action="/reply/write">
-                <div class="mb-3">
+                <div class="mb-3" style="margin-top: 5px;">
                     <label for="writer" class="form-label">댓글 작성자</label>
                     <input type="text" class="form-control" id="writer" name="writer" value="${nickname}" readonly required>
                 </div>
@@ -50,7 +62,7 @@
                 </div>
                 <input type="hidden" name="bnum" value="${vo.bnum}">
                 <div class="mb-3">
-                    <button type="submit" class="btn btn-primary">댓글 작성</button>
+                    <button type="submit" class="btn btn-danger btn-sm">댓글 작성</button>
                 </div>
             </form>
         </div>
@@ -79,10 +91,11 @@
                         </div>
                         <input type="hidden" name="bnum" id="editBnum" value=${reply.bnum }>
                         <input type="hidden" name="rnum" id="editRnum" value=${reply.rnum }>
+                        
                         <div class="mb-3">
                             <button type="submit" class="btn btn-primary">수정 완료</button>     
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>                       
-                        </div>
+                        </div>                        
                     </form>
                 </div>
             </div>

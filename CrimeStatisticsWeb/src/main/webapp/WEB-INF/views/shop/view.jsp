@@ -71,6 +71,20 @@ ul.category-list li {
 	background-color: #343a40;
 	color: #fff;
 }
+
+.bigrate{background: url(/img/star_bg02.png) no-repeat;width: 200px;height: 33px;position: relative;}
+.bigrate span{position: absolute;background: url(/img/star02.png);width: auto;height: 33px;}
+
+.rate{background: url(https://aldo814.github.io/jobcloud/html/images/user/star_bg02.png) no-repeat;width: 121px;height: 20px;position: relative;}
+.rate span{position: absolute;background: url(https://aldo814.github.io/jobcloud/html/images/user/star02.png);width: auto;height: 20px;}
+
+.review-box {
+    border-top: 1px solid #ccc;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    margin-bottom: 10px;
+}
+
 </style>
 </head>
 <body>
@@ -136,6 +150,47 @@ ul.category-list li {
 				</div>
 				</form>
 			</div>
+		</div>
+		<div style="display: flex; margin-top: 40px; background-color: #f8f9fb">
+			<div class="leftArea" style="flex: 1; padding-top: 30px; padding-bottom: 30px;">
+				<div style="text-align: center; font-size: 25px;">
+					사용자 총 평점
+				</div>
+				<div class="bigrate" style="display: inline-block; margin-top: 30px; margin-bottom: 20px; margin-left: 210px;">
+			            <span style="width: ${reviewAvg * 20}%;"></span><br>
+			    </div>
+			    <div style="text-align: center; font-size: 30px;"><span>${reviewAvg}</span><span style="color: gray;"> / 5.0</span></div>
+			</div>
+			
+			<div class="rightArea" style="flex: 1; text-align: center; padding-top: 30px; padding-bottom: 30px;">
+				<div style="font-size: 25px;">
+					전체 리뷰수
+				</div>
+				<div style="margin-top: 20px; margin-bottom: 5px;">
+					<img src="/img/multiple-users-silhouette.png">
+				</div>
+				<div style="font-size: 30px;">${reviewCnt}</div>
+			</div>
+		</div>
+		<div class="allReview">
+		    <c:forEach items="${reviewList}" var="review">
+		        <div class="oneReview" style="display: flex; align-items: center; border-bottom: 1px solid #ccc; padding-top: 30px; height: 150px;">
+		            <img src="/img/user.png" alt="User Image" style="width: 50px; height: 50px; margin-right: 10px;">
+		            <div style="flex: 1;">
+		                <div class="rate">
+		                    <span style="width: ${review.rating * 20}%;"></span>
+		                </div>
+		                <div style="margin-top: 5px;">
+		                	<span style="font-weight: bold;">${review.memberid}</span> | <span style="font-weight: bold;">${review.reviewDate}</span></div>
+		            </div>
+		            <div style="flex: 3;">
+		                <div>${review.reviewText}</div>
+		            </div>
+		            <div>
+		                <img src="${review.reviewImg}" alt="Review Image" width="100" height="100">
+		            </div>
+		        </div>
+		    </c:forEach>
 		</div>
 
 	</main>

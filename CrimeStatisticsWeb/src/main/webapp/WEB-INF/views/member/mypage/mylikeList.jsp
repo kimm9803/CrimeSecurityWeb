@@ -73,75 +73,6 @@ div {
 	margin-left: auto;
 }
 
-/* 단골상점 , 상품후기 , 적립금 박스 */
-.summaryContainer {
-	background-color: white;
-	display: flex;
-	padding: 21px 16px;
-	height: 90px;
-	margin-bottom: 10px;
-}
-/* 단골상점 , 상품후기 , 적립금 */
-.summaryContainer .item {
-	flex-grow: 1
-}
-/* 녹색 숫자 */
-.summaryContainer .number {
-	font-size: 19px;
-	font-weight: bold;
-	color: #DC3545;
-}
-/* 텍스트 */
-.summaryContainer .item>div:nth-child(2) {
-	font-size: 13px;
-}
-
-/* ================== 주문/배송조회 박스 시작 ==================== */
-.shippingStatusContainer {
-	padding: 21px 16px;
-	background-color: white;
-	margin-bottom: 10px;
-}
-
-/* 주문/배송조회 타이틀 */
-.shippingStatusContainer .title {
-	font-size: 16px;
-	font-weight: bold;
-	margin-bottom: 15px;
-}
-
-/* 장바구니 결제완료 배송중 구매확정 [로우] */
-.shippingStatusContainer .status {
-	display: flex;
-	justify-content: space-between;
-	margin-bottom: 21px;
-}
-/* 장바구니 결제완료 배송중 구매확정 [아이템]  */
-.shippingStatusContainer .item {
-	display: flex;
-}
-
-.shippingStatusContainer .number {
-	font-size: 31px;
-	font-weight: 500;
-	text-align: center;
-}
-
-.shippingStatusContainer .text {
-	font-size: 12px;
-	font-weight: normal;
-	color: #c2c2c2;
-	text-align: center;
-}
-
-.shippingStatusContainer .icon {
-	display: flex;
-	align-items: center;
-	padding: 20px;
-	width: 16px;
-	height: 16px;
-}
-
 /*=================== 주문목록 ~ 찜한상품 리스트 ==================*/
 .listContainer {
 	padding: 0;
@@ -264,6 +195,44 @@ h3 {
 	text-decoration: none;
 	color: black;
 }
+table {
+    width: 100%;
+    border-collapse: collapse; /* 테이블 셀 경계를 합칩니다. */
+    border-spacing: 0; /* 테이블 셀 사이의 간격을 없앱니다. */
+    border-top: 2px solid #000; /* 위쪽 테두리를 2px 두께의 검은색으로 설정합니다. */
+    border-bottom: 2px solid #000; /* 아래쪽 테두리를 2px 두께의 검은색으로 설정합니다. */
+    background-color: white;
+}
+thead {
+	background-color: #cccc;
+	height: 30px;
+}
+
+tbody td {
+	text-align: center;
+	height: 15px;
+}
+
+tbody tr {
+	border-bottom: 1px solid #ccc;
+}
+thead th {
+	text-align: center;
+    border: 1px solid #ccc; /* 테이블 셀의 테두리를 설정합니다. */
+}
+
+/* 부모 td 요소의 스타일 */
+td {
+    position: relative;
+}
+
+.close {display:inline-block;*display:inline;background-color: transparent;
+    border: none;cursor: pointer;}
+.close:after {display: inline-block;content: "\00d7"; font-size:15pt;}
+.close:hover {
+    color: olive; 
+}
+
 footer{
   position: fixed;
   bottom: 0;
@@ -337,7 +306,7 @@ footer{
             <a href="/member/mypage/mylike" class="item">
                <div class="icon">ii</div>
                <div class="text">
-                  좋아요 누른 게시물
+                  좋아요 누른 게시물<span class="circle"></span>
                </div>
                <div class="right">></div>
             </a>
@@ -415,7 +384,7 @@ footer{
 				                <div>포인트</div>
 				                <div style="margin-right: 20px;">
 				                	<a href="/member/mypage/point" class="splita">
-				                		<span style="color: red; font-weight: bold;">${member.point } </span>포인트
+				                		<span class="benefitPoint" style="color: red; font-weight: bold;">${member.point } </span>포인트
 				                	</a>
 				                </div>
 				            </div>
@@ -471,10 +440,10 @@ footer{
 			<div class="verticalSplit">
 			    <!-- 여기에 콘텐츠 넣어보자 -->         
 		        <!-- 게시물 목록 -->
-			    <div class="container mt-5">
+			    <div class="container" style="margin-top: 40px;">
 			        <h2 class="text-center">좋아요 누른 게시물</h2>			        
-			        <div class="main-content" style="margin-top:20px;">
-			        <table class="table table-striped">
+			        <div class="main-content" style="margin-top:40px;">
+			        <table>
 			            <thead>
 			                <tr>
 			                    <th scope="col">번호</th>
@@ -486,14 +455,14 @@ footer{
 			            <tbody>
 			                <c:forEach var="mylike" items="${mylikeList}">
 			                    <tr>
-			                        <th scope="row">${mylike.bnum}</th>
-			                        <td>
+			                        <td style="font-weight: bold;">${mylike.bnum}</td>
+			                        <td style="width: 500px;">
 			                            <a href="/board/view?bnum=${mylike.bnum}" style="text-decoration: none; color:black;">
 			                                ${mylike.title}
 			                            </a>
 			                        </td>
 			                        <td>${mylike.writer}</td>
-			                        <td>${mylike.regdate}</td>                       
+			                        <td style="width: 150px;">${mylike.regdate}</td>                       
 			                    </tr>
 			                </c:forEach>
 			            </tbody>
@@ -516,11 +485,19 @@ footer{
 		    $('.btninfo').on('click', function() {
 		    	location.href = '/member/mypage/modify';
 		    });
+		    
+		 	// BENEFIT 포인트 쉼표 추가
+		    $('.benefitPoint').text(addCommasToNumber($('.benefitPoint').text()));
 		});
 		
 		function formatPhoneNumber(phoneNumber) {
 		    return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
 		}		
+		
+		// 쉼표 추가
+		function addCommasToNumber(number) {
+		    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		}
 		
 	</script>
 </body>

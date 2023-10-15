@@ -43,8 +43,8 @@ public class BoardSerivceImpl implements BoardService {
 	}
 
 	@Override
-	public void deleteBoard(BoardVo vo) {
-		boardDao.deleteBoard(vo);
+	public void deleteBoard(int bnum) {
+		boardDao.deleteBoard(bnum);
 		
 	}
 

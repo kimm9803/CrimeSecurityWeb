@@ -1,3 +1,5 @@
+--------------------------------------------------------
+-----------회원,관리인, 상품 및 질문 등등 -----------------
 CREATE TABLE member (
     memberid         VARCHAR2(50)  PRIMARY KEY,
     passwd           VARCHAR2(50)         NOT NULL,
@@ -13,6 +15,9 @@ CREATE TABLE member (
     email_domain     VARCHAR2(100),
     regdate   DATE          DEFAULT SYSDATE
 );
+
+ALTER TABLE member ADD tel VARCHAR2(20);
+ALTER TABLE member ADD point number(10);
 
 CREATE TABLE admin (
     adminid     VARCHAR2(50)    PRIMARY KEY,
@@ -31,21 +36,21 @@ SELECT * FROM admin;
 ---------------------------------------------------------------
 // 상품 테이블 생성
 CREATE TABLE products (
-	pdNum		NUMBER			PRIMARY KEY,
-	pdName		VARCHAR2(50)	NOT NULL,
-	cateCode	VARCHAR2(30)	NOT NULL,
-	pdPrice		NUMBER			NOT NULL,
-	pdStock		NUMBER			NULL,
-	pdDes		VARCHAR2(500)	NULL,
-	pdImg		VARCHAR2(200)	NULL,
-	pdDate		DATE			DEFAULT 	SYSDATE
+   pdNum      NUMBER         PRIMARY KEY,
+   pdName      VARCHAR2(50)   NOT NULL,
+   cateCode   VARCHAR2(30)   NOT NULL,
+   pdPrice      NUMBER         NOT NULL,
+   pdStock      NUMBER         NULL,
+   pdDes      VARCHAR2(500)   NULL,
+   pdImg      VARCHAR2(200)   NULL,
+   pdDate      DATE         DEFAULT    SYSDATE
 );
 
 // 상품 카테고리 테이블 생성
 CREATE TABLE products_category (
-	cateName	VARCHAR2(20)	NOT NULL,
-	cateCode	VARCHAR2(30)	NOT NULL,
-	PRIMARY KEY(cateCode),
+   cateName   VARCHAR2(20)   NOT NULL,
+   cateCode   VARCHAR2(30)   NOT NULL,
+   PRIMARY KEY(cateCode),
 );
 
 // 상품 카테고리 CATENAME 크기 변경
@@ -54,13 +59,13 @@ MODIFY (CATENAME VARCHAR2(50));
 
 // 상품 테이블에 외래키 추가
 ALTER TABLE products ADD
-	CONSTRAINT fk_products_category
-	FOREIGN KEY (cateCode)
-		REFERENCES products_category(cateCode);
+   CONSTRAINT fk_products_category
+   FOREIGN KEY (cateCode)
+      REFERENCES products_category(cateCode);
 
 // 상품 번호 시퀀스
 CREATE SEQUENCE products_seq
-START 	  WITH 1
+START      WITH 1
 INCREMENT BY 1 NOCACHE;
 
 
@@ -81,20 +86,20 @@ SELECT * FROM products;
 ---------------------------------------------------------------------------------------------------------------------------
 // 장바구니 테이블
 CREATE TABLE cart (
-	cartNum		NUMBER			NOT NULL,
-	memberid	VARCHAR2(50)	NOT NULL,
-	pdNum		NUMBER			NOT NULL,
-	cartStock	NUMBER			NOT NULL,
-	addDate		DATE			DEFAULT		SYSDATE,
-	PRIMARY KEY (cartNum, memberid)
+   cartNum      NUMBER         NOT NULL,
+   memberid   VARCHAR2(50)   NOT NULL,
+   pdNum      NUMBER         NOT NULL,
+   cartStock   NUMBER         NOT NULL,
+   addDate      DATE         DEFAULT      SYSDATE,
+   PRIMARY KEY (cartNum, memberid)
 );
 
 // 카트 번호 생성 시퀀스
 CREATE SEQUENCE cart_seq
-	   INCREMENT BY 1
-	   START WITH	1
-	   NOCYCLE
-	   NOCACHE;
+      INCREMENT BY 1
+      START WITH   1
+      NOCYCLE
+      NOCACHE;
 
 // 외래키 생성1
 alter table cart
@@ -105,6 +110,54 @@ alter table cart
 alter table cart
     add constraint cart_pdNum foreign key(pdNum)
     references products(pdNum);
+    
+CREATE TABLE answer(
+     answer_id NUMBER    PRIMARY KEY
+    ,question_id NUMBER REFERENCES QUESTION(question_id)
+    ,adminid VARCHAR2(50) REFERENCES ADMIN(adminid)
+    ,answer_cont CLOB
+    ,create_date DATE    DEFAULT SYSDATE
+);
+
+CREATE TABLE question (
+     question_id NUMBER PRIMARY KEY,
+     memberid VARCHAR2(50) REFERENCES member(memberid),
+     question_title VARCHAR2(255) NOT NULL,
+     question_content CLOB,
+     create_date  DATE    DEFAULT SYSDATE
+);
+
+ALTER TABLE answer
+MODIFY answer_id NUMBER(10, 0) NOT NULL;
+
+
+-- 시퀀스 생성
+CREATE SEQUENCE answer_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCYCLE
+  NOCACHE;
+
+-- 시퀀스 생성
+CREATE SEQUENCE question_seq
+  START WITH 1
+  INCREMENT BY 1
+  NOMAXVALUE
+  NOCYCLE
+  NOCACHE;
+
+ALTER TABLE answer
+MODIFY answer_id NUMBER DEFAULT answer_seq.NEXTVAL;
+
+ALTER TABLE question
+MODIFY question_id NUMBER DEFAULT question_seq.NEXTVAL;
+
+commit;
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+----주문관련--------------------------------------------------------------------
+
     
 -- 주문 정보 테이블
 CREATE TABLE ORDERINFO (
@@ -131,10 +184,6 @@ ADD CONSTRAINT FK_ORDERINFO_MEMBER
 FOREIGN KEY (memberid)
 REFERENCES member(memberid);
 
-
--- 주문상세 시퀀스 생성
-CREATE SEQUENCE ORDERDETAIL_SEQ;
-
 -- 주문상세 테이블
 CREATE TABLE ORDERDETAIL (
     detailid    NUMBER          NOT NULL,
@@ -147,10 +196,11 @@ CREATE TABLE ORDERDETAIL (
     FOREIGN KEY(pdNum)   REFERENCES PRODUCTS(pdNum)
 );
 
-
--- 후기 시퀀스 생성
-CREATE SEQUENCE reviewid_seq;
-    
+-- 주문상세 시퀀스 생성
+CREATE SEQUENCE ORDERDETAIL_SEQ;
+ 
+-- 주문상세 시퀀스 생성
+CREATE SEQUENCE reviewid_SEQ;   
 -- 후기 테이블
 CREATE TABLE Reviews (
     reviewid    NUMBER DEFAULT reviewid_seq.NEXTVAL PRIMARY KEY,
@@ -178,3 +228,115 @@ CREATE TABLE POINT (
     pointDate       DATE    DEFAULT SYSDATE,
     FOREIGN KEY (memberid) REFERENCES member(memberid)
 );
+
+
+-----------------------------------------------------------------
+---------------게시판 관련 ---------------------------------------
+----------------------------------------------------------------
+//메뉴 테이블 생성
+//MENU_CATE = (1 : 자유게시판 , 2 : 지역게시판 )
+ CREATE  TABLE    MENUS
+ (
+       MENU_ID     NUMBER(6)     PRIMARY KEY
+    ,  MENU_NAME   VARCHAR2(30)  NOT NULL 
+    ,  MENU_CATE   NUMBER(6)     NOT NULL
+ )
+ //메뉴 MENU_CATE = 1,2만 가능
+ ALTER TABLE MENUS ADD CONSTRAINT CHECK_MENU_CATE CHECK(MENU_CATE IN(1, 2))
+
+//메뉴 데이터 추가
+INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'자유',1);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'서울',2);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'부산',2);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'대구',2);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'인천',2);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'광주',2);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'대전',2);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'울산',2);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'경기',2);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'강원',2);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'충북',2);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'충남',2);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'전북',2);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'전남',2);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'경북',2);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'경남',2);
+ INSERT INTO MENUS (MENU_ID, MENU_NAME, MENU_CATE)
+ VALUES((SELECT NVL(MAX(MENU_ID), 0)+1  FROM  MENUS),'제주',2);
+ ------------------------------------------------------------------------------------------------------------
+ //게시판 테이블 생성
+  CREATE   TABLE   BOARD
+(
+      BNUM            NUMBER(6, 0)        PRIMARY KEY
+    , MENU_ID        NUMBER(6, 0)       NOT NULL
+        REFERENCES   MENUS ( MENU_ID  )
+    , TITLE          VARCHAR2( 300  )    NOT NULL
+    , CONT           VARCHAR2( 4000 )                       
+    , WRITER         VARCHAR2( 30 )
+    , REGDATE        DATE                DEFAULT  SYSDATE 
+    , READCOUNT      NUMBER( 6, 0 )      DEFAULT  0
+)
+
+//댓글 테이블 생성
+<!--
+ 1. rno : 댓글 고유번호
+ 2. bno : 게시물 고유번호
+ 3. writer : 댓글 작성자
+ 4. content : 댓글 내용
+ 5. regDate : 댓글 작성 날짜 -->
+ 
+ CREATE TABLE REPLY
+ (
+   RNUM NUMBER(6,0) NOT NULL
+  ,BNUM NUMBER(6,0) NOT NULL
+  ,WRITER VARCHAR2(30) NOT NULL
+  ,CONT VARCHAR2(4000)
+  ,REGDATE DATE DEFAULT SYSDATE,
+  PRIMARY KEY(RNUM,BNUM),
+  FOREIGN KEY(BNUM) REFERENCES BOARD(BNUM)
+  ON DELETE CASCADE  
+ )
+
+
+// 좋아요 테이블 생성 + 게시판 테이블 좋아요수 컬럼 추가 
+ create table LIKES(
+LIKENO NUMBER NOT NULL PRIMARY KEY ,
+BNUM NUMBER ,
+MEMBERID VARCHAR2(50) NOT NULL,
+LIKECHECK NUMBER DEFAULT 0 NOT NULL,
+FOREIGN KEY (MEMBERID) REFERENCES MEMBER(MEMBERID) ON DELETE CASCADE,
+FOREIGN KEY (BNUM) REFERENCES BOARD(BNUM) ON DELETE CASCADE 
+);
+
+ALTER TABLE BOARD ADD LIKEHIT NUMBER(6,0) DEFAULT 0;
+ALTER TABLE BOARD ADD MEMBERID VARCHAR2(50);
+
+// 공지사항 테이블 생성
+CREATE TABLE NOTICE
+(
+NBNUM   NUMBER(6,0),
+TITLE   VARCHAR2(300 BYTE) NOT NULL,
+CONT   VARCHAR2(4000 BYTE),
+WRITER   VARCHAR2(30 BYTE) NOT NULL,
+REGDATE   DATE,
+READCOUNT   NUMBER(6,0),
+ENDDATE   DATE
+)
+
+commit;

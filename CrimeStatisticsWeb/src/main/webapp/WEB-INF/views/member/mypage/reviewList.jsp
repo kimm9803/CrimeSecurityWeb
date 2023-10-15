@@ -392,7 +392,7 @@ footer {
 				                <div>포인트</div>
 				                <div style="margin-right: 20px;">
 				                	<a href="/member/mypage/point" class="splita">
-				                		<span style="color: red; font-weight: bold;">${member.point } </span>포인트
+				                		<span class="benefitPoint" style="color: red; font-weight: bold;">${member.point } </span>포인트
 				                	</a>
 				                </div>
 				            </div>
@@ -417,7 +417,7 @@ footer {
 				                <div>작성게시물</div>
 				                <div style="margin-right: 20px;">
 				                	<a href="/member/mypage/myboard" class="splita">
-				                		<span style="color: red; font-weight: bold;">0 </span>건
+				                		<span style="color: red; font-weight: bold;">${myBoardCnt} </span>건
 				                	</a>
 				                </div>
 				            </div>
@@ -427,7 +427,7 @@ footer {
 				                <div>작성댓글</div>
 				                <div style="margin-right: 20px;">
 				                	<a href="/member/mypage/myreply" class="splita">
-				                		<span style="color: red; font-weight: bold;">0 </span>건
+				                		<span style="color: red; font-weight: bold;">${myReplyCnt} </span>건
 				                	</a>
 				                </div>
 				            </div>
@@ -437,7 +437,7 @@ footer {
 				                <div>좋아요 누른 게시물</div>
 				                <div style="margin-right: 20px;">
 				                	<a href="/member/mypage/mylike" class="splita">
-				                		<span style="color: red; font-weight: bold;">0 </span>건
+				                		<span style="color: red; font-weight: bold;">${myLikeCnt} </span>건
 				                	</a>
 				                </div>
 				            </div>
@@ -485,6 +485,9 @@ footer {
 		    var tel = telElement.text();
 		    telElement.text(formatPhoneNumber(tel));
 		    
+		 	// BENEFIT 포인트 쉼표 추가
+		    $('.benefitPoint').text(addCommasToNumber($('.benefitPoint').text()));
+		 
 		    // 회원정보수정 버튼
 		    $('#btn').on('click', function() {
 		    	location.href = '/member/mypage/modify';

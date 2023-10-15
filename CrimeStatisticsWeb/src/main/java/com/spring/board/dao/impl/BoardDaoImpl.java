@@ -47,8 +47,8 @@ public class BoardDaoImpl implements BoardDao {
 	}
 	// 게시물 삭제
 	@Override
-	public void deleteBoard(BoardVo vo) {
-		sqlSession.delete("Board.deleteBoard", vo);
+	public void deleteBoard(int bnum) {
+		sqlSession.delete("Board.deleteBoard", bnum);
 		
 	}
 	// 게시물 조회수

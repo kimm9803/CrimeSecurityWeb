@@ -1,6 +1,7 @@
 package com.spring.member.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.member.service.MemberService;
 import com.spring.member.vo.MemberVo;
+import com.spring.shop.service.ShopService;
+import com.spring.shop.vo.PointVo;
 
 @RestController
 @RequestMapping("/member")
@@ -21,6 +24,9 @@ public class MemberRestController {
 
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private ShopService shopService;
 	
 	// 비밀번호 확인
 	@PostMapping("/password-check")

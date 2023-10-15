@@ -440,7 +440,7 @@ td {
 				                <div>포인트</div>
 				                <div style="margin-right: 20px;">
 				                	<a href="/member/mypage/point" class="splita">
-				                		<span style="color: red; font-weight: bold;">${member.point } </span>포인트
+				                		<span class="benefitPoint" style="color: red; font-weight: bold;">${member.point } </span>포인트
 				                	</a>
 				                </div>
 				            </div>
@@ -465,7 +465,7 @@ td {
 				                <div>작성게시물</div>
 				                <div style="margin-right: 20px;">
 				                	<a href="/member/mypage/myboard" class="splita">
-				                		<span style="color: red; font-weight: bold;">0 </span>건
+				                		<span style="color: red; font-weight: bold;">${myBoardCnt} </span>건
 				                	</a>
 				                </div>
 				            </div>
@@ -475,7 +475,7 @@ td {
 				                <div>작성댓글</div>
 				                <div style="margin-right: 20px;">
 				                	<a href="/member/mypage/myreply" class="splita">
-				                		<span style="color: red; font-weight: bold;">0 </span>건
+				                		<span style="color: red; font-weight: bold;">${myReplyCnt} </span>건
 				                	</a>
 				                </div>
 				            </div>
@@ -485,7 +485,7 @@ td {
 				                <div>좋아요 누른 게시물</div>
 				                <div style="margin-right: 20px;">
 				                	<a href="/member/mypage/mylike" class="splita">
-				                		<span style="color: red; font-weight: bold;">0 </span>건
+				                		<span style="color: red; font-weight: bold;">${myLikeCnt} </span>건
 				                	</a>
 				                </div>
 				            </div>
@@ -496,8 +496,8 @@ td {
 			<div style="margin-bottom: 20px; margin-top: 40px;">
 				<h1>포인트</h1>
 			</div>
-			<div>
-				<span id="pointText" style="font-size: 20px;">" 현재 보유 포인트 : <span style="color: #dc3545; font-size: 25px;">${member.point} P</span> "</span>
+			<div style="margin-bottom: 20px;">
+				<span id="pointText" style="font-size: 20px;">" 현재 보유 포인트 : <span class="myPoint" style="color: #dc3545; font-size: 25px;">${member.point} P</span> "</span>
 			</div>
 			<div>
 				<input type="date" id="startDate"> ~ <input type="date" id="endDate"> <button type="button" id="showPoint" class="btn btn-danger btn-sm">조회</button>
@@ -520,17 +520,17 @@ td {
 				                <td>
 				                	<c:choose>
 					                	<c:when test="${point.accumulatePoint == 0 && point.usagePoint != 0}">
-					                		<span style="color: #dc3545;">-${point.usagePoint} P</span>
+					                		<span class="usagePoint" style="color: #dc3545;">-${point.usagePoint} P</span>
 					                	</c:when>
 					                	<c:when test="${point.accumulatePoint != 0 && point.usagePoint == 0}">
-					                		<span style="color: blue;">${point.accumulatePoint} P</span>
+					                		<span class="accumulatePoint" style="color: blue;">${point.accumulatePoint} P</span>
 					                	</c:when>
 					                	<c:otherwise>
 					                		0 P
 					                	</c:otherwise>
 				                	</c:choose>
 								</td>
-				                <td>${point.point} P</td>
+				                <td><span class="afPoint">${point.point} P</span></td>
 				            </tr>
 				        </c:forEach>
 				    </tbody>
@@ -552,28 +552,44 @@ td {
 		    	location.href = '/member/mypage/modify';
 		    });
 		    
+		    $('tbody tr').each(function() {
+		        var accumulatePointTd = $(this).children('td:eq(2)');
+		        var firstSpan = accumulatePointTd.find('span:eq(0)');
+		        var secondSpan = accumulatePointTd.find('span:eq(1)');
+		        var afPointElement = $(this).find('td:eq(3)').text();
+		        $('.afPoint').text(addCommasToNumber(afPointElement));
+		        
+		        // 첫 번째 <span> 내의 텍스트에서 쉼표 추가
+		        var firstSpanText = firstSpan.text();
+		        firstSpan.text(addCommasToNumber(firstSpanText));
+
+		        // 두 번째 <span> 내의 텍스트에서 쉼표 추가
+		        var secondSpanText = secondSpan.text();
+		        secondSpan.text(addCommasToNumber(secondSpanText));
+		    });
+		    
+		 	// BENEFIT 포인트 쉼표 추가
+		    $('.benefitPoint').text(addCommasToNumber($('.benefitPoint').text()));
+		 	
+		 	// 현재 보유 포인트 쉼표 추가
+		 	$('.myPoint').text(addCommasToNumber($('.myPoint').text()));
+		 	
 		    // 포인트 조회 버튼
 		    $('#showPoint').on('click', function() {
 		    	var startDate = $('#startDate').val();
 		    	var endDate = $('#endDate').val();
 		    	
-		    	$.ajax({
-		    		url: '/member/mypage/point/show',
-		    		type: 'POST',
-		    		data: {
-		    			startDate : startDate,
-		    			endDate : endDate
-		    		},
-		    		success: function() {
-		    			
-		    		},
-		    		error: function() {
-		    			
-		    		}
-		    	})
+		    	location.href = '/member/mypage/point/date?startDate=' + startDate + '&endDate=' + endDate;
 		    });
-		});		function formatPhoneNumber(phoneNumber) {
+		});
+		
+		// 휴대폰 번호 '-' 추가		function formatPhoneNumber(phoneNumber) {
 		    return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+		}
+		
+		// 쉼표 추가
+		function addCommasToNumber(number) {
+		    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		}
 	</script>
 </body>
