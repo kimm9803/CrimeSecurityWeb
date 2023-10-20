@@ -159,7 +159,7 @@ div {
 		    <a href="/admin/products/register" class="item">		      
 		      <div class="text">상품등록</div>		      
 		    </a>		    
-		    <a href="#" class="item">		      
+		    <a href="/admin/products/manage" class="item">		      
 		      <div class="text">상품재고관리</div>		      
 		    </a>
 		  </div>		  

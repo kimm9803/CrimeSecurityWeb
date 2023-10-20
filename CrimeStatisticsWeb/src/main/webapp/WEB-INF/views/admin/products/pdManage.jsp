@@ -124,14 +124,6 @@ div {
    margin-top: 60px;
 }
 
-.btninfo {
-    background-color: transparent !important;
-    border-color: white !important;
-    color: white !important;
-    font-size: 13px !important;
-    margin-left: 30px;
-}
-
 /* listGroupTitle에 스타일 추가 */
 .listGroupTitle {
   background-color: #333; /* 배경색 설정 */
@@ -140,21 +132,24 @@ div {
   font-weight: bold; /* 폰트 굵기 설정 */
   font-size: 20px;
 }
+tbody tr td {
+    vertical-align: middle; /* 세로 가운데 정렬 */
+}
 footer{
-  position: fixed;
+  position: absolute;
   bottom: 0;
   width:100%
 }
 </style>
 </head>
 <body>
-   <header><%@ include file="../template/header.jsp"%></header>
+   <header><%@ include file="../../template/header.jsp"%></header>
 
    <main style="display: flex; width: 65%; margin: 0 auto;">
       <div class="wrap" style="flex: 1;">
          <div class="grayContainer" style="display: flex; justify-content: center; align-items: center;">
              <div>
-                 <div class="name" style="text-align: center;">MY페이지</div>
+                 <div class="name" style="text-align: center;">관리자 페이지</div>
              </div>
          </div>     
          
@@ -163,10 +158,16 @@ footer{
 		    <div class="listGroupTitle">상품</div>
 		    <a href="/admin/products/register" class="item">		      
 		      <div class="text">상품등록</div>		      
-		    </a>		    
+		    </a>
+		    <!-- 
+		    <a href="#" class="item">		      
+		      <div class="text">상품후기</div>		      
+		    </a>
+		     -->
 		    <a href="/admin/products/manage" class="item">		      
 		      <div class="text">상품재고관리</div>		      
 		    </a>
+		    
 		  </div>		  
 		  <div class="listGroup">
 		    <div class="listGroupTitle">메뉴</div>
@@ -177,6 +178,14 @@ footer{
 		      <div class="text">게시판 카테고리조회</div>		      
 		    </a>
 		  </div>
+		  
+		  <!-- Q & A 조회 추가 일단 num 안받고 리스트만 받기-->
+				<div class="listGroup">
+					<div class="listGroupTitle">Q&A</div>
+					<a href="/question/adminListPageSearch?num=1" class="item">
+						<div class="text">Q&A 조회</div>
+					</a>
+				</div>
 		  		  
 		  <div class="listGroup">
 		    <div class="listGroupTitle">공지사항</div>
@@ -190,7 +199,7 @@ footer{
 		</div>         
       </div>
 
-    <!-- 오른쪽 콘텐츠 영역 -->
+      <!-- 오른쪽 콘텐츠 영역 -->
       <div class="rightArea" style="flex: 4;">
          <div class="grayContainer">
             <div class="name" style="display: flex; justify-content: space-between;">
@@ -198,57 +207,67 @@ footer{
                   <div style="font-weight: normal; margin-left: 0 auto; text-align: center;">어서오세요!! CSW 관리자님</div>
                </div>               
             </div>
-        <!-- 여기에 콘텐츠 넣어보자 -->         
-        <form action="/notice/write" method="POST" >
-          <h2 style="text-align: center; padding:20px;">공지사항 등록</h2>          
-	    <div class="main-content">
-	      <table class="table" >
-	        <tr>
-	          <th>제목</th>
-	          <td><input type="text" class="form-control" name="title" required /></td>
-	        </tr>
-	        <tr>
-	          <th>마감기간</th>
-	          <td><input type="date" class= "form-control" name="enddate" /></td>
-	        </tr>
-	        <tr>
-	          <th>글쓴이</th>
-	          <td><input type="text" class="form-control" name="writer" value="${nickname}" readonly /></td>
-	        </tr>
-	        <tr>
-	          <th>내용</th>
-	          <td><textarea class="form-control" name="cont" rows="10" required></textarea></td>
-	        </tr>  
-	        <tr>
-	          <td colspan="2">
-	            <button type="submit" class="btn btn-danger">등록</button>
-	            <button type="button" class="btn btn-danger" onclick="history.back()">취소</button>
-	          </td>
-	        </tr>
-	      </table>
-	      </div>
-	    </form> 
-	    <!-- 여기까지 오른쪽 컨텐츠 -->
+            
+         </div>
+         <div style="margin-top: 30px; text-align: center; margin-bottom: 30px;">
+         	<h1>상품재고관리</h1>
+         </div>
+         <div>
+         	<table class="table table-hover">
+					<thead class="thead-dark">
+						<tr style="font-size: 20px; text-align: center;">
+							<th>상품 이름</th>
+							<th></th>
+							<th>상품 가격</th>
+							<th>재고</th>
+							<th>수정</th>
+						</tr>
+					</thead>
+					<tbody style="font-size: 18px;">
+						<c:forEach var="pd" items="${pdList}">
+							<tr>
+								<input type="hidden" value="${pd.pdNum}">
+								<td>${pd.pdName}</td>
+								<td><img src="${pd.pdThumbImg}" width="100" height="100" /></td>
+								<td style="text-align: center;">${pd.pdPrice}</td>
+								<td style="text-align: center; width: 100px;"><input type="number" value="${pd.pdStock}" ></td>
+								<td style="text-align: center;"><button type="button" class="btn btn-danger pdStock-modify">수정</button></td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+         </div>
       </div>
    </main>
-   <footer><%@ include file="../template/footer.jsp"%></footer>
 
+   <footer><%@ include file="../../template/footer.jsp"%></footer>
    
    <script>
-      $(document).ready(function(){
-          var telElement = $('.rightArea .name .right div:first-child');
-          var tel = telElement.text();
-          telElement.text(formatPhoneNumber(tel));
-          
-          $('.btninfo').on('click', function() {
-             location.href = '/member/mypage/modify';
-          });
-      });
-      
-      function formatPhoneNumber(phoneNumber) {
-          return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-      }
+      $(document).ready(function() {
+    	  $('.pdStock-modify').on('click', function() {
+    		  var pdNum = $(this).closest('tr').find('input[type=hidden]').val();
+    		  var pdStock = $(this).closest('tr').find('input[type=number]').val();
 
+    		  var confirmResult = confirm('정말 재고를 수정하시겠습니까?');
+    		  
+    		  if (confirmResult) {
+    	            $.ajax({
+    	                url: '/shop/product/stock/modify',
+    	                type: 'POST',
+    	                data: {
+    	                    pdNum: pdNum,
+    	                    pdStock: pdStock
+    	                },
+    	                success: function() {
+    	                    location.href = '/admin/products/manage';
+    	                },
+    	                error: function() {
+    	                    alert('재고수정 에러 발생');
+    	                }
+    	            });
+    	        }
+    	  });
+      })
    </script>
 </body>
 </html>

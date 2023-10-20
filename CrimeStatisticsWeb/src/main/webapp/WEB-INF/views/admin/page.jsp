@@ -169,7 +169,7 @@ footer{
 		      <div class="text">상품후기</div>		      
 		    </a>
 		     -->
-		    <a href="#" class="item">		      
+		    <a href="/admin/products/manage" class="item">		      
 		      <div class="text">상품재고관리</div>		      
 		    </a>
 		    
