@@ -227,7 +227,7 @@ div {
 	margin-top: 60px;
 }
 
-.btn {
+#btn {
     background-color: transparent !important;
     border-color: white !important;
     color: white !important;
@@ -268,12 +268,17 @@ h3 {
 float:right;
 width:80%;
 }
+footer{
+  margin-top:350px;
+  bottom: 0;
+  width:100%
+}
 </style>
 </head>
 <body>
 <header><%@ include file="../../template/header.jsp"%></header>
     <main style="display: flex; width: 65%; margin: 0 auto;">
-      <div class="wrap" style="flex: 1; ">
+      <div class="wrap" style="flex: 1; height:720px;">
          <div class="grayContainer" style="display: flex; justify-content: center; align-items: center;">
              <div>
                  <div class="name" style="text-align: center;">MY페이지</div>
@@ -338,6 +343,14 @@ width:80%;
                </div>
                <div class="right">></div>
             </a>
+            
+               <a href="/member/mypage/myanswer?num=1" class="item">
+               <div class="icon">ii</div>
+               <div class="text">
+                  작성한 질문 
+               </div>
+               <div class="right">></div>
+            </a>
          </div>
          <div class="infoContainer">
             <a href="#" class="item">
@@ -364,7 +377,7 @@ width:80%;
                </div>
                <div class="right" style="display: flex; align-items: center; margin-left: 200px; font-weight: normal; font-size: 15px;">
                   <div>${member.tel} / ${member.email}</div>
-                  <button type="button" class="btn">회원정보수정</button>
+                  <button type="button" id="btn" class="btn">회원정보수정</button>
                </div>
             </div>
          </div>
@@ -462,6 +475,16 @@ width:80%;
                             </div>
                         </div>
                     </li>
+                    <li>
+				         <div style="display: flex; justify-content: space-between; align-items: center;">
+				               <div>작성 질문</div>
+				               <div style="margin-right: 20px;">
+				                <a href="/member/mypage/myanswer" class="splita">
+				                		<span style="color: red; font-weight: bold;">${questionCnt} </span>건
+				               	</a>
+				              </div>
+				            </div>
+				    </li>
                 </ul>
              </div>
          </div>
@@ -505,8 +528,7 @@ width:80%;
                <input type="text" id="address_primary" name="address_primary" value="${member.address_primary}" style="width:100%; margin-bottom:10px;" placeholder="기본주소" readonly />
                <input type="text" name="address_detail" style="width:100%" value="${member.address_detail}" autocomplete="off" placeholder="상세 주소(선택 사항)">
                </div>
-               </div>
-               
+               </div>               
                <div style="margin-bottom: 20px; margin-left: 10px;">번호
                <input type="text" name="tel" id="tel" value="${member.tel}" style="float:right; width:80%;" autocomplete="off" required />
                </div>
@@ -554,7 +576,8 @@ width:80%;
             <!-- 여기까지 오른쪽 컨텐츠 -->
          </div>
       </div>
-   </main>   
+   </main>
+   <footer><%@ include file="../../template/footer.jsp"%></footer>   
    <script>
       let code = "";   // 이메일 인증코드
       

@@ -19,7 +19,7 @@ public interface QuestionDao {
 	public void modify(QuestionVo vo); 
 	
 	//질문 삭제
-	public void delete(int question_id);
+	public Object delete(int question_id, String memberid);
 	
 	//질문 총 개수
 	public int count();
@@ -33,4 +33,14 @@ public interface QuestionDao {
 	 
 	// 게시물 총 갯수 + 검색 적용
 	 public int searchCount(String searchType, String keyword);
+	 
+	 // 마이페이지 질문 목록 
+	 public List<QuestionVo> listMyPage(int displayPost, int postNum, String memberid);
+	 
+	//마이페이지 질문 개수 
+	public Object questionCnt(String memberid, String nickname);
+	
+	//관리자 페이지 Q&A리스트
+	public List<QuestionVo> adminListPageSearch(int displayPost, int postNum, String searchType, String keyword);
+		 
 }

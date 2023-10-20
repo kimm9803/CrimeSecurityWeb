@@ -124,7 +124,7 @@ div {
    margin-top: 60px;
 }
 
-.btninfo {
+#btn {
     background-color: transparent !important;
     border-color: white !important;
     color: white !important;
@@ -141,7 +141,7 @@ div {
   font-size: 20px;
 }
 footer{
-  position: absolute;
+  margin-top:250px;
   bottom: 0;
   width:100%
 }
@@ -163,10 +163,7 @@ footer{
 		    <div class="listGroupTitle">상품</div>
 		    <a href="/admin/products/register" class="item">		      
 		      <div class="text">상품등록</div>		      
-		    </a>
-		    <a href="#" class="item">		      
-		      <div class="text">상품후기</div>		      
-		    </a>
+		    </a>		    
 		    <a href="#" class="item">		      
 		      <div class="text">상품재고관리</div>		      
 		    </a>
@@ -193,19 +190,14 @@ footer{
 		</div>         
       </div>
 
-      <!-- 오른쪽 콘텐츠 영역 -->      
-      <div class="rightArea" style="flex: 4; margin-bottom: 30px;">
+     <!-- 오른쪽 콘텐츠 영역 -->
+      <div class="rightArea" style="flex: 4;">
          <div class="grayContainer">
             <div class="name" style="display: flex; justify-content: space-between;">
                <div class="left" style="display: flex; align-items: center;">                  
-                  <div style="font-weight: normal; margin-left: 5px;">관리자 페이지입니다</div>
-               </div>
-               <div class="right" style="display: flex; align-items: center; margin-left: 200px; font-weight: normal; font-size: 15px;">
-                  <div>${member.tel} / ${member.email}</div>
-                  <button type="button" class="btninfo">회원정보수정</button>
-               </div>
-            </div>           
-         </div>
+                  <div style="font-weight: normal; margin-left: 0 auto; text-align: center;">어서오세요!! CSW 관리자님</div>
+               </div>               
+            </div>
         <!-- 여기에 콘텐츠 넣어보자 -->         
         <!-- 게시물 목록 -->
         <div>
@@ -230,8 +222,7 @@ footer{
                 </tr>
                 <tr>
                     <th>마감일</th>
-                    <td><input type="text" class="form-control" value="${ nvo.enddate }" readonly /></td>
-                    <td><input type="number" class= "form-control" name="enddate" min=1 value="1"/></td>
+                    <td><input type="date" class="form-control" name="enddate"value="${ nvo.enddate }" id="endDate" /></td>                  
                 </tr>
                 <tr>
                     <th>조회수</th>
@@ -243,7 +234,7 @@ footer{
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <input type="button" class="btn btn-danger" id="update" value="수정" />
+                        <input type="submit" class="btn btn-danger" id="update" value="수정" />
                         <a href="/notice/list" class="btn btn-secondary">목록</a>
                         <button type="button" class="btn btn-secondary" onclick="history.back()">이전으로</button>
                     </td>
@@ -255,18 +246,18 @@ footer{
       </div>
    </main>
    <footer><%@ include file="../template/footer.jsp"%></footer>
-
-   
    <script>
       $(document).ready(function(){
           var telElement = $('.rightArea .name .right div:first-child');
           var tel = telElement.text();
           telElement.text(formatPhoneNumber(tel));
           
-          $('.btninfo').on('click', function() {
+          $('#btn').on('click', function() {
              location.href = '/member/mypage/modify';
           });
       });
+      // $('#endDate').val(new Date().toISOString().substring(0,10));
+      $('#endDate').val(new Date().toISOString().substring(0,10));
       
       function formatPhoneNumber(phoneNumber) {
           return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');

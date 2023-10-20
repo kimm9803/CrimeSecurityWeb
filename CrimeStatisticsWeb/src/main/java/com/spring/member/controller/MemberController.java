@@ -132,7 +132,7 @@ public class MemberController {
 		System.out.println("obj : " + obj);
 		JSONObject jsonObj = (JSONObject) obj;
 
-		// 데이터 파싱
+		//  데이터 파싱
 		JSONObject response_obj = (JSONObject) jsonObj.get("response");
 		String access_token = oauthToken.getAccessToken(); // 토큰
 
@@ -154,7 +154,7 @@ public class MemberController {
 	public String naverLogout(HttpSession session) throws IOException {
 
 		session.invalidate(); // 로컬 세션 무효화
-		return "redirect:/"; // 로그아웃 후 리다이렉트할 URL
+		return "redirect:/";   // 로그아웃 후 리다이렉트할 URL
 	}
 
 	// 구글 Callback호출 메소드
@@ -181,7 +181,7 @@ public class MemberController {
 
 		// userInfo를 원하는 형태로 파싱하여 필요한 정보를 추출하고 세션에 저장
 		// 예를 들어, JSON 파싱 라이브러리를 사용하여 userInfo를 파싱할 수 있습니다.
-		// 여기서는 예시로 Google의 사용자 ID를 가져오는 것으로 가정합니다.
+        // 여기서는 예시로 Google의 사용자 ID를 가져오는 것으로 가정합니다.
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode node = objectMapper.readTree(userInfo);
 		String googleid = node.get("id").asText();
@@ -226,7 +226,7 @@ public class MemberController {
 		return "redirect:/";
 	}
 
-	// 마이페이지
+	//마이페이지
 	@GetMapping("/mypage")
 	public String mypage(BoardVo boardVo, HttpSession session, Model model) {
 		String memberid = (String) session.getAttribute("memberid");
@@ -246,6 +246,8 @@ public class MemberController {
 		model.addAttribute("myLikeCnt", boardService.mylikeList(memberid).size());
 		// 리뷰 갯수
 		model.addAttribute("reviewCnt", shopService.getReviewList(memberid).size());
+		
+		model.addAttribute("questionCnt",questionService.questionCnt(memberid, nickname));
 
 		return "member/mypage/index";
 	}
@@ -272,6 +274,8 @@ public class MemberController {
 		model.addAttribute("reviewCnt", shopService.getReviewList(memberid).size());
 		// 주문 리스트
 		model.addAttribute("orderInfo", shopService.getOrderInfoList(memberid));
+		// 질문 개수 
+		model.addAttribute("questionCnt",questionService.questionCnt(memberid, nickname));
 
 		return "member/mypage/orderInfoList";
 	}
@@ -282,6 +286,7 @@ public class MemberController {
 			Model model) {
 		String memberid = (String) session.getAttribute("memberid");
 		String nickname = (String) session.getAttribute("nickname");
+
 
 		// 장바구니 담은 갯수
 		model.addAttribute("cartCnt", shopService.getCartList(memberid).size());
@@ -299,11 +304,13 @@ public class MemberController {
 		model.addAttribute("reviewCnt", shopService.getReviewList(memberid).size());
 		// 주문 상세
 		model.addAttribute("orderDetailList", shopService.getOrderDetail(orderid));
+		// 질문 개수
+		model.addAttribute("questionCnt",questionService.questionCnt(memberid, nickname));
 
 		return "member/mypage/orderDetail";
 	}
 
-	// 상품후기(마이페이지)
+	//  상품후기(마이페이지)
 	@GetMapping("/mypage/review")
 	public String getReviewList(BoardVo boardVo, HttpSession session, Model model) {
 		String memberid = (String) session.getAttribute("memberid");
@@ -324,6 +331,8 @@ public class MemberController {
 		// 리뷰 리스트
 		model.addAttribute("reviewList", shopService.getReviewList(memberid));
 		model.addAttribute("reviewCnt", shopService.getReviewList(memberid).size());
+		//질문 개수 
+		model.addAttribute("questionCnt",questionService.questionCnt(memberid, nickname));
 
 		return "member/mypage/reviewList";
 	}
@@ -351,6 +360,9 @@ public class MemberController {
 		model.addAttribute("reviewCnt", shopService.getReviewList(memberid).size());
 		// 포인트 내역
 		model.addAttribute("pointList", shopService.getPointList(memberid));
+		// 질문개수  수정 완료
+		model.addAttribute("questionCnt", questionService.questionCnt(memberid, nickname));
+	
 
 		return "member/mypage/point";
 	}
@@ -376,16 +388,18 @@ public class MemberController {
 		// 포인트 추출 ${member.point}
 		model.addAttribute("member", memberService.findById(memberid));
 		// 작성게시물 갯수
-		model.addAttribute("myBoardCnt", boardService.myBoardcnt(boardVo, nickname));
-		// 작성댓글 갯수
-		model.addAttribute("myReplyCnt", replyService.myReplyCnt(nickname));
-		// 좋아요 누른 게시물 갯수
-		model.addAttribute("myLikeCnt", boardService.mylikeList(memberid).size());
-		// 리뷰 갯수
-		model.addAttribute("reviewCnt", shopService.getReviewList(memberid).size());
+    	model.addAttribute("myBoardCnt", boardService.myBoardcnt(boardVo, nickname));
+    	// 작성댓글 갯수
+    	model.addAttribute("myReplyCnt", replyService.myReplyCnt(nickname));
+    	// 좋아요 누른 게시물 갯수
+    	model.addAttribute("myLikeCnt", boardService.mylikeList(memberid).size());
+    	// 리뷰 갯수
+    	model.addAttribute("reviewCnt", shopService.getReviewList(memberid).size());
 		// 포인트 내역 기간 조회
-		model.addAttribute("pointList", shopService.showPointDate(stDate, edDate, memberid));
-
+    	model.addAttribute("pointList", shopService.showPointDate(stDate, edDate, memberid));
+    	// 질문개수  수정 완료
+    	model.addAttribute("questionCnt", questionService.questionCnt(memberid, nickname));
+	
 		return "member/mypage/point";
 	}
 
@@ -410,11 +424,13 @@ public class MemberController {
 		model.addAttribute("myLikeCnt", boardService.mylikeList(memberid).size());
 		// 리뷰 갯수
 		model.addAttribute("reviewCnt", shopService.getReviewList(memberid).size());
-
+		// 질문개수  수정 완료
+		model.addAttribute("questionCnt", questionService.questionCnt(memberid, nickname));
+	
 		return "member/mypage/myInfoModify";
 	}
 
-	// 회원정보수정
+	//  회원정보수정
 	@PostMapping("/mypage/modify")
 	public String myInfoModify(MemberVo memberVo, @RequestParam("newPasswd") String newPasswd) {
 		memberVo.setPasswd(newPasswd);
@@ -447,8 +463,13 @@ public class MemberController {
 		mv.addObject("myLikeCnt", boardService.mylikeList(memberid).size());
 		mv.addObject("myboardList", myboardList);
 		mv.addObject("member", memberService.findById(memberid));
-		// 리뷰 갯수
+		
+		// 리뷰 개수
 		mv.addObject("reviewCnt", shopService.getReviewList(memberid).size());
+		
+		// 질문개수  수정 완료
+		mv.addObject("questionCnt", questionService.questionCnt(memberid, nickname));
+	
 		mv.setViewName("member/mypage/myboardList");
 		return mv;
 	}
@@ -464,9 +485,9 @@ public class MemberController {
 		ModelAndView mv = new ModelAndView();
 		// 장바구니 담은 갯수
 		mv.addObject("cartCnt", shopService.getCartList(memberid).size());
-		// 결제완료 갯수
+		// 결제완료 개수 
 		mv.addObject("orderInfoCnt", shopService.getOrderInfoList(memberid).size());
-		// 포인트 추출 ${member.point}
+		// 포인트추출 ${member.point}
 		mv.addObject("member", memberService.findById(memberid));
 		// 작성게시물 갯수
 		mv.addObject("myBoardCnt", boardService.myBoardcnt(boardVo, nickname));
@@ -478,6 +499,10 @@ public class MemberController {
 		mv.addObject("member", memberService.findById(memberid));
 		// 리뷰 갯수
 		mv.addObject("reviewCnt", shopService.getReviewList(memberid).size());
+		// 질문개수  수정 완료
+		mv.addObject("questionCnt", questionService.questionCnt(memberid, nickname));
+	
+		
 		mv.setViewName("member/mypage/myreplyList");
 		return mv;
 	}
@@ -495,7 +520,7 @@ public class MemberController {
 		mv.addObject("cartCnt", shopService.getCartList(memberid).size());
 		// 결제완료 갯수
 		mv.addObject("orderInfoCnt", shopService.getOrderInfoList(memberid).size());
-		// 포인트 추출 ${member.point}
+		// 포인트 추출 ${member.point} 
 		mv.addObject("member", memberService.findById(memberid));
 		// 작성게시물 갯수
 		mv.addObject("myBoardCnt", boardService.myBoardcnt(boardVo, nickname));
@@ -507,18 +532,21 @@ public class MemberController {
 		mv.addObject("member", memberService.findById(memberid));
 		// 리뷰 갯수
 		mv.addObject("reviewCnt", shopService.getReviewList(memberid).size());
+		// 질문개수  수정 완료
+		mv.addObject("questionCnt", questionService.questionCnt(memberid, nickname));
+	
 		mv.setViewName("member/mypage/mylikeList");
 
 		return mv;
 	}
 
-	// 작성한 질문 page + search
+	//마이 페이지 질문 목록 
 	@GetMapping("/mypage/myanswer")
 	public ModelAndView myQuestion(BoardVo boardVo, QuestionVo queVo, HttpSession session, Model model,
 			@RequestParam("num") int num,
 			@RequestParam(value = "searchType", required = false, defaultValue = "title") String searchType,
 			@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword) {
-		// List<QuestionVo> list = questionService.list();
+		
 		// 질문 목록 + 페이징
 		Page2 page = new Page2();
 
@@ -530,14 +558,13 @@ public class MemberController {
 		page.setSearchType(searchType);
 		page.setKeyword(keyword);
 
-		List<QuestionVo> list = null;
-		list = questionService.listPageSearch(page.getDisplayPost(), page.getPostNum(), searchType, keyword);
-
 		// 기존 코드
 		String memberid = (String) session.getAttribute("memberid");
 		String nickname = (String) session.getAttribute("nickname");
-		List<ReplyVo> myreplyList = replyService.myreplyList(nickname);
-
+		
+		List<QuestionVo> list = null;
+		list = questionService.listMyPage(page.getDisplayPost(), page.getPostNum(), memberid);
+		
 		// 객체생성
 		ModelAndView mv = new ModelAndView();
 		// 장바구니 담은 갯수
@@ -550,22 +577,22 @@ public class MemberController {
 		mv.addObject("myBoardCnt", boardService.myBoardcnt(boardVo, nickname));
 		// 작성댓글 갯수
 		mv.addObject("myReplyCnt", replyService.myReplyCnt(nickname));
-		// 질문개수
-		mv.addObject("questionCnt", questionService.searchCount(memberid, nickname));
-
+		// 리뷰 갯수
+		mv.addObject("reviewCnt", shopService.getReviewList(memberid).size());
+		// 질문개수  수정 완료
+		mv.addObject("questionCnt", questionService.questionCnt(memberid, nickname));
+	
 		// 좋아요 누른 게시물 갯수
 		mv.addObject("myLikeCnt", boardService.mylikeList(memberid).size());
-		mv.addObject("myreplyList", myreplyList);
 		mv.addObject("member", memberService.findById(memberid));
 
-		// 목록+ 페이징
-		// model.addAttribute("list", list);
+		// 목록 + 페이징
 		model.addAttribute("list", list);
 		model.addAttribute("page", page);
 		model.addAttribute("select", num);
 
 		mv.setViewName("member/mypage/myAnswerList");
-
+		
 		return mv;
 	}
 

@@ -10,6 +10,9 @@
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&family=Nanum+Pen+Script&family=Orbit&display=swap" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
@@ -17,7 +20,7 @@
 <style>
 body {
 	padding: 0;
-	margin: 0;
+	margin: 0;	
 }
 
 div {
@@ -227,7 +230,7 @@ div {
 	margin-top: 60px;
 }
 
-.btn {
+#btn {
     background-color: transparent !important;
     border-color: white !important;
     color: white !important;
@@ -264,6 +267,9 @@ h3 {
 	text-decoration: none;
 	color: black;
 }
+main{
+font-family: 'IBM Plex Sans KR', sans-serif;
+}
 
 </style>
 </head>
@@ -271,7 +277,7 @@ h3 {
 	<header><%@ include file="../../template/header.jsp"%></header>
 
 	<main style="display: flex; width: 65%; margin: 0 auto;">
-		<div class="wrap" style="flex: 1;">
+		<div class="wrap" style="flex: 1; height:720px;">
 			<div class="grayContainer" style="display: flex; justify-content: center; align-items: center;">
 			    <div>
 			        <div class="name" style="text-align: center;">MY페이지</div>
@@ -336,6 +342,17 @@ h3 {
 					</div>
 					<div class="right">></div>
 				</a>
+				
+				<a href="/member/mypage/myanswer?num=1" class="item">
+                <div class="icon">ii</div>
+                <div class="text">
+                  작성한 질문 
+                </div>
+                <div class="right">></div>
+            	</a>
+            
+				
+				
 			</div>
 			<div class="infoContainer">
 				<a href="#" class="item">
@@ -362,7 +379,7 @@ h3 {
 					</div>
 					<div class="right" style="display: flex; align-items: center; margin-left: 200px; font-weight: normal; font-size: 15px;">
 						<div>${member.tel} / ${member.email}</div>
-						<button type="button" class="btn">회원정보수정</button>
+						<button type="button" id="btn"class="btn">회원정보수정</button>
 					</div>
 				</div>
 			</div>
@@ -402,6 +419,11 @@ h3 {
 				        </li>
 				    </ul>
 				</div>
+				
+				
+				
+				
+				
 			    <div class="splitColumn">
 			        <h3 style="margin-top: 15px; font-weight: bold;">BENEFIT</h3>
 			        <ul style="margin-left: 13px; margin-top: 20px;">
@@ -450,6 +472,7 @@ h3 {
 				                </div>
 				            </div>
 				        </li>
+				        
 				        <li>
 				            <div style="display: flex; justify-content: space-between; align-items: center;">
 				                <div>좋아요 누른 게시물</div>
@@ -460,12 +483,23 @@ h3 {
 				                </div>
 				            </div>
 				        </li>
+				        
+				          <li>
+				            <div style="display: flex; justify-content: space-between; align-items: center;">
+				                <div>작성 질문</div>
+				                <div style="margin-right: 20px;">
+				                	<a href="/member/mypage/myanswer" class="splita">
+				                		<span style="color: red; font-weight: bold;"> ${questionCnt} </span>건
+				                	</a>
+				                </div>
+				            </div>
+				        </li>	        
 				    </ul>
 			    </div>
 			</div>
 		</div>
+		
 	</main>
-
 	<footer><%@ include file="../../template/footer.jsp"%></footer>
 	
 	<script>
@@ -474,7 +508,7 @@ h3 {
 		    var tel = telElement.text();
 		    telElement.text(formatPhoneNumber(tel));
 		    
-		    $('.btn').on('click', function() {
+		    $('#btn').on('click', function() {
 		    	location.href = '/member/mypage/modify';
 		    });
 		    
@@ -491,6 +525,7 @@ h3 {
 		function addCommasToNumber(number) {
 		    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		}
+		
 	</script>
 </body>
 </html>

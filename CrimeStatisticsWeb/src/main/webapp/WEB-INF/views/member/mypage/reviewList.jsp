@@ -11,6 +11,9 @@
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&family=Nanum+Pen+Script&family=Orbit&display=swap" rel="stylesheet">	
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
@@ -20,7 +23,9 @@ body {
 	padding: 0;
 	margin: 0;
 }
-
+main{
+font-family: 'IBM Plex Sans KR', sans-serif;
+}
 div {
 	box-sizing: border-box;
 }
@@ -253,7 +258,7 @@ footer {
 	<header><%@ include file="../../template/header.jsp"%></header>
 
 	<main style="display: flex; width: 65%; margin: 0 auto;">
-		<div class="wrap" style="flex: 1; height: 650px;">
+		<div class="wrap" style="flex: 1; height:720px;">
 			<div class="grayContainer" style="display: flex; justify-content: center; align-items: center;">
 			    <div>
 			        <div class="name" style="text-align: center;">MY페이지</div>
@@ -318,6 +323,13 @@ footer {
 					</div>
 					<div class="right">></div>
 				</a>
+				<a href="/member/mypage/myanswer?num=1" class="item">
+               <div class="icon">ii</div>
+               <div class="text">
+                  작성한 질문
+               </div>
+               <div class="right">></div>
+            </a>
 			</div>
 			<div class="infoContainer">
 				<a href="#" class="item">
@@ -442,6 +454,18 @@ footer {
 				                </div>
 				            </div>
 				        </li>
+				        
+				          <li>
+				            <div style="display: flex; justify-content: space-between; align-items: center;">
+				                <div>작성 질문</div>
+				                <div style="margin-right: 20px;">
+				                	<a href="/member/mypage/myanswer" class="splita">
+				                		<span style="color: red; font-weight: bold;">${questionCnt} </span>건
+				                	</a>
+				                </div>
+				            </div>
+				        </li>
+				        
 				    </ul>
 			    </div>
 			</div>

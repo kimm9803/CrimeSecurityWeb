@@ -2,6 +2,7 @@ package com.spring.question.dao.impl;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -47,8 +48,13 @@ public class QuestionDaoImpl implements QuestionDao {
 	
 	//질문 삭제
 	@Override
-	public void delete(int question_id) {
-		sqlSession.delete(namespace + ".delete", question_id);
+	public Object delete(int question_id, String memberid) {
+        Map<String, Object> data = new HashMap<String, Object>();
+		
+		data.put("memberid",  memberid);
+		data.put("question_id", question_id);
+		
+		return sqlSession.delete(namespace + ".delete", data);
 	}
 	
 	//질문 총 개수
@@ -68,7 +74,9 @@ public class QuestionDaoImpl implements QuestionDao {
 		
 		return sqlSession.selectList(namespace + ".listPage", data);
 	}
-
+	
+	
+	//질문 목록 + 페이징 + 검색
 	@Override
 	public List<QuestionVo> listPageSearch(int displayPost, int postNum, String searchType, String keyword) {
 		  
@@ -93,6 +101,46 @@ public class QuestionDaoImpl implements QuestionDao {
 	 data.put("keyword", keyword);
 	 
 	 return sqlSession.selectOne(namespace + ".searchCount", data); 
+	}
+	
+	// 마이페이지 질문 목록 
+	@Override
+	public List<QuestionVo> listMyPage(int displayPost, int postNum, String memberid) {
+		
+		HashMap<String, Object> data = new HashMap<String, Object>();
+	
+		data.put("displayPost",displayPost);
+		data.put("postNum", postNum);
+		data.put("memberid", memberid);
+		
+		return sqlSession.selectList(namespace + ".mypageAnswerList", data);
+	}
+	
+	// 마이페이지 질문 개수
+	@Override
+	public Object questionCnt(String memberid, String nickname) {
+		
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		
+		data.put("memberid",  memberid);
+		data.put("nickname", nickname);
+		
+		return sqlSession.selectOne(namespace + ".questionCnt", data);
+	}
+	
+	//관리자 페이지 질문 목록
+	@Override
+	public List<QuestionVo> adminListPageSearch(int displayPost, int postNum, String searchType, String keyword) {
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		
+		  data.put("displayPost", displayPost);
+		  data.put("postNum", postNum);
+		  
+		  data.put("searchType", searchType);
+		  data.put("keyword", keyword);
+		  
+		  
+	  	return sqlSession.selectList(namespace +".adminListPageSearch", data); 
 	}
 }
 

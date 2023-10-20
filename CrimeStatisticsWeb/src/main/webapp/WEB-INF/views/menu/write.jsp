@@ -158,10 +158,7 @@ div {
 		    <div class="listGroupTitle">상품</div>
 		    <a href="/admin/products/register" class="item">		      
 		      <div class="text">상품등록</div>		      
-		    </a>
-		    <a href="#" class="item">		      
-		      <div class="text">상품후기</div>		      
-		    </a>
+		    </a>		    
 		    <a href="#" class="item">		      
 		      <div class="text">상품재고관리</div>		      
 		    </a>
@@ -193,12 +190,8 @@ div {
          <div class="grayContainer">
             <div class="name" style="display: flex; justify-content: space-between;">
                <div class="left" style="display: flex; align-items: center;">                  
-                  <div style="font-weight: normal; margin-left: 5px;">관리자 페이지입니다</div>
-               </div>
-               <div class="right" style="display: flex; align-items: center; margin-left: 200px; font-weight: normal; font-size: 15px;">
-                  <div>${member.tel} / ${member.email}</div>
-                  <button type="button" class="btninfo">회원정보수정</button>
-               </div>
+                  <div style="font-weight: normal; margin-left: 5px;">어서오세요!! CSW 관리자님</div>
+               </div>              
             </div>           
          </div>
           <!-- 여기에 콘텐츠 넣어보자 -->
@@ -237,27 +230,12 @@ div {
 
    <footer><%@ include file="../template/footer.jsp"%></footer>
    
-   <script>
-      $(document).ready(function(){
-          var telElement = $('.rightArea .name .right div:first-child');
-          var tel = telElement.text();
-          telElement.text(formatPhoneNumber(tel));
-          
-          $('.btninfo').on('click', function() {
-             location.href = '/member/mypage/modify';
-          });
-      });
+   <script>   
       
       function formatPhoneNumber(phoneNumber) {
           return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
       }
-      document.getElementById("write").onclick = function(){
-          var memberid = '<%= (String)session.getAttribute("memberid")%>';
-          if(memberid == "null"){
-            alert("로그인이 필요합니다");
-            location.href="#";
-          }
-        }
+    
    </script>
 </body>
 </html>

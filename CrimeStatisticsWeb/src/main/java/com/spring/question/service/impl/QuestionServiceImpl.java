@@ -42,8 +42,8 @@ public class QuestionServiceImpl implements QuestionService {
 	
 	//질문 삭제
 	@Override
-	public void delete(int question_id) {
-		dao.delete(question_id);
+	public Object delete(int question_id, String memberid) {
+		return dao.delete(question_id, memberid);
 	}
 	
 	//질문 총 개수
@@ -69,6 +69,24 @@ public class QuestionServiceImpl implements QuestionService {
 	@Override
 	public int searchCount(String searchType, String keyword){
 	 return dao.searchCount(searchType, keyword);
+	}
+
+	// 마이페이지 질문 목록 
+	@Override
+	public List<QuestionVo> listMyPage(int displayPost, int postNum, String memberid) {	
+		return dao.listMyPage(displayPost, postNum, memberid);
+	}
+	
+	// 마이페이지 질문 개수
+	@Override
+	public Object questionCnt(String memberid, String nickname) {
+		return dao.questionCnt(memberid, nickname);
+	}
+	
+	//관리자 페이지 Q&A 리스트 
+	@Override
+	public List<QuestionVo> adminListPageSearch(int displayPost, int postNum, String searchType, String keyword) {
+		return dao.adminListPageSearch(displayPost, postNum, searchType, keyword);
 	}
 	
 }

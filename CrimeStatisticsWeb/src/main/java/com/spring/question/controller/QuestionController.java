@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.answer.service.AnswerService;
 import com.spring.answer.vo.AnswerVo;
@@ -38,7 +39,7 @@ public class QuestionController {
 	@Autowired
 	private AnswerService answerService;
 	
-	//질문 목록
+	//
 	@GetMapping("/list")
 	 public String getList(Model model){
 		List<QuestionVo> list = questionService.list();
@@ -47,13 +48,13 @@ public class QuestionController {
 		return "question/list";
 	 }
 	
-	//질문 작성 폼
+	//
 	@GetMapping("/writeform")
 	public String getWrite(Model model, HttpSession session, HttpServletRequest request) {
 		String memberid = (String)session.getAttribute("memberid");
 		
 		if(memberid == null) {
-			request.setAttribute("msg", "질문은 회원만 가능합니다.");
+			request.setAttribute("msg", "로그인이 필요합니다.");
 			request.setAttribute("url", "http://localhost:8080" );
 			return "question/alert";
 		}
@@ -61,17 +62,16 @@ public class QuestionController {
 		
 		model.addAttribute("memberid", memberid);
 		model.addAttribute("nickname", findMember.getNickname());
+		
 		return "question/write";
 	}
 	
-	//질문 작성 
+	//작성
 	@PostMapping("/write")
 	public String postwrite(QuestionVo vo, HttpSession session) {
 		
 		String memberid = (String)session.getAttribute("memberid");
-		
-		
-		
+
 		vo.setMemberid(memberid);
 		
 		questionService.insertQuestion(vo);
@@ -79,75 +79,33 @@ public class QuestionController {
 		return "redirect:/question/listPageSearch?num=1" ;	
 	}
 	
-	
-	/*
-	//답글 작성 (관리자)
-	@PostMapping("/writeAnswer")
-	public String postwriteAnswer(AnswerVo vo, HttpSession session) {
-		
-		//adminid 값 받아서 nickname값 가져오기 
-		String adminid = (String)session.getAttribute("adminid");
-		vo.setAdminid(adminid);
-		
-		//작성
-		answerService.write(vo);
-		
-		return "redirect:/question/view?question_id=" + vo.getQuestion_id();
-	}
-
-	
-	@PostMapping("/writewAnswer")
-	public String postWrite(AnswerVo vo, HttpSession session,HttpServletRequest request) {
-		
-		String loggedInAdminId = (String) session.getAttribute("adminid");
-
-		
-		
-		if(loggedInAdminId == null) {
-			    //adminid
-		        request.setAttribute("msg", "관리권한이 필요합니다.");
-		        request.setAttribute("url", "/question/view?question_id=" + vo.getQuestion_id() );
-		        return "question/alert";
-		}
-		
-		
-		vo.setAdminid(loggedInAdminId);
-		//System.out.println(vo);
-	
-		
-		
-		answerService.write(vo);
-		return "redirect:/question/view?question_id=" + vo.getQuestion_id();
-	}
-	*/
-	
-	
-	
-	//질문 조회 + 작성  잠만
+	//
 	@GetMapping("/view")
 	public void getView(@RequestParam("question_id") int question_id, Model model, HttpSession session) {
 		
 		QuestionVo vo = questionService.view(question_id);
 	    String nickname = (String)session.getAttribute("nickname");
+	    String memberid = (String)session.getAttribute("memberid");
 	    
-		//화면 보이기
+		//
 		model.addAttribute("view", vo);
 		
-		//답글 조회
+		//
 		List<AnswerVo> answer = null;
 		answer = answerService.list(question_id);
 		model.addAttribute("answer", answer);
 		model.addAttribute("nickname", nickname);
+		model.addAttribute("memberid", memberid);
 	}
 	
-	//질문 수정 폼
+	//수정
 	@RequestMapping(value = "/modify", method = RequestMethod.GET)
 	public String getModify(@RequestParam("question_id") int question_id, Model model,HttpSession session,HttpServletRequest request) {
 		QuestionVo vo = questionService.view(question_id);
         String memberid = (String)session.getAttribute("memberid");
 		
 		if(memberid == null) {
-			request.setAttribute("msg", "수정은 회원만 가능합니다.");
+			request.setAttribute("msg", "로그인이 필요합니다.");
 			request.setAttribute("url", "/question/view?question_id=" + vo.getQuestion_id());
 			return "question/alert";
 		}
@@ -156,33 +114,33 @@ public class QuestionController {
 		return "/question/modify";
 	}
 	
-	// 질문 수정
+	// 수정
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
 	public String postModify(QuestionVo vo) {
 		questionService.modify(vo);
 		return "redirect:/question/view?question_id=" + vo.getQuestion_id();		
 	}
 	
-	//질문 삭제
+	//삭제
 	@GetMapping("/delete")
 	public String getDelete(@RequestParam("question_id") int question_id, HttpSession session, HttpServletRequest request) {
 		
 		String memberid = (String)session.getAttribute("memberid");
-		
         QuestionVo vo   =  questionService.view(question_id);
+        
 		if(memberid == null) {
-			request.setAttribute("msg", "삭제는 회원만 가능합니다.");
+			request.setAttribute("msg", "회원만 가능합니다.");
 			request.setAttribute("url", "/question/view?question_id=" + vo.getQuestion_id());
 			return "question/alert";
 		}
- 
-		questionService.delete(question_id);
+	
+		//수정 memberid값 받아야됨 
+		questionService.delete(question_id, memberid);
 		
-		
-		return "redirect:/question/list";
+		return "redirect:/question/listPageSearch?num=1";
 	}
 	
-	// 질문 목록 + 페이징 추가
+	//리스트 페이징
 	@GetMapping("/listPage")
 	public void getListPage(Model model, @RequestParam("num") int num){
 		
@@ -194,14 +152,42 @@ public class QuestionController {
 
 		List<QuestionVo> list = null; 
 		list = questionService.listPage(page.getDisplayPost(), page.getPostNum());
-
+		
 		model.addAttribute("list", list);   
 		model.addAttribute("page", page);
 		model.addAttribute("select", num);		
 	}
 	
+	//관리자 페이지 답변 리스트 페이징 설치 
+	@GetMapping("/adminListPageSearch")
+	public void getadminListPage(Model model, @RequestParam("num") int num,
+				 @RequestParam(value = "searchType",required = false, defaultValue = "title") String searchType,
+				 @RequestParam(value = "keyword",required = false, defaultValue = "") String keyword
+			){
+		 //paging
+		Page page = new Page();
+		
+		
+		page.setNum(num);
+		page.setCount(questionService.searchCount(searchType, keyword));
+		
+		page.setSearchType(searchType); 
+		page.setKeyword(keyword);
+		//질문 목록
+		List<QuestionVo> list = null; 
+		list = questionService.adminListPageSearch(page.getDisplayPost(), page.getPostNum(), searchType, keyword);
+		//답변 여부 
+		//int a = answerService.answerWhether(question_id);
+		
+	//	model.addAttribute("a", a); 
+		
+		model.addAttribute("list", list);
+		model.addAttribute("page", page);
+		model.addAttribute("select", num); 
 	
-	// 게시물 목록 + 페이징 추가 + 검색
+	}
+	
+	// 리스트 페이징 + 서치 
 	@RequestMapping(value = "/listPageSearch", method = RequestMethod.GET)
 	public void getListPageSearch(
 			Model model, @RequestParam("num") int num, 
@@ -214,7 +200,6 @@ public class QuestionController {
 	 page.setNum(num);
 	 page.setCount(questionService.searchCount(searchType, keyword));
 	 
-	 // 검색 타입과 검색어
 	 page.setSearchType(searchType);
 	 page.setKeyword(keyword);
 	 
@@ -226,6 +211,7 @@ public class QuestionController {
 	 model.addAttribute("page", page);
 	 model.addAttribute("select", num);
 	}
+	
 }
 
 

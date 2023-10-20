@@ -7,98 +7,104 @@
     <title>커뮤니티</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&family=Nanum+Pen+Script&family=Orbit&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&family=Nanum+Pen+Script&family=Orbit&display=swap" rel="stylesheet">
     <style>
-.{
- font-family: 'IBM Plex Sans KR', sans-serif;
-}
-h2 {
-	font-family: 'IBM Plex Sans KR', sans-serif;
-}
+	.{
+ 	font-family: 'IBM Plex Sans KR', sans-serif;
+	}http://localhost:8080/question/view?question_id=1
+	h2 {
+		font-family: 'IBM Plex Sans KR', sans-serif;
+	}
 
-.container {
-	margin-top: 20px;
-}
+	.container {
+		margin-top: 20px;
+	}
 
-.community-title {
-	text-align: center;
-	font-size: 28px;
-	font-weight: bold;
-	margin: 20px 0;
-}
+	.community-title {
+		text-align: center;
+		font-size: 28px;
+		font-weight: bold;
+		margin: 20px 0;
+	}
 
-.search-container {
-	margin: 10px 0;
-	padding: 10px;
-	background-color: #fff;
-	border-radius: 5px;
-}
+	.search-container {
+		margin: 10px 0;
+		padding: 10px;
+		background-color: #fff;
+		border-radius: 5px;
+	}
 
-select, input, button {
-	margin: 5px 0;
-	padding: 5px;
-	border: 1px solid #ccc;
-	border-radius: 3px;
-}
+	select, input, button {
+		margin: 5px 0;
+		padding: 5px;
+		border: 1px solid #ccc;
+		border-radius: 3px;
+	}
 
-.button-container {
+	.button-container {
 	text-align: right;
-	margin: 10px 0;
-}
-/* 모든 td에 폰트 적용 */
-td {
+		margin: 10px 0;
+	}
+	/* 모든 td에 폰트 적용 */
+	td {
 	font-family: 'IBM Plex Sans KR', sans-serif;
-}
-/* 공지사항 부분의 td에 bold 적용 */
-.notice-row td {
-	font-weight: bold;
-}
-/* 공지사항 부분의 배경색 설정 */
-.notice-row tr {
-	background-color: #f2f2f2; /* 옅은 회색 배경색 */
-}
-/* 테이블 행을 hover할 때 스타일 변경 */
-table.table-hover tbody tr:hover {
-	background-color: #e5e5e5; /* hover시 배경색 변경 */
-}
+	}
+	/* 공지사항 부분의 td에 bold 적용 */
+	.notice-row td {
+		font-weight: bold;
+	}
+	
+	/* 공지사항 부분의 배경색 설정 */
+	.notice-row tr {
+		background-color: #f2f2f2; /* 옅은 회색 배경색 */
+	}
+	
+	/* 테이블 행을 hover할 때 스타일 변경 */
+	table.table-hover tbody tr:hover {
+		background-color: #e5e5e5; /* hover시 배경색 변경 */
+	}
 
-.input-group select, .input-group input, .input-group button {
-	font-family: 'IBM Plex Sans KR', sans-serif;
-}
+	.input-group select, .input-group input, .input-group button {
+		font-family: 'IBM Plex Sans KR', sans-serif;
+	}
 
-.sort-link {
-	font-family: 'IBM Plex Sans KR', sans-serif;
-}
+	.sort-link {
+		font-family: 'IBM Plex Sans KR', sans-serif;
+	}
 
-#write {
-	font-family: 'IBM Plex Sans KR', sans-serif;
-	/* Change to your desired font for the "새글쓰기" button */
-}
+	#write {
+		font-family: 'IBM Plex Sans KR', sans-serif;
+		/* Change to your desired font for the "새글쓰기" button */
+	}
 
 
-.table thead th {	
-	color: #black; /* Change the text color to white */
-	text-align: center;
-}
-.table thead {
- border-top: 5px solid #0F3A5F;
- border-bottom: 2px solid #0F3A5F;
-}
-.custom-sort-links a:hover {
- background-color: #0F3A5F;
-}
-
+	.table thead th {	
+		color: #black; /* Change the text color to white */
+		text-align: center;
+	}
+	.table thead {
+ 	border-top: 5px solid #0F3A5F;
+ 	border-bottom: 2px solid #0F3A5F;
+	}
+	.custom-sort-links a:hover {
+ 	background-color: #0F3A5F;
+	}
+	footer{
+  	margin-top:200px;
+  	bottom: 0;
+  	width:100%
+	}
 </style>
 </head>
 <body>
 	<header>
 		<%@ include file="../template/header.jsp"%>
 	</header>
-	<main style="margin:0 auto 50px;  width:900px;">
+	<main style="margin:0 auto 50px;  width:900px; height:690px;">
 		<!-- 제목 -->
 		<div class="container">
-			<h2 class="community-title">${name}커뮤니티</h2>
+			<h2 class="community-title">${name} 커뮤니티</h2>
 		</div>
 
 		<!-- 검색 -->
@@ -115,7 +121,7 @@ table.table-hover tbody tr:hover {
 					</select>
 				</div>
 				<input type="text" class="form-control" name="keyword"
-					id="keywordInput" placeholder="검색어를 입력하세요">
+					id="keywordInput" placeholder="검색어를 입력하세요" autocomplete="off">
 				<button id="searchBtn" class="btn btn-danger" style="width: 80px;">검색</button>
 			</div>
 		</div>
@@ -189,7 +195,7 @@ table.table-hover tbody tr:hover {
 		</div>
 		<%@ include file="../board/include/SearchPaging.jsp"%>
 	</main>
-	<%@ include file="../template/footer.jsp"%>
+	<footer><%@ include file="../template/footer.jsp"%></footer>
 </body>
 <!-- 스크립트 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -220,3 +226,4 @@ table.table-hover tbody tr:hover {
         });
     </script>
 </html>
+

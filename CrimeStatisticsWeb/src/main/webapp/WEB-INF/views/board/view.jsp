@@ -14,8 +14,8 @@
    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&family=Nanum+Gothic+Coding&family=Nanum+Pen+Script&family=Noto+Sans+KR&family=Orbit&display=swap" rel="stylesheet">
     <!-- 부트스트랩 JavaScript 및 jQuery 추가 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
 <style>
@@ -94,14 +94,19 @@ font-family: 'Nanum Gothic Coding', monospace;
               </a>
               <p class="mb-0" style="font-size:20px;">(${vo.likehit})</p>
           </div>
-      </c:if>
+      </c:if>      
        <div style="margin-bottom: 30px;">
-            <a href="/board/updateform?bnum=${vo.bnum}" id="update" class="btn btn-danger ml-2">수정</a>
+       <c:if test="${vo.writer == sessionScope.nickname}">
+          <a href="/board/updateform?bnum=${vo.bnum}" id="update" class="btn btn-danger ml-2">수정</a>
           <button id="delete" class="btn btn-danger">삭제</button>
+       </c:if>
+          <a href="/board/listsearch?menu_id=${vo.menu_id}" class="btn btn-danger">목록으로</a>
+          <a href="javascript:history.back()" class="btn btn-danger">이전으로</a>
        </div>        
         <%@ include file="../board/include/reply.jsp"%>
      </main>   
         <footer style="margin-top: 150px;"><%@ include file="../template/footer.jsp"%></footer>
+   
     <script>  
                
         let bnum = ${vo.bnum};
@@ -149,6 +154,6 @@ font-family: 'Nanum Gothic Coding', monospace;
             }
         
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
