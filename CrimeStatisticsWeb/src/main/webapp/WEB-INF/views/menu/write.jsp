@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -173,6 +173,13 @@ div {
 		    </a>
 		  </div>
 		  		  
+		  <div class="listGroup">
+             <div class="listGroupTitle">Q&A</div>
+             <a href="/question/adminListPageSearch?num=1" class="item">
+                <div class="text">Q&A 조회</div>
+             </a>
+          </div>
+            
 		  <div class="listGroup">
 		    <div class="listGroupTitle">공지사항</div>
 		    <a href="/notice/writeform" class="item">		      

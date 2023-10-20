@@ -172,7 +172,14 @@ div {
 		      <div class="text">게시판 카테고리조회</div>		      
 		    </a>
 		  </div>
-		  		  
+		  
+		  <div class="listGroup">
+             <div class="listGroupTitle">Q&A</div>
+             <a href="/question/adminListPageSearch?num=1" class="item">
+                <div class="text">Q&A 조회</div>
+             </a>
+          </div>
+            
 		  <div class="listGroup">
 		    <div class="listGroupTitle">공지사항</div>
 		    <a href="/notice/writeform" class="item">		      
